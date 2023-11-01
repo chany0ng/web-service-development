@@ -1,10 +1,11 @@
-import './App.css';
-
+import GlobalStyles from './styles/GlobalStyles.styles';
+import Box from './styles/Box.styles';
 function App() {
   return (
-    <div className="App">
-      <h1>개씨발</h1>
-    </div>
+    <>
+      <GlobalStyles />
+      <Box>박스입니다</Box>
+    </>
   );
 }
 
