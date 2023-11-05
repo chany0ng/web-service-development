@@ -1,0 +1,11 @@
+package com.database4.dto;
+
+import lombok.Getter;
+
+@Getter
+public class PostTicketPurchaseDto {
+    private String hour;
+    private String user_id;
+    private int cash;
+
+}
