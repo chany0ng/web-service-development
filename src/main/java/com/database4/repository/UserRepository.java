@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserRepository {
 
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public UserRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -20,9 +20,9 @@ public class UserRepository {
 
     public ReturnPostUserLoginDto login(PostUserLoginDto postUserLoginDto){
         String sql = "SELECT u.user_id, u.cash, IF(r.end_location IS NULL, r.bike_id, NULL) AS bike_id, " +
-                "IF(r.end_location IS NULL, TIMEDIFF(SEC_TO_TIME(u.ticket_id * 3600), " +
+                "IF(r.end_location IS NULL, TIMEDIFF(SEC_TO_TIME(t.hour * 3600), " +
                 "TIMEDIFF(NOW(), r.start_time)), NULL) AS remain_rental_time " +
-                "FROM user u join rental r ON u.user_id = r.user_id " +
+                "FROM user u join rental r ON u.user_id = r.user_id cross join ticket t " +
                 "WHERE u.user_id = :user_id AND u.password = :password ORDER BY r.start_time desc limit 1";
 
 

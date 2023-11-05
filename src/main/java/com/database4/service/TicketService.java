@@ -10,15 +10,14 @@ import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
-    private TicketRepository ticketRepository;
+    private final TicketRepository ticketRepository;
 
     public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
 
     public int purchase(PostTicketPurchaseDto postTicketPurchaseDto){
-        int rowsAffected = ticketRepository.purchase(postTicketPurchaseDto);
-        return rowsAffected;
+        return ticketRepository.purchase(postTicketPurchaseDto);
     }
 
     public List<String> ticketList(){

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ChargeService {
-    private ChargeRepository chargeRepository;
+    private final ChargeRepository chargeRepository;
 
     public ChargeService(ChargeRepository chargeRepository) {
         this.chargeRepository = chargeRepository;

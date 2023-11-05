@@ -7,11 +7,10 @@ import com.database4.repository.MapRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MapService {
-    private MapRepository mapRepository;
+    private final MapRepository mapRepository;
 
     public MapService(MapRepository mapRepository) {
         this.mapRepository = mapRepository;

@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 @Slf4j
 public class MapRepository {
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     public MapRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
