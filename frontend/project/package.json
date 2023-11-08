@@ -25,7 +25,19 @@
       "react-app",
       "react-app/jest",
       "prettier"
-    ]
+    ],
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "rules": {
+      "react/destructuring-assignment": "warn",
+      "react/jsx-pascal-case": "warn",
+      "react/no-direct-mutation-state": "warn",
+      "react/jsx-no-useless-fragment": "warn",
+      "react/jsx-key": "warn",
+      "react/jsx-curly-brace-presence": "warn"
+    }
   },
   "browserslist": {
     "production": [
