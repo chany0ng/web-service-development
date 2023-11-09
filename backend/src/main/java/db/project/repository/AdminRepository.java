@@ -35,14 +35,12 @@ public class AdminRepository {
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
-        
-        
     }
 
     private final RowMapper<Admin> adminMapper = (rs, rowNum) -> {
-            Admin admin = new Admin();
-            admin.setAdmin_id(rs.getString("admin_id"));
-            admin.setPassword(rs.getString("password"));
-            return admin;
-        };
+        Admin admin = new Admin();
+        admin.setAdmin_id(rs.getString("admin_id"));
+        admin.setPassword(rs.getString("password"));
+        return admin;
+    };
 }

@@ -1,0 +1,69 @@
+package db.project.config.jwt;
+
+import db.project.domain.User;
+import db.project.service.UserDetailService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import java.security.Key;
+import java.util.Base64;
+import java.util.Date;
+
+@Service
+@RequiredArgsConstructor
+public class TokenProvider {
+    private final JwtProperties jwtProperties;
+
+    private final UserDetailService userDetailService;
+
+    private long tokenValidTime = 30 * 60 * 1000L; //30분
+
+    private String key;
+    @PostConstruct
+    protected void init() {
+        key = Base64.getEncoder().encodeToString(jwtProperties.getSecret_key().getBytes());
+    }
+   public String createToken(User user) {
+       Date now = new Date();
+
+       return Jwts.builder()
+               .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+               .setIssuer(jwtProperties.getIssuer())
+               .setIssuedAt(now)
+               .setExpiration(new Date(now.getTime() + tokenValidTime))
+               .setSubject(user.getId())
+               .claim("role", user.getRole())
+               .signWith(SignatureAlgorithm.HS256, key)
+               .compact();
+   }
+
+   public boolean validToken(String token) {
+       try {
+           Jwts.parser()
+                   .setSigningKey(key)
+                   .parseClaimsJws(token);
+           return true;
+       } catch (Exception e) {
+           return false;
+       }
+   }
+   public Authentication getAuthentication(String token) {
+       Claims claims = getClaims(token);
+       UserDetails userDetails = userDetailService.loadUserByUsername(claims.getSubject());
+       return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+   }
+   private Claims getClaims(String token) {
+       return Jwts.parser()
+               .setSigningKey(key)
+               .parseClaimsJws(token)
+               .getBody();
+   }
+}
