@@ -1,16 +1,11 @@
-import SingInPage from './pages/SignInPage';
-import Header from './layouts/Header';
-import Footer from './layouts/Footer';
-import SignUpPage from './pages/SingUpPage';
+import Router from './Router';
+import { BrowserRouter } from 'react-router-dom';
 
 function App() {
   return (
-    <>
-      <Header></Header>
-      <SingInPage></SingInPage>
-      {/* <SignUpPage></SignUpPage> */}
-      <Footer></Footer>
-    </>
+    <BrowserRouter>
+      <Router />
+    </BrowserRouter>
   );
 }
 
