@@ -4,6 +4,10 @@ import com.database4.dto.PostTicketPurchaseDto;
 import com.database4.dto.ReturnGetTicketInfoDto;
 import com.database4.dto.TicketListResponseDto;
 import com.database4.service.TicketService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,18 +24,15 @@ public class TicketController {  // 사용자 이용권 구매 Controller
         this.ticketService = ticketService;
     }
 
-//    @ResponseBody
-//    @GetMapping("/ticket")
-//    // 이용권 종류 List
-//    public ResponseEntity<Map<String, List<String>>> getTicketList(){
-//        List<String> hours = ticketService.ticketList();
-//
-//        Map<String, List<String>> response = new HashMap<>();
-//        response.put("hour", hours);
-//        return ResponseEntity.ok(response);
-//    }
     @ResponseBody
     @GetMapping("/ticket")
+    @Operation(
+            summary = "이용권 LIST",
+            description = "이용권 목록을 클릭했을 때의 API"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이용권 목록 출력 성공")
+    })
     // 이용권 종류 List
     public ResponseEntity<TicketListResponseDto> getTicketList(){
         TicketListResponseDto ticketListResponseDto = ticketService.ticketList();
@@ -42,6 +43,15 @@ public class TicketController {  // 사용자 이용권 구매 Controller
 
     @ResponseBody
     @PostMapping("/ticket")
+    @Operation(
+            summary = "이용권 구매",
+            description = "이용권 구매를 클릭했을 때의 API"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "이용권 구매 성공"),
+            @ApiResponse(responseCode = "409", description = "기존 이용권 보유중", content = @Content),
+            @ApiResponse(responseCode = "402", description = "소지금 부족", content = @Content)
+    })
     // 이용권 구매
     public ResponseEntity<Void> postPurchase(@RequestBody PostTicketPurchaseDto form){
         int rowsAffected = ticketService.purchase(form);

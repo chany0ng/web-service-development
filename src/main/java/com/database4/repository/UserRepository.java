@@ -19,11 +19,6 @@ public class UserRepository {
     }
 
     public ReturnPostUserLoginDto login(PostUserLoginDto postUserLoginDto){
-//        String sql = "SELECT u.user_id, u.cash, IF(r.end_location IS NULL, r.bike_id, NULL) AS bike_id, " +
-//                "IF(r.end_location IS NULL, TIMEDIFF(SEC_TO_TIME(t.hour * 3600), " +
-//                "TIMEDIFF(NOW(), r.start_time)), NULL) AS remain_rental_time " +
-//                "FROM user u join rental r ON u.user_id = r.user_id cross join ticket t " +
-//                "WHERE u.user_id = :user_id AND u.password = :password ORDER BY r.start_time desc limit 1";
         String sql = "SELECT u.user_id, u.cash, IF(r.end_location IS NULL, r.bike_id, NULL) AS bike_id, " +
                 "CASE WHEN r.end_location IS NULL AND u.ticket_id IS NOT NULL " +
                 "THEN TIMEDIFF(SEC_TO_TIME(t.hour * 3600),TIMEDIFF(NOW(), r.start_time)) " +
@@ -31,8 +26,6 @@ public class UserRepository {
                 "FROM user u JOIN rental r ON u.user_id = r.user_id LEFT JOIN ticket t ON u.ticket_id = t.ticket_id " +
                 "WHERE u.user_id = :user_id AND u.password = :password ORDER BY r.start_time DESC limit 1";
 
-
-        //String sql = "SELECT user_id, password FROM user WHERE user_id = :user_id AND password = :password";
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("user_id", postUserLoginDto.getUser_id())
                 .addValue("password", postUserLoginDto.getPassword());
