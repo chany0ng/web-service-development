@@ -1,0 +1,10 @@
+$main-color: green;
+$font-color: white;
+
+body {
+  padding: 0;
+  margin: 0;
+  font: {
+    color: $font-color;
+  }
+}
