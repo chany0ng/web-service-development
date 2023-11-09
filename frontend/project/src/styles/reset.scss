@@ -2,18 +2,17 @@
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: inherit;
   vertical-align: baseline;
   box-sizing: border-box;
 }
 html {
   font-size: 62.5%; // 1rem = 10px
+  height: 100vh;
 }
 body {
   font-family: 'Noto Sans KR', sans-serif;
   min-width: 320px;
-  width: 100%;
-  height: 100%;
+  height: 100vh;
 }
 ol,
 ul,
