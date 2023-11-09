@@ -4,8 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class PostTicketPurchaseDto {
-    private String hour;
+    private int hour;
     private String user_id;
     private int cash;
-
 }

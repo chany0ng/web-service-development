@@ -1,7 +1,8 @@
 package com.database4.controller;
 
 import com.database4.dto.PostTicketPurchaseDto;
-import com.database4.dto.ReturnGetTicketPurchaseDto;
+import com.database4.dto.ReturnGetTicketInfoDto;
+import com.database4.dto.TicketListResponseDto;
 import com.database4.service.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @RestController
 public class TicketController {  // 사용자 이용권 구매 Controller
@@ -20,16 +20,25 @@ public class TicketController {  // 사용자 이용권 구매 Controller
         this.ticketService = ticketService;
     }
 
+//    @ResponseBody
+//    @GetMapping("/ticket")
+//    // 이용권 종류 List
+//    public ResponseEntity<Map<String, List<String>>> getTicketList(){
+//        List<String> hours = ticketService.ticketList();
+//
+//        Map<String, List<String>> response = new HashMap<>();
+//        response.put("hour", hours);
+//        return ResponseEntity.ok(response);
+//    }
     @ResponseBody
     @GetMapping("/ticket")
     // 이용권 종류 List
-    public ResponseEntity<Map<String, List<String>>> getTicketList(){
-        List<String> hours = ticketService.ticketList();
+    public ResponseEntity<TicketListResponseDto> getTicketList(){
+        TicketListResponseDto ticketListResponseDto = ticketService.ticketList();
 
-        Map<String, List<String>> response = new HashMap<>();
-        response.put("hour", hours);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ticketListResponseDto);
     }
+
 
     @ResponseBody
     @PostMapping("/ticket")

@@ -1,12 +1,13 @@
 package com.database4.service;
 
+import com.database4.dto.BikeInfo;
 import com.database4.dto.PostTicketPurchaseDto;
-import com.database4.dto.ReturnGetTicketPurchaseDto;
+import com.database4.dto.ReturnGetTicketInfoDto;
+import com.database4.dto.TicketListResponseDto;
 import com.database4.repository.TicketRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
@@ -20,10 +21,12 @@ public class TicketService {
         return ticketRepository.purchase(postTicketPurchaseDto);
     }
 
-    public List<String> ticketList(){
-        List<ReturnGetTicketPurchaseDto> returnGetTicketPurchaseDtoList  = ticketRepository.ticketList();
-        return returnGetTicketPurchaseDtoList.stream()
-                .map(ReturnGetTicketPurchaseDto::getHour)
-                .collect(Collectors.toList());
+    public TicketListResponseDto ticketList(){
+        List<ReturnGetTicketInfoDto> ticketInfoList = ticketRepository.ticketList();
+        TicketListResponseDto response = new TicketListResponseDto();
+        for (ReturnGetTicketInfoDto ticketInfo : ticketInfoList) {
+            response.getTickets().add(ticketInfo);
+        }
+        return response;
     }
 }

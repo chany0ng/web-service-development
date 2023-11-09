@@ -1,7 +1,7 @@
 package com.database4.repository;
 
 import com.database4.dto.PostTicketPurchaseDto;
-import com.database4.dto.ReturnGetTicketPurchaseDto;
+import com.database4.dto.ReturnGetTicketInfoDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -18,11 +18,11 @@ public class TicketRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReturnGetTicketPurchaseDto> ticketList(){
-        String sql = "SELECT hour FROM ticket";
+    public List<ReturnGetTicketInfoDto> ticketList(){
+        String sql = "SELECT hour, price FROM ticket";
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 
-        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetTicketPurchaseDto.class));
+        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetTicketInfoDto.class));
     }
 
     public int purchase(PostTicketPurchaseDto postTicketPurchaseDto){
