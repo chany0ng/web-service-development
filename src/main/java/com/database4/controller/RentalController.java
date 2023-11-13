@@ -1,6 +1,8 @@
 package com.database4.controller;
 
 import com.database4.dto.PostRentalRentDto;
+import com.database4.dto.PostRentalReturnDto;
+import com.database4.dto.ReturnPostRentalReturnDto;
 import com.database4.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,5 +43,20 @@ public class RentalController {  // 자전거 대여, 반납 Controller
             // 이용권이 없어 대여 실패
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
+    }
+
+    @ResponseBody
+    @PostMapping("return")
+    @Operation(
+            summary = "자전거 반납",
+            description = "대여소에서 자전거의 반납 버튼을 클릭했을 때의 API"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "대여 성공")
+    })
+    public ResponseEntity<ReturnPostRentalReturnDto> postReturn(@RequestBody PostRentalReturnDto form){
+        ReturnPostRentalReturnDto postRentalReturnDto = rentalService.Return(form);
+
+        return ResponseEntity.ok(postRentalReturnDto);
     }
 }
