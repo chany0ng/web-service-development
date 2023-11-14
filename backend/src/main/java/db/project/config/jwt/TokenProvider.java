@@ -10,12 +10,14 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,18 +31,21 @@ public class TokenProvider {
     private String key;
     @PostConstruct
     protected void init() {
-        key = Base64.getEncoder().encodeToString(jwtProperties.getSecret_key().getBytes());
+        key = Base64.getEncoder().encodeToString(jwtProperties.getSecretKey().getBytes());
     }
-   public String createToken(User user) {
+   public String createToken(Authentication authentication) {
        Date now = new Date();
+       String authorities = authentication.getAuthorities().stream()
+               .map(GrantedAuthority::getAuthority)
+               .collect(Collectors.joining(","));
 
        return Jwts.builder()
                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                .setIssuer(jwtProperties.getIssuer())
                .setIssuedAt(now)
                .setExpiration(new Date(now.getTime() + tokenValidTime))
-               .setSubject(user.getId())
-               .claim("role", user.getRole())
+               .setSubject(authentication.getName())
+               .claim("role", authorities)
                .signWith(SignatureAlgorithm.HS256, key)
                .compact();
    }

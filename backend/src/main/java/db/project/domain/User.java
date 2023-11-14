@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor
+@Builder
 public class User implements UserDetails {
     private String id;
     private String password;
@@ -24,20 +24,20 @@ public class User implements UserDetails {
     private int ticket_id;
 
 
-    @Builder
-    public User(String id, String password, String email, String phone_number,
-                int pw_question, String pw_answer, String role, int cash, int overfee, int ticket_id) {
-        this.id = id;
-        this.password = password;
-        this.email = email;
-        this.phone_number = phone_number;
-        this.pw_question = pw_question;
-        this.pw_answer = pw_answer;
-        this.role = role;
-        this.cash = cash;
-        this.overfee = overfee;
-        this.ticket_id = ticket_id;
-    }
+//    @Builder
+//    public User(String id, String password, String email, String phone_number,
+//                int pw_question, String pw_answer, String role, int cash, int overfee, int ticket_id) {
+//        this.id = id;
+//        this.password = password;
+//        this.email = email;
+//        this.phone_number = phone_number;
+//        this.pw_question = pw_question;
+//        this.pw_answer = pw_answer;
+//        this.role = role;
+//        this.cash = cash;
+//        this.overfee = overfee;
+//        this.ticket_id = ticket_id;
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

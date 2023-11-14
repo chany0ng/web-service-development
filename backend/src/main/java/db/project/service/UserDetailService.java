@@ -1,5 +1,6 @@
 package db.project.service;
 
+import db.project.domain.User;
 import db.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,8 +14,8 @@ public class UserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findUserById(username)
+    public User loadUserByUsername(String userId) throws UsernameNotFoundException {
+        return userRepository.findUserById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("등록된 사용자가 아닙니다."));
     }
 
