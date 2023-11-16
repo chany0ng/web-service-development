@@ -23,7 +23,7 @@ public class RentalService {
         try {
                 return rentalRepository.Rent(rentalRentDto)
                     .orElseThrow(() -> new RentalRentException("대여에 실패했습니다."));
-        } catch (TicketPurchaseException e) {
+        } catch (RentalRentException e) {
             throw e;
         }
     }
