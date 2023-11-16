@@ -5,6 +5,7 @@ import com.database4.repository.MapRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MapService {
@@ -17,23 +18,25 @@ public class MapService {
     public LocationListResponseDto locationList(){
        List<ReturnGetMapLocationDto> mapLocationList = mapRepository.locationList();
        LocationListResponseDto response = new LocationListResponseDto();
-       for(ReturnGetMapLocationDto mapLocation : mapLocationList){
+       for (ReturnGetMapLocationDto mapLocation : mapLocationList) {
            response.getLocations().add(mapLocation);
-       }
+        }
        return response;
     }
 
-    public LocationInfoResponseDto locationInfo(PostMapLocationInfoDto postMapLocationInfoDto) {
-        ReturnPostMapLocationInfoDto LocationInfo = mapRepository.locationInfo(postMapLocationInfoDto);
+    public Optional<LocationInfoResponseDto> locationInfo(PostMapLocationInfoDto postMapLocationInfoDto) {
+        Optional<ReturnPostMapLocationInfoDto> locationInfoOptional = mapRepository.locationInfo(postMapLocationInfoDto);
 
-        LocationInfoResponseDto response = new LocationInfoResponseDto(LocationInfo.getLocation_id(), LocationInfo.getAddress(), LocationInfo.getLocation_status(), LocationInfo.isFavorite());
-        String[] bikeId = LocationInfo.getBike_id().split(",");
-        String[] bikeStatus = LocationInfo.getBike_status().split(",");
+        return locationInfoOptional.map(mapLocationInfo -> {
+            LocationInfoResponseDto response = new LocationInfoResponseDto(mapLocationInfo.getLocation_id(), mapLocationInfo.getAddress(), mapLocationInfo.getLocation_status(), mapLocationInfo.isFavorite());
+            String[] bikeId = mapLocationInfo.getBike_id().split(",");
+            String[] bikeStatus = mapLocationInfo.getBike_status().split(",");
 
-        for (int i = 0; i < bikeId.length; i++) {
-            response.getBike().add(new BikeInfo(bikeId[i], bikeStatus[i]));
-        }
+            for (int i = 0; i < bikeId.length; i++) {
+                response.getBike().add(new BikeInfo(bikeId[i], bikeStatus[i]));
+            }
 
-        return response;
+            return response;
+        });
     }
 }

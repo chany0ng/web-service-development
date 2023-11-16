@@ -3,9 +3,13 @@ package com.database4.controller;
 import com.database4.dto.PostRentalRentDto;
 import com.database4.dto.PostRentalReturnDto;
 import com.database4.dto.ReturnPostRentalReturnDto;
+import com.database4.exceptions.RentalRentException;
+import com.database4.exceptions.RentalReturnException;
+import com.database4.exceptions.TicketPurchaseException;
 import com.database4.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
 
 @RestController
 public class RentalController {  // 자전거 대여, 반납 Controller
@@ -30,18 +36,25 @@ public class RentalController {  // 자전거 대여, 반납 Controller
             description = "원하는 자전거의 대여 버튼을 클릭했을 때의 API"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "대여 성공"),
-            @ApiResponse(responseCode = "409", description = "이용권이 없어 대여 실패", content = @Content)
+            @ApiResponse(responseCode = "200", description = "대여 성공", content = {
+                    @Content(mediaType = "text/plain", examples = {
+                            @ExampleObject(value = "대여에 성공했습니다.")})
+            }),
+            @ApiResponse(responseCode = "400", description = "대여 실패", content = {
+                    @Content(mediaType = "text/plain", examples = {
+                            @ExampleObject(value = "미납금이 존재해 대여에 실패했습니다.", name = "overfeeOwned"),
+                            @ExampleObject(value = "잘못된 사용자 ID가 전달되었습니다.", name = "InvalidUserId"),
+                            @ExampleObject(value = "보유중인 이용권이 없습니다.", name = "InvalidTicket")
+                    })
+            })
     })
     // 자전거 대여
-    public ResponseEntity<Void> postRent(@RequestBody PostRentalRentDto form){
-        boolean checkInsert = rentalService.Rent(form);
-        if(checkInsert){
-            // 대여 성공
-            return ResponseEntity.ok().build();
-        } else{
-            // 이용권이 없어 대여 실패
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+    public ResponseEntity<String> postRent(@RequestBody PostRentalRentDto form){
+        try {
+            String result = rentalService.Rent(form);
+            return ResponseEntity.ok(result);
+        } catch (RentalRentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -52,11 +65,15 @@ public class RentalController {  // 자전거 대여, 반납 Controller
             description = "대여소에서 자전거의 반납 버튼을 클릭했을 때의 API"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "대여 성공")
+            @ApiResponse(responseCode = "200", description = "반납 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 값이 전달되어 반납 실패")
     })
     public ResponseEntity<ReturnPostRentalReturnDto> postReturn(@RequestBody PostRentalReturnDto form){
-        ReturnPostRentalReturnDto postRentalReturnDto = rentalService.Return(form);
-
-        return ResponseEntity.ok(postRentalReturnDto);
+        try {
+            ReturnPostRentalReturnDto postRentalReturnDto = rentalService.Return(form);
+            return ResponseEntity.ok(postRentalReturnDto);
+        } catch (RentalReturnException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

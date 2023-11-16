@@ -13,11 +13,16 @@ public class ChargeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void charge(PostChargeDto postChargeDto){
+    public boolean charge(PostChargeDto postChargeDto){
         String sql = "UPDATE user SET cash = cash + :cash Where user_id = :user_id";
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("user_id", postChargeDto.getUser_id())
                 .addValue("cash", postChargeDto.getCash());
-        jdbcTemplate.update(sql, namedParameters);
+        int checkChargeUpdate = jdbcTemplate.update(sql, namedParameters);
+        if(checkChargeUpdate == 1){
+            return true;
+        } else{
+            return false;
+        }
     }
 }

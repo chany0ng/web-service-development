@@ -2,13 +2,17 @@ package com.database4.repository;
 
 import com.database4.dto.PostTicketPurchaseDto;
 import com.database4.dto.ReturnGetTicketInfoDto;
+import com.database4.dto.TicketInfo;
+import com.database4.exceptions.TicketPurchaseException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class TicketRepository {
@@ -25,32 +29,47 @@ public class TicketRepository {
         return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetTicketInfoDto.class));
     }
 
-    public int purchase(PostTicketPurchaseDto postTicketPurchaseDto){
+    @Transactional
+    public Optional<String> purchase(PostTicketPurchaseDto postTicketPurchaseDto){
         int prevCash = postTicketPurchaseDto.getCash();
 
-        String sql = "UPDATE user u JOIN (SELECT ticket_id, price FROM ticket WHERE hour = :hour) AS t " +
-                "SET u.ticket_id = CASE WHEN u.cash > t.price THEN t.ticket_id ELSE u.ticket_id END, " +
-                "u.cash = CASE WHEN u.cash > t.price THEN u.cash - t.price ELSE u.cash END " +
-                "WHERE u.user_id = :user_id AND u.ticket_id IS NULL";
         final MapSqlParameterSource namedParameters  = new MapSqlParameterSource()
                 .addValue("user_id", postTicketPurchaseDto.getUser_id())
                 .addValue("hour", postTicketPurchaseDto.getHour());
 
-        int updatedRows = jdbcTemplate.update(sql, namedParameters);
-        if(updatedRows > 0){
-            String checkCashSql = "SELECT cash FROM user WHERE user_id = :user_id";
-            try{
-                Integer curCash = jdbcTemplate.queryForObject(checkCashSql, namedParameters, Integer.class);
-                if(curCash != null && curCash != prevCash){
-                    return 1;
-                } else{
-                    return -1;
-                }
-            } catch(EmptyResultDataAccessException e){
-                return 0;
+        // 기존에 티켓을 가지고 있는지 확인
+        String checkTicketSql = "SELECT ticket_id FROM user WHERE user_id = :user_id";
+        try{
+            Integer existingTicketId = jdbcTemplate.queryForObject(checkTicketSql, namedParameters, Integer.class);
+            if(existingTicketId != null){
+                throw new TicketPurchaseException("이미 이용권을 보유 중입니다.");
             }
-        } else{
-            return 0;
+        } catch (EmptyResultDataAccessException e) {
+            throw new TicketPurchaseException("잘못된 사용자 ID가 전달되었습니다.");
         }
+
+        // 구매하려는 티켓의 정보 조회
+        String ticketInfoSql = "SELECT ticket_id, price FROM ticket WHERE hour = :hour";
+        TicketInfo ticketInfo;
+        try{
+            ticketInfo = jdbcTemplate.queryForObject(ticketInfoSql, namedParameters, new BeanPropertyRowMapper<>(TicketInfo.class));
+        } catch (EmptyResultDataAccessException e) {
+            throw new TicketPurchaseException("잘못된 시간 정보가 전달되었습니다.");
+        }
+
+        if(ticketInfo.getPrice() > prevCash){
+            throw new TicketPurchaseException("소지금이 부족합니다.");
+        }
+
+        // 티켓 구매 성공
+        String purchaseTicketSql = "UPDATE user SET ticket_id = :ticket_id, cash = cash - :price WHERE user_id = :user_id";
+        final MapSqlParameterSource purchaseParams = new MapSqlParameterSource()
+                .addValue("ticket_id", ticketInfo.getTicketId())
+                .addValue("price", ticketInfo.getPrice())
+                .addValue("user_id", postTicketPurchaseDto.getUser_id());
+        int updatedRows = jdbcTemplate.update(purchaseTicketSql, purchaseParams);
+
+        // 티켓을 성공적으로 구매한 경우
+        return Optional.of("이용권 구매에 성공했습니다.");
     }
 }

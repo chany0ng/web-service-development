@@ -12,7 +12,8 @@ public class ChargeService {
         this.chargeRepository = chargeRepository;
     }
 
-    public void charge(PostChargeDto postChargeDto) {
-        chargeRepository.charge(postChargeDto);
+    public boolean charge(PostChargeDto postChargeDto) {
+
+        return chargeRepository.charge(postChargeDto);
     }
 }
