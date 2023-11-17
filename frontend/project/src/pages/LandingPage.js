@@ -13,7 +13,12 @@ const LandingPage = () => {
           세계적인 자전거 도시 서울
         </h1>
         <Link to="/signin" className="link">
-          <Button type="button" variant="contained">
+          <Button
+            type="button"
+            variant="contained"
+            size="large"
+            className="btn"
+          >
             Start
           </Button>
         </Link>
