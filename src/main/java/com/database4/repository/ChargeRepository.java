@@ -19,7 +19,7 @@ public class ChargeRepository {
                 .addValue("user_id", postChargeDto.getUser_id())
                 .addValue("cash", postChargeDto.getCash());
         int checkChargeUpdate = jdbcTemplate.update(sql, namedParameters);
-        if(checkChargeUpdate == 1){
+        if(checkChargeUpdate > 0){
             return true;
         } else{
             return false;

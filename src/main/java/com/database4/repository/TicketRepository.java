@@ -37,7 +37,6 @@ public class TicketRepository {
                 .addValue("user_id", postTicketPurchaseDto.getUser_id())
                 .addValue("hour", postTicketPurchaseDto.getHour());
 
-        // 기존에 티켓을 가지고 있는지 확인
         String checkTicketSql = "SELECT ticket_id FROM user WHERE user_id = :user_id";
         try{
             Integer existingTicketId = jdbcTemplate.queryForObject(checkTicketSql, namedParameters, Integer.class);
@@ -48,7 +47,6 @@ public class TicketRepository {
             throw new TicketPurchaseException("잘못된 사용자 ID가 전달되었습니다.");
         }
 
-        // 구매하려는 티켓의 정보 조회
         String ticketInfoSql = "SELECT ticket_id, price FROM ticket WHERE hour = :hour";
         TicketInfo ticketInfo;
         try{
@@ -61,7 +59,6 @@ public class TicketRepository {
             throw new TicketPurchaseException("소지금이 부족합니다.");
         }
 
-        // 티켓 구매 성공
         String purchaseTicketSql = "UPDATE user SET ticket_id = :ticket_id, cash = cash - :price WHERE user_id = :user_id";
         final MapSqlParameterSource purchaseParams = new MapSqlParameterSource()
                 .addValue("ticket_id", ticketInfo.getTicketId())
@@ -69,7 +66,6 @@ public class TicketRepository {
                 .addValue("user_id", postTicketPurchaseDto.getUser_id());
         int updatedRows = jdbcTemplate.update(purchaseTicketSql, purchaseParams);
 
-        // 티켓을 성공적으로 구매한 경우
         return Optional.of("이용권 구매에 성공했습니다.");
     }
 }

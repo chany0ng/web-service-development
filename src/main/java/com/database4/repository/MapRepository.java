@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,9 +35,6 @@ public class MapRepository {
                 "LEFT JOIN favorites f ON f.location_id = l.location_id AND f.user_id = :user_id " +
                 "WHERE l.latitude = :latitude AND l.longitude = :longitude " +
                 "GROUP BY l.location_id, l.address, l.status";
-
-
-
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("latitude", postMapLocationInfoDto.getLatitude())
                 .addValue("longitude", postMapLocationInfoDto.getLongitude())

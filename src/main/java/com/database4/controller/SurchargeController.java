@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
-public class SurchargeController {
+public class SurchargeController { // 추가요금 결제 Controller
     private final SurchargeService surchargeService;
 
     public SurchargeController(SurchargeService surchargeService) {
@@ -30,6 +30,7 @@ public class SurchargeController {
             @ApiResponse(responseCode = "200", description = "추가요금 조회 성공"),
             @ApiResponse(responseCode = "400", description = "잘못된 값이 전달되어 조회 실패")
     })
+    // 추가요금 금액 확인
     public ResponseEntity<Integer> postSurchargeInfo(@RequestBody PostSurchargeInfoDto form){
         Optional<Integer> overfee = surchargeService.overfeeInfo(form);
 
@@ -48,6 +49,7 @@ public class SurchargeController {
             @ApiResponse(responseCode = "200", description = "추가요금 지불 성공"),
             @ApiResponse(responseCode = "400", description = "입력받은 금액이 추가요금 보다 많아 추가요금 지불 실패")
     })
+    // 추가요금 지불
     public ResponseEntity<Void> postSurchargePay(@RequestBody PostSurchargePayDto form){
         Boolean checkOverfee = surchargeService.overfeePay(form);
         if(checkOverfee){
