@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import './css/LandingPage.module.min.css';
-import LoginBackground from '../components/Background/LoginBackground';
+import LoginBackground from '../../components/Background/LoginBackground';
 
 const LandingPage = () => {
   return (
