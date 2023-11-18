@@ -1,12 +1,12 @@
 .background-image {
-  filter: brightness(0.6);
+  overflow: auto;
   filter: saturate(1.5);
   background-image: url('C:/VScode/DB-project/web-service-development/frontend/project/public/images/landingImage.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  height: 100vh;
-  width: 100vw;
+  height: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
