@@ -33,19 +33,15 @@ public class TokenProvider {
     protected void init() {
         key = Base64.getEncoder().encodeToString(jwtProperties.getSecretKey().getBytes());
     }
-   public String createToken(Authentication authentication) {
+   public String createToken(String id) {
        Date now = new Date();
-       String authorities = authentication.getAuthorities().stream()
-               .map(GrantedAuthority::getAuthority)
-               .collect(Collectors.joining(","));
 
        return Jwts.builder()
                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
                .setIssuer(jwtProperties.getIssuer())
                .setIssuedAt(now)
                .setExpiration(new Date(now.getTime() + tokenValidTime))
-               .setSubject(authentication.getName())
-               .claim("role", authorities)
+               .setSubject(id)
                .signWith(SignatureAlgorithm.HS256, key)
                .compact();
    }

@@ -41,13 +41,13 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role.toUpperCase() == "ADMIN") {
+        if(this.role.toUpperCase().equals("ADMIN")) {
             List<SimpleGrantedAuthority> list = new ArrayList<>();
-            list.add(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
+            list.add(new SimpleGrantedAuthority("ROLE_" + this.role.toUpperCase()));
             list.add(new SimpleGrantedAuthority("ROLE_USER"));
             return list;
         }
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.toUpperCase()));
     }
 
     @Override
