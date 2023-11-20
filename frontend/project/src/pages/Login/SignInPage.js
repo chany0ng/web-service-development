@@ -1,3 +1,4 @@
+import { useState, useReducer } from 'react';
 import './css/SignInPage.module.min.css';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -10,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { MenuItem } from '@mui/material';
 import LoginBackground from '../../components/Background/LoginBackground';
+import { postData } from '../../config';
+import { useNavigate } from 'react-router-dom';
 
 const passwordQuestion = [
   {
@@ -23,6 +26,39 @@ const passwordQuestion = [
 ];
 
 const SignInPage = () => {
+  const navigate = useNavigate();
+  const [inputData, setInputData] = useState({
+    user_id: '',
+    password: '',
+    userType: ''
+  });
+  const [isValid, setIsValid] = useState(true);
+  const inputDataHandler = (e) => {
+    e.preventDefault();
+    const key = e.target.id || 'userType';
+    const value = e.target.value;
+    setInputData((prevData) => ({ ...prevData, [key]: value }));
+  };
+
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      if (inputData.user_id.trim() === '' || inputData.password.trim() === '') {
+        setIsValid(false);
+      } else {
+        setIsValid(true);
+        const { status, data } = await postData('url', inputData);
+        if (status) {
+          localStorage.setItem('token', data.token);
+          // 로컬스토리지에 로그인상태 저장 -> 메인화면에서 useEffect로 받기
+          // navigate('/signin');
+        }
+      }
+    } catch (error) {
+      console.error('로그인버튼 에러', error);
+    }
+  };
+
   return (
     <LoginBackground>
       <Container component="main" maxWidth="sm">
@@ -50,19 +86,21 @@ const SignInPage = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  required
+                  value={inputData.user_id}
+                  onChange={inputDataHandler}
                   fullWidth
-                  name="id"
+                  name="user_id"
                   label="Id"
                   type="id"
-                  id="id"
+                  id="user_id"
                   variant="standard"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
+                  value={inputData.password}
                   fullWidth
+                  onChange={inputDataHandler}
                   name="password"
                   label="Password"
                   type="password"
@@ -72,24 +110,35 @@ const SignInPage = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  required
                   fullWidth
-                  id="user-type"
+                  id="userType"
                   select
                   label="User type"
                   variant="standard"
                   helperText="관리자 or 이용자"
+                  value={inputData.userType}
+                  onChange={inputDataHandler}
                 >
                   {passwordQuestion.map((option) => (
-                    <MenuItem key={option.question} value={option.description}>
+                    <MenuItem
+                      id="userType"
+                      key={option.question}
+                      value={option.description}
+                    >
                       {option.description}
                     </MenuItem>
                   ))}
                 </TextField>
               </Grid>
+              {!isValid && (
+                <Grid item xs={12} sx={{ color: 'error.main' }}>
+                  입력을 다시 확인해주세요!
+                </Grid>
+              )}
             </Grid>
             <Button
               type="submit"
+              onClick={onSubmitHandler}
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}

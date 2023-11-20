@@ -9,6 +9,10 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { MenuItem } from '@mui/material';
 import LoginBackground from '../../components/Background/LoginBackground';
+import { useState, useReducer } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { postData } from '../../config';
+
 const passwordQuestion = [
   {
     question: 'school',
@@ -21,6 +25,51 @@ const passwordQuestion = [
 ];
 
 const SignUpPage = () => {
+  const navigate = useNavigate();
+  const [inputData, setInputData] = useState({
+    email: '',
+    user_id: '',
+    password: '',
+    passwordCheck: '',
+    pw_question: '',
+    pw_answer: '',
+    phone_number: ''
+  });
+  const [isValid, setIsValid] = useState(true);
+  const inputDataHandler = (e) => {
+    e.preventDefault();
+    const key = e.target.id || 'pw_question';
+    const value = e.target.value;
+    setInputData((prevData) => ({ ...prevData, [key]: value }));
+  };
+
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      console.log(inputData.password.trim());
+      console.log(inputData.passwordCheck.trim());
+      if (
+        inputData.user_id.trim() === '' ||
+        inputData.password.trim() === '' ||
+        inputData.passwordCheck.trim() !== inputData.password.trim() ||
+        inputData.pw_question.trim() === '' ||
+        inputData.pw_answer.trim() === '' ||
+        inputData.phone_number.trim() === '' ||
+        !inputData.email.includes('@')
+      ) {
+        setIsValid(false);
+      } else {
+        setIsValid(true);
+        const { status } = await postData('url', inputData);
+        if (status) {
+          alert('회원가입 성공');
+          navigate('/signin');
+        }
+      }
+    } catch (error) {
+      console.error('회원가입 에러', error);
+    }
+  };
   return (
     <LoginBackground>
       <Container component="main" maxWidth="sm" style={{ marginTop: '150px' }}>
@@ -48,6 +97,8 @@ const SignUpPage = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  value={inputData.email}
+                  onChange={inputDataHandler}
                   required
                   fullWidth
                   id="email"
@@ -58,17 +109,21 @@ const SignUpPage = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={inputData.id}
+                  onChange={inputDataHandler}
                   required
                   fullWidth
-                  name="id"
+                  name="user_id"
+                  id="user_id"
                   label="Id"
                   type="id"
-                  id="id"
                   variant="standard"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={inputData.password}
+                  onChange={inputDataHandler}
                   required
                   fullWidth
                   name="password"
@@ -80,20 +135,25 @@ const SignUpPage = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={inputData.passwordCheck}
+                  onChange={inputDataHandler}
                   required
                   fullWidth
-                  name="password-check"
+                  name="passwordCheck"
                   label="Password Check"
                   type="password"
-                  id="password-check"
+                  id="passwordCheck"
                   variant="standard"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={inputData.pw_question}
+                  onChange={inputDataHandler}
                   required
                   fullWidth
-                  id="outlined-select-currency"
+                  name="pw_question"
+                  id="pw_question"
                   select
                   label="Password Question"
                   variant="standard"
@@ -108,29 +168,38 @@ const SignUpPage = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={inputData.pw_answer}
+                  onChange={inputDataHandler}
                   required
                   fullWidth
                   variant="standard"
-                  name="password-answer"
+                  name="pw_answer"
                   label="Password Answer"
-                  type="password-answer"
-                  id="password-answer"
+                  id="pw_answer"
                   helperText="비밀번호 찾기 답변을 작성해주세요"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={inputData.phone_number}
+                  onChange={inputDataHandler}
                   required
                   fullWidth
                   variant="standard"
-                  name="phone-number"
+                  name="phone_number"
                   label="Phone Number( - 없이 숫자만 입력)"
                   type="tel"
-                  id="phone-number"
+                  id="phone_number"
                 />
               </Grid>
+              {!isValid && (
+                <Grid item xs={12} sx={{ color: 'error.main' }}>
+                  입력을 다시 확인해주세요!
+                </Grid>
+              )}
             </Grid>
             <Button
+              onClick={onSubmitHandler}
               type="submit"
               fullWidth
               variant="contained"

@@ -9,6 +9,9 @@ import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { MenuItem } from '@mui/material';
+import { useState } from 'react';
+import { postData } from '../../config';
+import { useNavigate } from 'react-router-dom';
 
 const passwordQuestion = [
   {
@@ -22,6 +25,41 @@ const passwordQuestion = [
 ];
 
 const FindPwPage = () => {
+  const navigate = useNavigate();
+  const [inputData, setInputData] = useState({
+    user_id: '',
+    pw_question: '',
+    pw_answer: ''
+  });
+  const [isValid, setIsValid] = useState(true);
+  const inputDataHandler = (e) => {
+    e.preventDefault();
+    const key = e.target.id || 'pw_question';
+    const value = e.target.value;
+    setInputData((prevData) => ({ ...prevData, [key]: value }));
+  };
+
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      if (
+        inputData.user_id.trim() === '' ||
+        inputData.pw_answer.trim() === '' ||
+        inputData.pw_question.trim() === ''
+      ) {
+        setIsValid(false);
+      } else {
+        setIsValid(true);
+        const { status, data } = await postData('url', inputData);
+        if (status) {
+          alert(`비밀번호는 ${data}입니다.`);
+          navigate('/signin');
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <LoginBackground>
       <Container component="main" maxWidth="sm">
@@ -49,20 +87,24 @@ const FindPwPage = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
+                  value={inputData.user_id}
+                  onChange={inputDataHandler}
                   required
                   fullWidth
-                  name="id"
+                  name="user_id"
                   label="Id"
                   type="id"
-                  id="id"
+                  id="user_id"
                   variant="standard"
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={inputData.pw_question}
+                  onChange={inputDataHandler}
                   required
                   fullWidth
-                  id="outlined-select-currency"
+                  id="pw_question"
                   select
                   label="Password Question"
                   variant="standard"
@@ -77,18 +119,26 @@ const FindPwPage = () => {
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  value={inputData.pw_answer}
+                  onChange={inputDataHandler}
                   required
                   fullWidth
                   variant="standard"
-                  name="password-answer"
+                  name="pw_answer"
                   label="Password Answer"
                   type="password-answer"
-                  id="password-answer"
+                  id="pw_answer"
                   helperText="비밀번호 찾기 답변을 작성해주세요"
                 />
               </Grid>
+              {!isValid && (
+                <Grid item xs={12} sx={{ color: 'error.main' }}>
+                  입력을 다시 확인해주세요!
+                </Grid>
+              )}
             </Grid>
             <Button
+              onClick={onSubmitHandler}
               type="submit"
               fullWidth
               variant="contained"
