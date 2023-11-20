@@ -12,6 +12,7 @@ import LoginBackground from '../../components/Background/LoginBackground';
 import { useState, useReducer } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postData } from '../../config';
+import { Alert } from '@mui/material';
 
 const passwordQuestion = [
   {
@@ -118,6 +119,7 @@ const SignUpPage = () => {
                   label="Id"
                   type="id"
                   variant="standard"
+                  helperText="20자 이하"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -131,6 +133,7 @@ const SignUpPage = () => {
                   type="password"
                   id="password"
                   variant="standard"
+                  helperText="20자 이하"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -187,14 +190,17 @@ const SignUpPage = () => {
                   fullWidth
                   variant="standard"
                   name="phone_number"
-                  label="Phone Number( - 없이 숫자만 입력)"
+                  label="Phone Number"
                   type="tel"
                   id="phone_number"
+                  helperText="( - 없이 숫자만 입력)"
                 />
               </Grid>
               {!isValid && (
                 <Grid item xs={12} sx={{ color: 'error.main' }}>
-                  입력을 다시 확인해주세요!
+                  <Alert variant="outlined" severity="error">
+                    입력값을 다시 확인해주세요!
+                  </Alert>
                 </Grid>
               )}
             </Grid>

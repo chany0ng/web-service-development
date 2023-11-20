@@ -8,7 +8,7 @@ import Box from '@mui/material/Box';
 import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { MenuItem } from '@mui/material';
+import { MenuItem, Alert } from '@mui/material';
 import { useState } from 'react';
 import { postData } from '../../config';
 import { useNavigate } from 'react-router-dom';
@@ -133,7 +133,9 @@ const FindPwPage = () => {
               </Grid>
               {!isValid && (
                 <Grid item xs={12} sx={{ color: 'error.main' }}>
-                  입력을 다시 확인해주세요!
+                  <Alert variant="outlined" severity="error">
+                    입력값을 다시 확인해주세요!
+                  </Alert>
                 </Grid>
               )}
             </Grid>

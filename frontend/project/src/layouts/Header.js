@@ -1,13 +1,5 @@
-import React from 'react';
-
+import './css/Header.module.min.css';
 const Header = () => {
-  return (
-    <header style={{ textAlign: 'center', padding: '10px' }}>
-      <div>
-        <h1>이곳은 헤더입니다</h1>
-      </div>
-    </header>
-  );
+  return <header>This is header</header>;
 };
-
 export default Header;

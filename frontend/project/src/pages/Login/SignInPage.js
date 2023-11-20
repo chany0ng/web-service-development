@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
+import { Alert } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
@@ -94,6 +95,7 @@ const SignInPage = () => {
                   type="id"
                   id="user_id"
                   variant="standard"
+                  helperText="20자 이하"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -106,6 +108,7 @@ const SignInPage = () => {
                   type="password"
                   id="password"
                   variant="standard"
+                  helperText="20자 이하"
                 />
               </Grid>
               <Grid item xs={12}>
@@ -132,7 +135,9 @@ const SignInPage = () => {
               </Grid>
               {!isValid && (
                 <Grid item xs={12} sx={{ color: 'error.main' }}>
-                  입력을 다시 확인해주세요!
+                  <Alert variant="outlined" severity="error">
+                    입력값을 다시 확인해주세요!
+                  </Alert>
                 </Grid>
               )}
             </Grid>
