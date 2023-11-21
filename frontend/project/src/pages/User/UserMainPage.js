@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { postData, getData } from '../../config';
 import Layout from '../../layouts/Layout';
 import CustomCard from '../../components/Card/CustomCard';
-import './css/UserMainPage.module.min.css';
+import styles from './UserMainPage.module.scss';
 const UserMainPage = () => {
   return (
     <Layout>
