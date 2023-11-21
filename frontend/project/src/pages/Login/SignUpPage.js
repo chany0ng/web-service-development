@@ -64,6 +64,15 @@ const SignUpPage = () => {
         const { status } = await postData('url', inputData);
         if (status) {
           alert('회원가입 성공');
+          setInputData({
+            email: '',
+            user_id: '',
+            password: '',
+            passwordCheck: '',
+            pw_question: '',
+            pw_answer: '',
+            phone_number: ''
+          });
           navigate('/signin');
         }
       }
