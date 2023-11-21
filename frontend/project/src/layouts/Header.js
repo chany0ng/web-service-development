@@ -8,9 +8,9 @@ import Link from '@mui/material/Link';
 
 const Header = ({ sections, title }) => {
   return (
-    <React.Fragment>
+    <header className={styles.header}>
       <Toolbar
-        sx={{ borderBottom: 1, borderColor: 'divider' }}
+        sx={{ borderBottom: 1, borderColor: 'primary.light' }}
         style={{ paddingLeft: '90px' }}
       >
         <Typography
@@ -23,7 +23,7 @@ const Header = ({ sections, title }) => {
         >
           {title}
         </Typography>
-        <Button variant="outlined" size="small">
+        <Button variant="outlined" size="small" className={styles.btn}>
           Logout
         </Button>
       </Toolbar>
@@ -35,7 +35,7 @@ const Header = ({ sections, title }) => {
           overflowX: 'auto',
           mb: '20px',
           borderBottom: 1,
-          borderColor: 'divider',
+          borderColor: 'primary.light',
           minHeight: '25px'
         }}
       >
@@ -58,7 +58,7 @@ const Header = ({ sections, title }) => {
           </Link>
         ))}
       </Toolbar>
-    </React.Fragment>
+    </header>
   );
 };
 
