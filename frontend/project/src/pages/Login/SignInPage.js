@@ -15,17 +15,6 @@ import LoginBackground from '../../components/Background/LoginBackground';
 import { postData } from '../../config';
 import { useNavigate } from 'react-router-dom';
 
-const passwordQuestion = [
-  {
-    question: 'school',
-    description: '관리자'
-  },
-  {
-    question: 'school2',
-    description: '이용자'
-  }
-];
-
 const SignInPage = () => {
   const navigate = useNavigate();
   const [inputData, setInputData] = useState({
@@ -111,28 +100,7 @@ const SignInPage = () => {
                   helperText="20자 이하"
                 />
               </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  id="userType"
-                  select
-                  label="User type"
-                  variant="standard"
-                  helperText="관리자 or 이용자"
-                  value={inputData.userType}
-                  onChange={inputDataHandler}
-                >
-                  {passwordQuestion.map((option) => (
-                    <MenuItem
-                      id="userType"
-                      key={option.question}
-                      value={option.description}
-                    >
-                      {option.description}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              </Grid>
+
               {!isValid && (
                 <Grid item xs={12} sx={{ color: 'error.main' }}>
                   <Alert variant="outlined" severity="error">

@@ -1,11 +1,12 @@
 import Header from './Header';
-import './css/Layout.module.min.css';
+import styles from './css/layout.module.min.css';
 import Footer from './Footer';
 const Layout = ({ children }) => {
+  console.log(styles.wrapper);
   return (
-    <div className="wrapper">
+    <div className={styles.wrapper}>
       <Header />
-      <main>{children}</main>
+      <main className={styles.main}>{children}</main>
       <Footer />
     </div>
   );
