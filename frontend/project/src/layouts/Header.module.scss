@@ -1,6 +1,11 @@
-header {
-  // height: 10vh;
+.header {
   width: 80vw;
-  background-color: cadetblue;
-  margin: 0 auto;
+  margin: 10 auto;
+}
+
+.link {
+  &:hover {
+    font-weight: bold;
+    background-color: whitesmoke;
+  }
 }
