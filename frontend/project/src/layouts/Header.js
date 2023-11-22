@@ -5,25 +5,30 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-
+import { useNavigate } from 'react-router-dom';
 const Header = ({ sections, title }) => {
+  const navigate = useNavigate();
+  const logoutHandler = () => {
+    navigate('/signin');
+  };
   return (
     <header className={styles.header}>
       <Toolbar
         sx={{ borderBottom: 1, borderColor: 'primary.light' }}
         style={{ paddingLeft: '90px' }}
       >
-        <Typography
-          component="h2"
-          variant="h4"
-          color="inherit"
-          align="center"
-          noWrap
-          sx={{ flex: 1 }}
+        <div
+          onClick={() => {
+            navigate('/user/main');
+          }}
+          className={styles.logo}
+        ></div>
+        <Button
+          variant="outlined"
+          onClick={logoutHandler}
+          size="small"
+          className={styles.btn}
         >
-          {title}
-        </Typography>
-        <Button variant="outlined" size="small" className={styles.btn}>
           Logout
         </Button>
       </Toolbar>
@@ -44,13 +49,14 @@ const Header = ({ sections, title }) => {
             color="inherit"
             noWrap
             key={section.title}
-            variant="body1"
+            variant="body3"
             href={section.url}
             className={styles.link}
             sx={{
               p: 1,
               flexShrink: 0,
-              fontSize: 'larger',
+              fontSize: '1.3rem',
+              fontWeight: 'bold',
               textDecoration: 'none'
             }}
           >
