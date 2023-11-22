@@ -2,7 +2,6 @@ package com.database4.repository;
 
 import com.database4.dto.PostRentalHistoryDto;
 import com.database4.dto.ReturnPostRentalHistoryDto;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,7 +11,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-@Slf4j
 public class RentalHistoryRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -24,7 +22,6 @@ public class RentalHistoryRepository {
 
         String endDate = LocalDate.parse(postRentalHistoryDto.getEnd_date()).plusDays(1).toString();
 
-        log.info("start_date : " + postRentalHistoryDto.getStart_date());
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("start_date", postRentalHistoryDto.getStart_date())
                 .addValue("end_date", endDate)

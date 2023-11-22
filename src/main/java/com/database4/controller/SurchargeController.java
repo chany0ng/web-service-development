@@ -2,6 +2,7 @@ package com.database4.controller;
 
 import com.database4.dto.PostSurchargeInfoDto;
 import com.database4.dto.PostSurchargePayDto;
+import com.database4.dto.ReturnGetSurchargeOverfeeInfoDto;
 import com.database4.service.SurchargeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -31,8 +32,8 @@ public class SurchargeController { // 추가요금 결제 Controller
             @ApiResponse(responseCode = "400", description = "잘못된 값이 전달되어 조회 실패")
     })
     // 추가요금 금액 확인
-    public ResponseEntity<Integer> postSurchargeInfo(@RequestBody PostSurchargeInfoDto form){
-        Optional<Integer> overfee = surchargeService.overfeeInfo(form);
+    public ResponseEntity<ReturnGetSurchargeOverfeeInfoDto> postSurchargeInfo(@RequestBody PostSurchargeInfoDto form){
+        Optional<ReturnGetSurchargeOverfeeInfoDto> overfee = surchargeService.overfeeInfo(form);
 
         return overfee
                 .map(ResponseEntity::ok)

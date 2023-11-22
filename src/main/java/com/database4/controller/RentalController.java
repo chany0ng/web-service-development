@@ -5,7 +5,6 @@ import com.database4.dto.PostRentalReturnDto;
 import com.database4.dto.ReturnPostRentalReturnDto;
 import com.database4.exceptions.RentalRentException;
 import com.database4.exceptions.RentalReturnException;
-import com.database4.exceptions.TicketPurchaseException;
 import com.database4.service.RentalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -18,8 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
 
 @RestController
 public class RentalController {  // 자전거 대여, 반납 Controller
@@ -42,16 +39,16 @@ public class RentalController {  // 자전거 대여, 반납 Controller
             }),
             @ApiResponse(responseCode = "400", description = "대여 실패", content = {
                     @Content(mediaType = "text/plain", examples = {
-                            @ExampleObject(value = "미납금이 존재해 대여에 실패했습니다.", name = "overfeeOwned"),
-                            @ExampleObject(value = "잘못된 사용자 ID가 전달되었습니다.", name = "InvalidUserId"),
-                            @ExampleObject(value = "보유중인 이용권이 없습니다.", name = "InvalidTicket")
+                            @ExampleObject(value = "미납금이 존재해 대여에 실패했습니다.", name = "OverfeeOwned"),
+                            @ExampleObject(value = "보유중인 이용권이 없습니다.", name = "InvalidTicket"),
+                            @ExampleObject(value = "자전거 상태 업데이트 실패", name = "BikeStatusUpdateFailed")
                     })
             })
     })
     // 자전거 대여
     public ResponseEntity<String> postRent(@RequestBody PostRentalRentDto form){
         try {
-            String result = rentalService.Rent(form);
+            String result = rentalService.rentalRent(form);
             return ResponseEntity.ok(result);
         } catch (RentalRentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -70,7 +67,7 @@ public class RentalController {  // 자전거 대여, 반납 Controller
     })
     public ResponseEntity<ReturnPostRentalReturnDto> postReturn(@RequestBody PostRentalReturnDto form){
         try {
-            ReturnPostRentalReturnDto postRentalReturnDto = rentalService.Return(form);
+            ReturnPostRentalReturnDto postRentalReturnDto = rentalService.rentalReturn(form);
             return ResponseEntity.ok(postRentalReturnDto);
         } catch (RentalReturnException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

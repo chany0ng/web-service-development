@@ -1,21 +1,15 @@
 package com.database4.service;
 
-import com.database4.dto.BikeInfo;
-import com.database4.dto.PostTicketPurchaseDto;
-import com.database4.dto.ReturnGetTicketInfoDto;
-import com.database4.dto.TicketListResponseDto;
+import com.database4.dto.*;
 import com.database4.exceptions.TicketPurchaseException;
 import com.database4.repository.TicketRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
 public class TicketService {
     private final TicketRepository ticketRepository;
 
@@ -23,12 +17,25 @@ public class TicketService {
         this.ticketRepository = ticketRepository;
     }
 
+    @Transactional
     public String purchase(PostTicketPurchaseDto postTicketPurchaseDto){
-        try {
-            return ticketRepository.purchase(postTicketPurchaseDto)
-                    .orElseThrow(() -> new TicketPurchaseException("티켓 구매에 실패했습니다."));
-        } catch (TicketPurchaseException e) {
-            throw e;
+        String userId = postTicketPurchaseDto.getUser_id();
+        int prevCash = postTicketPurchaseDto.getCash();
+        int hour = postTicketPurchaseDto.getHour();
+
+        Optional<String> existingTicketId = ticketRepository.getTicketIdByUserId(userId);
+        if(existingTicketId.isPresent()) {
+            TicketInfo ticketInfo = ticketRepository.getTicketInfoByHour(hour).orElseThrow(() -> new TicketPurchaseException("잘못된 시간 정보가 전달되었습니다."));
+
+            if (ticketInfo.getPrice() > prevCash) {
+                throw new TicketPurchaseException("소지금이 부족합니다.");
+            }
+
+            boolean purchaseSuccess = ticketRepository.updateUserInfo(userId, ticketInfo);
+
+            return "이용권 구매에 성공했습니다.";
+        } else{
+            throw new TicketPurchaseException("이미 이용권을 보유 중입니다.");
         }
     }
 

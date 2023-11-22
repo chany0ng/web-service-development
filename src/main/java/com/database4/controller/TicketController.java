@@ -1,7 +1,6 @@
 package com.database4.controller;
 
 import com.database4.dto.PostTicketPurchaseDto;
-import com.database4.dto.ReturnGetTicketInfoDto;
 import com.database4.dto.TicketListResponseDto;
 import com.database4.exceptions.TicketPurchaseException;
 import com.database4.service.TicketService;
@@ -10,18 +9,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 @RestController
-@Slf4j
 public class TicketController {  // 사용자 이용권 구매 Controller
     private final TicketService ticketService;
 
@@ -50,7 +42,6 @@ public class TicketController {  // 사용자 이용권 구매 Controller
         }
     }
 
-
     @ResponseBody
     @PostMapping("/ticket")
     @Operation(
@@ -65,7 +56,6 @@ public class TicketController {  // 사용자 이용권 구매 Controller
             @ApiResponse(responseCode = "400", description = "이용권 구매 실패", content = {
                     @Content(mediaType = "text/plain", examples = {
                             @ExampleObject(value = "이미 이용권을 보유 중입니다.", name = "TicketOwned"),
-                            @ExampleObject(value = "잘못된 사용자 ID가 전달되었습니다.", name = "InvalidUserId"),
                             @ExampleObject(value = "잘못된 시간 정보가 전달되었습니다.", name = "InvalidHour"),
                             @ExampleObject(value = "소지금이 부족합니다.", name = "InsufficientFunds")
                     })

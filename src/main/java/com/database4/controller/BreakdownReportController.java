@@ -36,7 +36,8 @@ public class BreakdownReportController {  // 고장신고 Controller
             }),
             @ApiResponse(responseCode = "400", description = "접수 실패", content = {
                     @Content(mediaType = "text/plain", examples = {
-                            @ExampleObject(value = "잘못된 정보가 입력되었습니다.")
+                            @ExampleObject(value = "고장신고 접수 실패", name = "ReportFailed"),
+                            @ExampleObject(value = "자전거 상태 업데이트 실패", name = "BikeStatusUpdateFailed")
                     })
             })
     })
