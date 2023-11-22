@@ -1,6 +1,45 @@
+@import '../../styles/reset.scss';
+
 .card {
-  width: 30vw;
-  // height: 10vh;
-  background-color: beige;
-  margin: 0 auto;
+  margin: 15px 0 15px 0;
+  box-shadow: $boxShadow;
+  &:hover {
+    box-shadow: $boxShadowHover;
+  }
+}
+.cardHeader {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $primaryLight;
+  h1 {
+    display: inline;
+    color: $primaryMain;
+  }
+}
+.cardBody {
+  height: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  div {
+    font-size: 1.5rem;
+    font-weight: bold;
+    h3 {
+      margin-left: 9rem;
+      display: inline-block;
+      color: $primaryLight;
+    }
+  }
+  .cardMoney {
+    display: flex;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $primaryLight;
+  }
+  .cardInfo {
+    display: flex;
+    padding-top: 0.5rem;
+  }
 }
