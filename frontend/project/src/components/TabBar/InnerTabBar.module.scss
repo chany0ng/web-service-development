@@ -1,0 +1,25 @@
+@import '../../styles/reset.scss';
+.flex-container {
+  width: 30vw;
+  height: 8vh;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border: 1px solid black;
+  cursor: pointer;
+  .flex-item {
+    flex: 1;
+    padding-top: 10px;
+    height: 100%;
+    color: black;
+  }
+  .activeTab {
+    flex: 1;
+    padding-top: 10px;
+    height: 100%;
+    color: white;
+    background-color: $primaryLight;
+  }
+}

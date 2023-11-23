@@ -4,11 +4,12 @@
   flex-direction: column;
 }
 .header {
-  margin-bottom: 1000px;
 }
 .main {
   flex: 1;
   border: 2px solid whitesmoke;
+  padding: 20px;
   width: 80vw;
   margin: 0 auto;
+  // background-color: whitesmoke;
 }

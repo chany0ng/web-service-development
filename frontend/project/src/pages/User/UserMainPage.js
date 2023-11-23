@@ -8,7 +8,7 @@ const UserMainPage = () => {
   return (
     <Layout>
       <CustomCard />
-      <article className={styles.article}>홈페이지에 들어갈 부분</article>
+      <article className={styles.article}></article>
     </Layout>
   );
 };

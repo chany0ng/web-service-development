@@ -20,6 +20,10 @@
   }
 }
 .link {
+  color: black;
+  font-size: 1.3rem;
+  font-weight: 500;
+  text-decoration: none;
   &:hover {
     color: $primaryLight;
     text-decoration: underline;
