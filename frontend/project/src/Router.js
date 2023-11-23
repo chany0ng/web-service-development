@@ -4,6 +4,8 @@ import SignInPage from './pages/Login/SignInPage';
 import SignUpPage from './pages/Login/SignUpPage';
 import FindPwPage from './pages/Login/FindPwPage';
 import UserMainPage from './pages/User/UserMainPage';
+import UserInfoEdit from './pages/User/UserInfo/UserInfoEdit';
+import UserInfoBookMark from './pages/User/UserInfo/UserInfoBookMark';
 const Router = () => {
   return (
     <Routes>
@@ -12,6 +14,8 @@ const Router = () => {
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/findpw" element={<FindPwPage />} />
       <Route path="/user/main" element={<UserMainPage />} />
+      <Route path="/user/info/edit" element={<UserInfoEdit />} />
+      <Route path="/user/info/bookmark" element={<UserInfoBookMark />} />
     </Routes>
   );
 };

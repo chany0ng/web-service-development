@@ -4,19 +4,18 @@ import styles from './TabBar.module.scss';
 import PersonIcon from '@mui/icons-material/Person';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-const TabBar = () => {
-  const [selectedTab, setSelectedTab] = useState(1);
+const TabBar = ({ title, select }) => {
+  const navigate = useNavigate();
   const tabClickHandler = (num) => {
-    if (selectedTab !== num) {
-      setSelectedTab(num);
-    }
+    if (num === 1) navigate('/user/info/edit');
+    if (num === 2) navigate('/user/main');
+    if (num === 3) navigate('/user/main');
   };
-
   return (
     <div className={styles['flex-container']}>
       <div
         className={`${
-          selectedTab === 1 ? styles.activeTab : styles['flex-item']
+          select === 'info' ? styles.activeTab : styles['flex-item']
         }`}
         onClick={() => tabClickHandler(1)}
       >
@@ -25,7 +24,7 @@ const TabBar = () => {
       </div>
       <div
         className={`${
-          selectedTab === 2 ? styles.activeTab : styles['flex-item']
+          select === 'pay' ? styles.activeTab : styles['flex-item']
         }`}
         onClick={() => tabClickHandler(2)}
       >
@@ -33,7 +32,7 @@ const TabBar = () => {
       </div>
       <div
         className={`${
-          selectedTab === 3 ? styles.activeTab : styles['flex-item']
+          select === 'manage' ? styles.activeTab : styles['flex-item']
         }`}
         onClick={() => tabClickHandler(3)}
       >

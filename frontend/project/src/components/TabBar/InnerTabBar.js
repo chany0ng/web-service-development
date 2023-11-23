@@ -2,16 +2,9 @@ import styles from './InnerTabBar.module.scss';
 import { useNavigate, Link } from 'react-router-dom';
 import { useState } from 'react';
 
-const InnerTabBar = ({ title }) => {
+const InnerTabBar = ({ title, select }) => {
   const navigate = useNavigate();
-  const [selectedTab, setSelectedTab] = useState(1);
   const tabClickHandler = (num) => {
-    if (selectedTab !== num) {
-      navigationHandler(num);
-    }
-  };
-  const navigationHandler = (num) => {
-    setSelectedTab(num);
     if (num === 1) {
       navigate('/user/info/edit');
     }
@@ -23,7 +16,7 @@ const InnerTabBar = ({ title }) => {
     <div className={styles['flex-container']}>
       <div
         className={`${
-          selectedTab === 1 ? styles.activeTab : styles['flex-item']
+          select === 'edit' ? styles.activeTab : styles['flex-item']
         }`}
         onClick={() => tabClickHandler(1)}
       >
@@ -31,7 +24,7 @@ const InnerTabBar = ({ title }) => {
       </div>
       <div
         className={`${
-          selectedTab === 2 ? styles.activeTab : styles['flex-item']
+          select === 'bookmark' ? styles.activeTab : styles['flex-item']
         }`}
         onClick={() => tabClickHandler(2)}
       >
