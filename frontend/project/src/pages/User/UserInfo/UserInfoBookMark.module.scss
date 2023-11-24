@@ -1,0 +1,25 @@
+@import '../../../styles/reset.scss';
+
+.card {
+  margin: 15px 0 15px 0;
+  box-shadow: $boxShadow;
+  &:hover {
+    box-shadow: $boxShadowHover;
+  }
+  h2 {
+    padding: 10px;
+    border-bottom: 1px solid $primaryLight;
+  }
+}
+
+.favorite {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  input {
+    height: 30px;
+    margin-right: 5px;
+    border-radius: 5px;
+  }
+}
