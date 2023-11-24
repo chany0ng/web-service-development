@@ -6,6 +6,7 @@ import styles from './UserInfoEdit.module.scss';
 import { postData } from '../../../config';
 import { Grid, Alert, Button } from '@mui/material';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
+import Article from '../../../layouts/Article';
 
 const innerTitle = ['개인정보 수정', '대여소 즐겨찾기'];
 const outerTab = 'info';
@@ -53,7 +54,7 @@ const UserInfoEdit = () => {
     <Layout>
       <TabBar title={innerTitle} select={outerTab} />
       <InnerTabBar title={innerTitle} select={innerTab} />
-      <article className={styles.article}>
+      <Article>
         <div className={styles['flex-container']}>
           <table className={styles.table}>
             <colgroup>
@@ -158,7 +159,7 @@ const UserInfoEdit = () => {
             수정하기
           </Button>
         </div>
-      </article>
+      </Article>
     </Layout>
   );
 };

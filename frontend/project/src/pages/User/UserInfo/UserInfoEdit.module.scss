@@ -1,20 +1,12 @@
 @import '../../../styles/reset.scss';
 
-.article {
-  padding: 30px 0 30px 0;
-  width: 60vw;
-  border-top: 1px solid black;
-  border-bottom: 1px solid black;
-  margin: 0 auto;
-
-  input {
-    outline: 1px solid grey;
-    border-radius: 1px;
-    height: 2rem;
-    &:focus {
-      outline: 1.5px solid black; /* 포커스 시 테두리 스타일 및 색상 지정 */
-      border-radius: 2px;
-    }
+input {
+  outline: 1px solid grey;
+  border-radius: 1px;
+  height: 2rem;
+  &:focus {
+    outline: 1.5px solid black; /* 포커스 시 테두리 스타일 및 색상 지정 */
+    border-radius: 2px;
   }
 }
 
