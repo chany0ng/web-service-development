@@ -4,11 +4,12 @@ import styles from './TabBar.module.scss';
 import PersonIcon from '@mui/icons-material/Person';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import EditNoteIcon from '@mui/icons-material/EditNote';
+
 const TabBar = ({ title, select }) => {
   const navigate = useNavigate();
   const tabClickHandler = (num) => {
     if (num === 1) navigate('/user/info/edit');
-    if (num === 2) navigate('/user/main');
+    if (num === 2) navigate('/user/pay/charge');
     if (num === 3) navigate('/user/main');
   };
   return (
@@ -20,7 +21,7 @@ const TabBar = ({ title, select }) => {
         onClick={() => tabClickHandler(1)}
       >
         <PersonIcon sx={{ fontSize: '25px' }} />
-        <div>회원정보 관리</div>
+        <div>{title[0]}</div>
       </div>
       <div
         className={`${
@@ -28,7 +29,7 @@ const TabBar = ({ title, select }) => {
         }`}
         onClick={() => tabClickHandler(2)}
       >
-        <MonetizationOnIcon sx={{ fontSize: '25px' }} /> <div> 결제 관리</div>
+        <MonetizationOnIcon sx={{ fontSize: '25px' }} /> <div>{title[1]}</div>
       </div>
       <div
         className={`${
@@ -37,7 +38,7 @@ const TabBar = ({ title, select }) => {
         onClick={() => tabClickHandler(3)}
       >
         <EditNoteIcon sx={{ fontSize: '25px' }} />
-        <div> 이용정보 관리</div>
+        <div>{title[2]}</div>
       </div>
     </div>
   );

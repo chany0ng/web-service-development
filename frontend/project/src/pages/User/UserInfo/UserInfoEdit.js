@@ -8,9 +8,12 @@ import { Grid, Alert, Button } from '@mui/material';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import Article from '../../../layouts/Article';
 
+const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['개인정보 수정', '대여소 즐겨찾기'];
 const outerTab = 'info';
 const innerTab = 'edit';
+const url = { edit: '/user/info/edit', bookmark: '/user/info/bookmark' };
+
 const UserInfoEdit = () => {
   const [inputData, setInputData] = useState({
     email: 'sibal@naver.com',
@@ -52,8 +55,8 @@ const UserInfoEdit = () => {
   };
   return (
     <Layout>
-      <TabBar title={innerTitle} select={outerTab} />
-      <InnerTabBar title={innerTitle} select={innerTab} />
+      <TabBar title={outerTitle} select={outerTab} />
+      <InnerTabBar title={innerTitle} select={innerTab} url={url} />
       <Article>
         <div className={styles['flex-container']}>
           <table className={styles.table}>

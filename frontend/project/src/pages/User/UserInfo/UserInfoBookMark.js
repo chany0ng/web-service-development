@@ -7,11 +7,11 @@ import { Card, Container, Button } from '@mui/material';
 import { useState } from 'react';
 import CustomTable from '../../../components/Table/CustomTable';
 
+const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['개인정보 수정', '대여소 즐겨찾기'];
 const outerTab = 'info';
 const innerTab = 'bookmark';
-
-// 테이블에 넘길 값
+const url = { edit: '/user/info/edit', bookmark: '/user/info/bookmark' }; // 테이블에 넘길 값
 const head = [
   '대여소 고유번호',
   '대여소 주소',
@@ -48,8 +48,8 @@ const UserInfoBookMark = () => {
   };
   return (
     <Layout>
-      <TabBar title={innerTitle} select={outerTab} />
-      <InnerTabBar title={innerTitle} select={innerTab} />
+      <TabBar title={outerTitle} select={outerTab} />
+      <InnerTabBar title={innerTitle} select={innerTab} url={url} />
       <Article>
         <Container maxWidth="xs">
           <Card
