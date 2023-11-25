@@ -6,6 +6,8 @@ import FindPwPage from './pages/Login/FindPwPage';
 import UserMainPage from './pages/User/UserMainPage';
 import UserInfoEdit from './pages/User/UserInfo/UserInfoEdit';
 import UserInfoBookMark from './pages/User/UserInfo/UserInfoBookMark';
+import UserPayCharge from './pages/User/UserPay/UserPayCharge';
+import UserPayExtraCharge from './pages/User/UserPay/UserPayExtraCharge';
 const Router = () => {
   return (
     <Routes>
@@ -16,6 +18,8 @@ const Router = () => {
       <Route path="/user/main" element={<UserMainPage />} />
       <Route path="/user/info/edit" element={<UserInfoEdit />} />
       <Route path="/user/info/bookmark" element={<UserInfoBookMark />} />
+      <Route path="/user/pay/charge" element={<UserPayCharge />} />
+      <Route path="/user/pay/extra-charge" element={<UserPayExtraCharge />} />
     </Routes>
   );
 };
