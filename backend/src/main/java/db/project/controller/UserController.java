@@ -1,7 +1,7 @@
 package db.project.controller;
 
 import db.project.config.jwt.TokenProvider;
-import db.project.domain.Token;
+import db.project.domain.UserLoginResponse;
 import db.project.domain.User;
 import db.project.domain.UserLoginRequest;
 import db.project.service.UserService;
@@ -27,9 +27,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Token> login(@RequestBody UserLoginRequest userLoginRequest) {
-        Token token = userService.login(userLoginRequest);
-        return ResponseEntity.ok(token);
+    public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
+        UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
+        return ResponseEntity.ok(userLoginResponse);
     }
 
     @GetMapping("/test")
