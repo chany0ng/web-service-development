@@ -1,4 +1,4 @@
-import { Routes, Route, Link, Redirect } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/Login/LandingPage';
 import SignInPage from './pages/Login/SignInPage';
 import SignUpPage from './pages/Login/SignUpPage';
@@ -8,6 +8,9 @@ import UserInfoEdit from './pages/User/UserInfo/UserInfoEdit';
 import UserInfoBookMark from './pages/User/UserInfo/UserInfoBookMark';
 import UserPayCharge from './pages/User/UserPay/UserPayCharge';
 import UserPayExtraCharge from './pages/User/UserPay/UserPayExtraCharge';
+import UserManageRentalHistory from './pages/User/UserManage/UserManageRentalHistory';
+import UserManageRentalRanking from './pages/User/UserManage/UserManageRentalRanking';
+
 const Router = () => {
   return (
     <Routes>
@@ -20,6 +23,14 @@ const Router = () => {
       <Route path="/user/info/bookmark" element={<UserInfoBookMark />} />
       <Route path="/user/pay/charge" element={<UserPayCharge />} />
       <Route path="/user/pay/extra-charge" element={<UserPayExtraCharge />} />
+      <Route
+        path="/user/manage/rental-history"
+        element={<UserManageRentalHistory />}
+      />
+      <Route
+        path="/user/manage/rental-ranking"
+        element={<UserManageRentalRanking />}
+      />
     </Routes>
   );
 };

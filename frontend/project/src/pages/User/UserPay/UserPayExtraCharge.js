@@ -22,7 +22,6 @@ const UserPayExtraCharge = () => {
   const [isLackOfMoney, setIsLackOfMoney] = useState(false);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   useEffect(() => {
-    console.log('effect!');
     if (overFee > existMoney) {
       setIsLackOfMoney(true);
       setIsButtonEnabled(true);

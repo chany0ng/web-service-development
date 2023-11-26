@@ -82,6 +82,9 @@ const UserInfoBookMark = () => {
             </div>
           </Card>
         </Container>
+        <h2 style={{ textAlign: 'center', marginTop: '50px' }}>
+          즐겨찾는 대여소 목록
+        </h2>
         <CustomTable headData={head} bodyData={body} />
       </Article>
     </Layout>

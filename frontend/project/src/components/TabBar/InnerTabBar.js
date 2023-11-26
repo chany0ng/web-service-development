@@ -1,17 +1,14 @@
 import styles from './InnerTabBar.module.scss';
-import { useNavigate, Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const InnerTabBar = ({ title, select, url }) => {
   const urlKeys = Object.keys(url);
   const navigate = useNavigate();
   const tabClickHandler = (num) => {
     if (num === 0) {
-      console.log(url[urlKeys[num]]);
       navigate(url[urlKeys[num]]);
     }
     if (num === 1) {
-      console.log(url[select]);
       navigate(url[urlKeys[num]]);
     }
   };

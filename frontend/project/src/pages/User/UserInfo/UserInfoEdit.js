@@ -35,8 +35,8 @@ const UserInfoEdit = () => {
       e.preventDefault();
       console.log(inputData.password.trim());
       if (
-        inputData.user_id.trim() === '' ||
         inputData.password.trim() === '' ||
+        inputData.passwordCheck.trim() !== inputData.password.trim() ||
         inputData.phone_number.trim() === '' ||
         !inputData.email.includes('@')
       ) {
@@ -73,6 +73,7 @@ const UserInfoEdit = () => {
                 <td className={styles.col1}>비밀번호</td>
                 <td className={styles.cell}>
                   <input
+                    className={styles.input}
                     type="password"
                     name="password"
                     id="password"
@@ -95,6 +96,7 @@ const UserInfoEdit = () => {
                 <td className={styles.col1}>비밀번호 확인</td>
                 <td className={styles.cell}>
                   <input
+                    className={styles.input}
                     type="password"
                     name="passwordCheck"
                     id="passwordCheck"
@@ -107,6 +109,7 @@ const UserInfoEdit = () => {
                 <td className={styles.col1}>이메일</td>
                 <td className={`${styles.cell} ${styles.tdFlex}`}>
                   <input
+                    className={styles.input}
                     type="email"
                     name="email"
                     id="email"
@@ -129,6 +132,7 @@ const UserInfoEdit = () => {
                 <td className={styles.col1}>휴대폰 번호</td>
                 <td className={styles.cell}>
                   <input
+                    className={styles.input}
                     type="tel"
                     name="phone_number"
                     id="phone_number"
@@ -140,8 +144,12 @@ const UserInfoEdit = () => {
             </tbody>
           </table>
           {!isValid && (
-            <Grid item xs={6} sx={{ color: 'error.main' }}>
-              <Alert variant="outlined" severity="error">
+            <Grid item xs={6} sx={{ color: 'error.main', marginTop: '20px' }}>
+              <Alert
+                variant="outlined"
+                severity="error"
+                sx={{ fontSize: '1.3rem' }}
+              >
                 입력값을 다시 확인해주세요!
               </Alert>
             </Grid>
@@ -153,6 +161,7 @@ const UserInfoEdit = () => {
             sx={{
               mt: 3,
               width: '20vw',
+              fontSize: '1.1rem',
               backgroundColor: 'secondary.main',
               '&:hover': {
                 backgroundColor: 'secondary.main'
