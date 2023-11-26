@@ -30,9 +30,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const CustomTable = ({ headData, bodyData }) => {
   // 현재 예시 데이터 사용중
-  console.log(headData);
   return (
-    <TableContainer component={Paper} sx={{ marginTop: '50px' }}>
+    <TableContainer component={Paper} sx={{ marginTop: '30px' }}>
       <Table sx={{ minWidth: '50vw' }} aria-label="customized table">
         <TableHead>
           <TableRow>
@@ -43,17 +42,31 @@ const CustomTable = ({ headData, bodyData }) => {
             ))}
           </TableRow>
         </TableHead>
-        <TableBody>
-          {bodyData.map((row, index) => (
-            <StyledTableRow key={index}>
-              {Object.values(row).map((cellValue, cellIndex) => (
-                <StyledTableCell key={cellIndex} align="center">
-                  {cellValue}
-                </StyledTableCell>
-              ))}
+        {bodyData && bodyData.length > 0 ? (
+          <TableBody>
+            {bodyData.map((row, index) => (
+              <StyledTableRow key={index}>
+                {Object.values(row).map((cellValue, cellIndex) => (
+                  <StyledTableCell key={cellIndex} align="center">
+                    {cellValue}
+                  </StyledTableCell>
+                ))}
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        ) : (
+          <TableBody>
+            <StyledTableRow>
+              <StyledTableCell
+                colSpan="10"
+                align="center"
+                sx={{ color: 'red', fontSize: '5rem' }}
+              >
+                데이터가 없습니다
+              </StyledTableCell>
             </StyledTableRow>
-          ))}
-        </TableBody>
+          </TableBody>
+        )}
       </Table>
     </TableContainer>
   );
