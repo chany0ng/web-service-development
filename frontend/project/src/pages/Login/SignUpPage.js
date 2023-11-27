@@ -72,7 +72,8 @@ const SignUpPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status } = await postData('url', inputData);
+        const { status } = await postData('api/signup', inputData);
+        console.log(`회원가입 시도: ${status}`);
         if (status) {
           alert('회원가입 성공');
           setInputData({
@@ -116,18 +117,6 @@ const SignUpPage = () => {
           </Typography>
           <Box component="form" noValidate sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  value={inputData.email}
-                  onChange={inputDataHandler}
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  variant="standard"
-                  name="email"
-                />
-              </Grid>
               <Grid item xs={12}>
                 <TextField
                   value={inputData.id}
@@ -200,6 +189,18 @@ const SignUpPage = () => {
                   label="Password Answer"
                   id="pw_answer"
                   helperText="비밀번호 찾기 답변을 작성해주세요"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  value={inputData.email}
+                  onChange={inputDataHandler}
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  variant="standard"
+                  name="email"
                 />
               </Grid>
               <Grid item xs={12}>
