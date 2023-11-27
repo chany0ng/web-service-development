@@ -28,7 +28,8 @@ public class RentalHistoryRepository {
                 .addValue("user_id", postRentalHistoryDto.getUser_id());
 
         String sql = "SELECT bike_id, start_time, start_location, end_time, end_location FROM rental " +
-                "WHERE user_id =:user_id AND start_time BETWEEN DATE(:start_date) AND DATE(:end_date) ORDER BY start_time";
+                "WHERE user_id =:user_id AND start_time BETWEEN DATE(:start_date) AND DATE(:end_date) " +
+                "AND end_location IS NOT NULL ORDER BY start_time";
 
         return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnPostRentalHistoryDto.class));
     }
