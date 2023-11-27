@@ -1,0 +1,48 @@
+@import '../../../styles/reset.scss';
+.card {
+  margin: 15px 0 15px 0;
+  box-shadow: $boxShadow;
+  &:hover {
+    box-shadow: $boxShadowHover;
+  }
+  h2 {
+    padding: 10px;
+    border-bottom: 1px solid $primaryLight;
+  }
+}
+
+.favorite {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  .notice {
+    text-align: left;
+    font-size: larger;
+    color: red;
+    padding: 10px;
+  }
+  .inputBox {
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  input {
+    height: 30px;
+    border: 1px solid black;
+    margin-right: 5px;
+    border-radius: 5px;
+  }
+}
+
+.money {
+  padding: 10px;
+  color: black;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}

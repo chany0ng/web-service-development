@@ -3,13 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.16",
+    "@mui/material": "^5.14.17",
+    "@mui/x-date-pickers": "^6.18.2",
+    "@mui/x-date-pickers-pro": "^6.18.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "customize-cra": "^1.0.0",
+    "dayjs": "^1.11.10",
     "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
     "react-scripts": "5.0.1",
+    "sass": "^1.69.5",
+    "styled-components": "^6.1.0",
+    "styled-reset": "^4.5.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -23,7 +35,19 @@
       "react-app",
       "react-app/jest",
       "prettier"
-    ]
+    ],
+    "env": {
+      "browser": true,
+      "node": true
+    },
+    "rules": {
+      "react/destructuring-assignment": "warn",
+      "react/jsx-pascal-case": "warn",
+      "react/no-direct-mutation-state": "warn",
+      "react/jsx-no-useless-fragment": "warn",
+      "react/jsx-key": "warn",
+      "react/jsx-curly-brace-presence": "warn"
+    }
   },
   "browserslist": {
     "production": [
@@ -35,7 +59,8 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
-    ]
+    ],
+    "proxy": "http://localhost:8080"
   },
   "devDependencies": {
     "eslint": "^8.52.0",
