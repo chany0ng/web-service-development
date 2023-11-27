@@ -34,7 +34,8 @@ const SignInPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postData('url', inputData);
+        const { status, data } = await postData('api/login', inputData);
+        console.log(`로그인 시도: ${status}`);
         if (status) {
           localStorage.setItem('token', data.token);
           // 로컬스토리지에 로그인상태 저장 -> 메인화면에서 useEffect로 받기
