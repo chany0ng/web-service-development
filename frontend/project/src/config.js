@@ -1,5 +1,3 @@
-// API는 config.js 파일에 일괄적으로 관리하면서 import, export 통해 사용하면 좋습니다.
-// 백엔드 서버 IP 가 변경되면 fetch 함수를 일일이 찾아서 수정해주지 않아도 됩니다.
 // 로딩 중에, loading이라는 state변수 하나 만들어놓고 로딩상태아이콘 띄우기(212 강의)
 
 const BASE_URL = 'http://localhost:8080/';
@@ -27,6 +25,8 @@ export const postData = async (url, body) => {
       body: JSON.stringify(body)
     });
     console.log('POST FETCH 성공!');
+    console.log(`서버에서 넘어온 데이터: ${response.data}`);
+    console.log(`서버에서 넘어온 status: ${response.status}`);
     if (!response.ok) {
       throw new Error('API POST요청 에러 발생');
     }
