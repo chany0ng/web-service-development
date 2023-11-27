@@ -16,7 +16,7 @@ import { useNavigate } from 'react-router-dom';
 const SignInPage = () => {
   const navigate = useNavigate();
   const [inputData, setInputData] = useState({
-    user_id: '',
+    id: '',
     password: ''
   });
   const [isValid, setIsValid] = useState(true);
@@ -30,14 +30,15 @@ const SignInPage = () => {
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
-      if (inputData.user_id.trim() === '' || inputData.password.trim() === '') {
+      if (inputData.id.trim() === '' || inputData.password.trim() === '') {
         setIsValid(false);
       } else {
         setIsValid(true);
         const { status, data } = await postData('api/login', inputData);
         console.log(`로그인 시도: ${status}`);
         if (status) {
-          localStorage.setItem('token', data.token);
+          localStorage.setItem('accessToken', data.accessToken);
+          localStorage.setItem('refreshToken', data.refreshToken);
           // 로컬스토리지에 로그인상태 저장 -> 메인화면에서 useEffect로 받기
           navigate('/user/main');
         }
@@ -74,13 +75,13 @@ const SignInPage = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  value={inputData.user_id}
+                  value={inputData.id}
                   onChange={inputDataHandler}
                   fullWidth
-                  name="user_id"
+                  name="id"
                   label="아이디"
                   type="id"
-                  id="user_id"
+                  id="id"
                   variant="standard"
                   helperText="20자 이하"
                 />
