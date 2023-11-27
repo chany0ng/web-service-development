@@ -1,6 +1,6 @@
 .flexContainer {
   padding: 10px;
-  width: 40vw;
+  width: 60vw;
   margin: 0 auto;
 }
 .flexItem {
@@ -20,7 +20,25 @@
   }
 }
 
-.moneyLack {
-  color: red;
-  padding: 10px;
+.notice {
+  padding-left: 10px;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  p {
+    text-align: left;
+  }
+}
+
+.payBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  padding: 15px;
+  margin: 0 auto;
+  background-color: rgb(240, 240, 240);
+  .moneyLack {
+    color: red;
+    margin-right: 20px;
+  }
 }
