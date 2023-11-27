@@ -60,16 +60,9 @@ public class UserService {
                 .build();
     }
 
-    @Transactional
     public void logout() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null) {
-            String id = authentication.getName();
-            refreshTokenService.deleteById(id);
-        } else {
-            throw new AuthenticationCredentialsNotFoundException("인증되지 않음");
-        }
-
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        refreshTokenService.deleteById(id);
     }
 
 }
