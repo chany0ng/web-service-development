@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d0550538-7efc-4d66-977d-0ecbaedc1cfd" name="Changes" comment="폴더 정리">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" afterPath="$PROJECT_DIR$/backend/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/gradlew" beforeDir="false" afterPath="$PROJECT_DIR$/backend/gradlew" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/ProjectApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/config/JwtAccessDeniedHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/config/JwtAuthenticationEntryPoint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/config/SecurityConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/config/TokenAuthenticationFilter.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/config/jwt/JwtProperties.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/config/jwt/TokenProvider.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/controller/TokenController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/domain/CreateTokenRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/domain/RefreshToken.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/domain/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/domain/UserLoginRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/domain/UserLoginResponse.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/repository/RefreshTokenRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/repository/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/service/RefreshTokenService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/service/UserDetailService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/db/project/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/test/java/db/project/ProjectApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/Application.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/JdbcConfig.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/controller/BreakdownReportController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/controller/ChargeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/controller/MapController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/controller/RankController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/controller/RentalController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/controller/RentalHistoryController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/controller/SurchargeController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/controller/TicketController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/controller/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/BikeInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/LocationInfoResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/LocationListResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostBreakdownReportDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostChargeDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostMapLocationInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostRentalHistoryDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostRentalRentDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostRentalReturnDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostSurchargeInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostSurchargePayDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostTicketPurchaseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostUserJoinDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/PostUserLoginDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/RentalHistoryResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/ReturnGetMapLocationDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/ReturnGetSurchargeOverfeeInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/ReturnGetTicketInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/ReturnPostMapLocationInfoDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/ReturnPostRentalHistoryDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/ReturnPostRentalReturnDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/ReturnPostUserLoginDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/TicketInfo.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/dto/TicketListResponseDto.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/exceptions/BreakdownReportException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/exceptions/RentalRentException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/exceptions/RentalReturnException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/exceptions/TicketPurchaseException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/repository/BreakdownReportRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/repository/ChargeRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/repository/MapRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/repository/RankRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/repository/RentalHistoryRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/repository/RentalRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/repository/SurchargeRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/repository/TicketRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/repository/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/service/BreakdownReportService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/service/ChargeService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/service/MapService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/service/RankService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/service/RentalHistoryService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/service/RentalService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/service/SurchargeService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/service/TicketService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/database4/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/database4/ApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+    <projectState path="$PROJECT_DIR$/backend">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$/backend">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="backend" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="AnnotationType" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="Dongick" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;history&quot;: [
+    {
+      &quot;state&quot;: &quot;OPEN&quot;,
+      &quot;assignee&quot;: &quot;Dongick&quot;
+    }
+  ],
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Dongick&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="6454ed64-86b3-4b34-b60b-3578bf3ef5d4" />
+        <option name="url" value="https://github.com/chany0ng/web-service-development.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2VskqKWYYjaTiXucEA7WhTQGkZY" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/lg/Desktop/4-2/데이터베이스및데이터시각화/최종",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "preferences.packagesearch.PackageSearchGeneralConfigurable"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\lg\Desktop\4-2\데이터베이스및데이터시각화\최종 프로젝트\2018202004" />
+      <recent name="C:\Users\lg\Desktop\4-2\데이터베이스및데이터시각화\최종 프로젝트\2018202004\frontend" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.database4.Validator" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Application">
+    <configuration name="Application (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.database4.Application" />
+      <module name="backend.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.database4.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Application" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.database4.Application" />
+      <module name="2018202004.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.database4.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Application (1)" />
+        <item itemvalue="Application.Application" />
+        <item itemvalue="Application.Application" />
+        <item itemvalue="Application.Application" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d0550538-7efc-4d66-977d-0ecbaedc1cfd" name="Changes" comment="" />
+      <created>1695632364650</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1695632364650</updated>
+    </task>
+    <task id="LOCAL-00001" summary="회원가입, 이용권 구매, 요금 충전, 대여소 위치정보 코드 추가">
+      <created>1699209892283</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1699209892283</updated>
+    </task>
+    <task id="LOCAL-00002" summary="로그인, 이용권 구입 수정 and final 추가 ver1">
+      <created>1699213275131</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1699213275131</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="7938fe59-d703-4438-aa7f-3c2c484dc9b4">
+          <value>
+            <State />
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/chany0ng" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="7938fe59-d703-4438-aa7f-3c2c484dc9b4" value="TOOL_WINDOW" />
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="회원가입, 이용권 구매, 요금 충전, 대여소 위치정보 코드 추가" />
+    <MESSAGE value="로그인, 이용권 구입 수정 ver1" />
+    <MESSAGE value="로그인, 이용권 구입 수정 and final 추가 ver1" />
+    <MESSAGE value="폴더 정리" />
+    <option name="LAST_COMMIT_MESSAGE" value="폴더 정리" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

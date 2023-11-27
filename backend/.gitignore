@@ -26,7 +26,11 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 build
+<<<<<<< Updated upstream
 src/main/java/database4/domain/
+=======
+src/main/java/com/database4/domain/
+>>>>>>> Stashed changes
 src/main/resources/
 
 
