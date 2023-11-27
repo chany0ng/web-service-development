@@ -1,61 +1,53 @@
 package database4.controller;
 
-import database4.dto.PostUserLoginDto;
-import database4.dto.PostUserJoinDto;
-import database4.dto.ReturnPostUserLoginDto;
+import database4.config.jwt.TokenProvider;
+import database4.domain.UserLoginResponse;
+import database4.domain.User;
+import database4.domain.UserLoginRequest;
 import database4.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
+@RequestMapping("/api")
 @RestController
-public class UserController {  // 사용자 로그인 및 회원가입 Controller
+public class UserController {
+    private final TokenProvider tokenProvider;
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
+    @PostMapping("/signup")
+    public ResponseEntity<String> signup(@RequestBody User user) {
+        return ResponseEntity.ok(userService.save(user));
     }
 
     @PostMapping("/login")
-    @ResponseBody
-    @Operation(
-            summary = "사용자 로그인",
-            description = "아이디 비밀번호 입력 후 로그인 버튼을 클릭했을 때의 API"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "로그인 성공"),
-            @ApiResponse(responseCode = "401", description = "id 또는 비밀번호가 일치하지 않아 로그인 실패", content = @Content)
-    })
-    // 사용자 로그인
-    public ResponseEntity<ReturnPostUserLoginDto> postLogin(@RequestBody PostUserLoginDto form){
+    public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
+        UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
+        return ResponseEntity.ok(userLoginResponse);
+    }
 
-        ReturnPostUserLoginDto returnPostUserLoginDto = userService.login(form);
-        if(returnPostUserLoginDto != null){ // 로그인 성공
-            return ResponseEntity.ok(returnPostUserLoginDto);
-        } else{  // 해당 id와 비밀번호가 일치하는 사용자가 없음
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    @GetMapping("/test")
+    public void test() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null) {
+            Object principal = authentication.getPrincipal();
+
+            List<String> authorities = authentication.getAuthorities()
+                    .stream()
+                    .map(grantedAuthority -> grantedAuthority.getAuthority())
+                    .collect(Collectors.toList());
+            System.out.println("Principal: " + principal.toString());
+            System.out.println("username: " + authentication.getName());
+            System.out.println("Authorities: " + authorities);
+        } else {
+            System.out.println("인증된 사용자 없음");
         }
     }
 
-    @ResponseBody
-    @PostMapping("join")
-    @Operation(
-            summary = "회원가입",
-            description = "개인 정보를 입력 후 회원가입 버튼을 클릭했을 때의 API"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "회원가입 성공")
-    })
-    // 사용자 회원가입
-    public ResponseEntity<Void> postJoin(@RequestBody PostUserJoinDto form){
-        userService.join(form);
-        return ResponseEntity.ok().build();
-    }
 }

@@ -1,9 +1,8 @@
-package db.project.service;
+package database4.service;
 
-import db.project.domain.User;
-import db.project.repository.UserRepository;
+import database4.domain.User;
+import database4.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;

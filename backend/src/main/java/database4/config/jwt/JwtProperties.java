@@ -1,4 +1,4 @@
-package db.project.config.jwt;
+package database4.config.jwt;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
-package db.project.config;
+package database4.config;
 
-import db.project.config.jwt.TokenProvider;
+import database4.config.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader(HEADER_AUTHORIZATION);
 
         String token = getAccessToken(authorizationHeader);
-        if (tokenProvider.validToken(token, request)) {
+        if (token != null && tokenProvider.validToken(token, request)) {
             Authentication authentication = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }

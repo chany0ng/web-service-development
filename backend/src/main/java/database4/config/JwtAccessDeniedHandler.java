@@ -1,4 +1,4 @@
-package db.project.config;
+package database4.config;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
