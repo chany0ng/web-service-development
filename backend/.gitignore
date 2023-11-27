@@ -4,7 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-*.yml
+
 ### STS ###
 .apt_generated
 .classpath
@@ -25,6 +25,14 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+build
+<<<<<<< Updated upstream
+src/main/java/database4/domain/
+=======
+src/main/java/com/database4/domain/
+>>>>>>> Stashed changes
+src/main/resources/
+
 
 ### NetBeans ###
 /nbproject/private/
@@ -35,5 +43,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-../.idea

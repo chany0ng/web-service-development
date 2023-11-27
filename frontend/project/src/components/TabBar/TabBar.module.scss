@@ -1,0 +1,34 @@
+@import '../../styles/reset.scss';
+.flex-container {
+  width: 55vw;
+  height: 12vh;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: rgb(157, 157, 170);
+  font-size: larger;
+  cursor: pointer;
+  .flex-item {
+    flex: 1;
+    padding-top: 15px;
+    height: 100%;
+    color: white;
+    border-width: 1px 1px 0 1px;
+    border-style: solid;
+    border-color: $primaryLight;
+    vertical-align: middle;
+  }
+  .activeTab {
+    flex: 1;
+    padding-top: 15px;
+    height: 100%;
+    border-width: 1px 1px 0 1px;
+    border-style: solid;
+    border-color: $primaryLight;
+    vertical-align: middle;
+    background-color: white;
+    color: $primaryLight;
+  }
+}
