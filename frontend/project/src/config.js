@@ -2,7 +2,7 @@
 // 백엔드 서버 IP 가 변경되면 fetch 함수를 일일이 찾아서 수정해주지 않아도 됩니다.
 // 로딩 중에, loading이라는 state변수 하나 만들어놓고 로딩상태아이콘 띄우기(212 강의)
 
-const BASE_URL = 'http://localhost:3000/';
+const BASE_URL = 'http://localhost:8080/';
 // const [isLoading, setIsLoading] = useState(false); // 로딩중 유무 state
 // const [error, setError] = useState(null); // state로 에러 메시지 관리
 export const getData = async (url) => {
@@ -23,9 +23,10 @@ export const postData = async (url, body) => {
   try {
     const response = await fetch(`${BASE_URL}${url}`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application.json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     });
+    console.log('POST FETCH 성공!');
     if (!response.ok) {
       throw new Error('API POST요청 에러 발생');
     }
