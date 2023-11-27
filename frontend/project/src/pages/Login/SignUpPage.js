@@ -43,6 +43,9 @@ const SignUpPage = () => {
     setInputData((prevData) => ({ ...prevData, [key]: value }));
   };
   const checkUserInput = () => {
+    console.log(inputData.password);
+    console.log(inputData.passwordCheck);
+    console.log(inputData.pw_question);
     if (
       inputData.id.trim() === '' ||
       inputData.email.trim() === '' ||
@@ -71,6 +74,7 @@ const SignUpPage = () => {
         setIsValid(true);
         const finalInputData = { ...inputData };
         delete finalInputData.passwordCheck;
+        console.log(`보내는 데이터: ${finalInputData}`);
         const { status } = await postData('api/signup', finalInputData);
         console.log(`회원가입 시도: ${status}`);
         if (status) {
