@@ -4,6 +4,7 @@ import TabBar from './../../../components/TabBar/TabBar';
 import Layout from '../../../layouts/Layout';
 import CustomTable from '../../../components/Table/CustomTable';
 import { BarChart } from '@mui/x-charts/BarChart';
+import styles from './UserManageRentalRanking.module.scss';
 
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['대여/반납 이력', '대여소 랭킹'];
@@ -32,7 +33,16 @@ const UserManageRentalRanking = () => {
       <TabBar title={outerTitle} select={outerTab} />
       <InnerTabBar title={innerTitle} select={innerTab} url={url} />
       <Article>
-        <h3 style={{}}>나의 랭킹</h3>
+        <h3 style={{ marginBottom: '10px' }}>나의 랭킹</h3>
+        <div className={styles.myRank}>
+          <span>- 등</span>
+          <span>park990328</span>
+          <span>2 시간</span>
+        </div>
+        {/* useEffect에서 데이터 요청 후 받으면
+        사람:데이터, 형식일테니까 Object.메서드 사용해서
+        사람배열, 데이터배열 나눠서 저장 후 차트에 적용 */}
+        <h2>대여 시간 순 차트</h2>
         <BarChart
           xAxis={[
             {
@@ -51,10 +61,30 @@ const UserManageRentalRanking = () => {
               ]
             }
           ]}
-          series={[
-            { data: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1] } // 각 사람의 데이터 값을 순서대로 배열로 전달합니다.
+          series={[{ data: [20, 9, 8, 7, 6, 5, 4, 3, 2, 1] }]}
+          height={300}
+        />
+        <br />
+        <h2>이용 횟수 순 차트</h2>
+        <BarChart
+          xAxis={[
+            {
+              scaleType: 'band',
+              data: [
+                '사람1',
+                '사람2',
+                '사람3',
+                '사람4',
+                '사람5',
+                '사람6',
+                '사람7',
+                '사람8',
+                '사람9',
+                '사람10'
+              ]
+            }
           ]}
-          width={500}
+          series={[{ data: [10, 9, 8, 7, 6, 5, 4, 3, 2, 1] }]}
           height={300}
         />
         <h3 style={{ float: 'left' }}>전체 랭킹 목록(이용 거리 순)</h3>
