@@ -19,9 +19,9 @@ public class SurchargeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<ReturnGetSurchargeOverfeeInfoDto> overfeeInfo(PostSurchargeInfoDto postSurchargeInfoDto){
+    public Optional<ReturnGetSurchargeOverfeeInfoDto> overfeeInfo(String user_id){
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", postSurchargeInfoDto.getUser_id());
+                .addValue("user_id", user_id);
 
         String sql = "SELECT overfee FROM user WHERE user_id = :user_id";
 
@@ -33,19 +33,19 @@ public class SurchargeRepository {
         }
     }
 
-    public Integer getOverfee(String userId) {
+    public Integer getOverfee(String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", userId);
+                .addValue("user_id", user_id);
         String checkOverfee = "SELECT overfee FROM user WHERE user_id = :user_id";
 
         return jdbcTemplate.queryForObject(checkOverfee, namedParameters, Integer.class);
     }
 
-    public boolean overfeePay(PostSurchargePayDto postSurchargePayDto) {
+    public boolean overfeePay(int cash, String user_id) {
 
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", postSurchargePayDto.getUser_id())
-                .addValue("cash", postSurchargePayDto.getCash());
+                .addValue("user_id", user_id)
+                .addValue("cash", cash);
 
         String sql = "UPDATE user SET overfee = overfee - :cash WHERE user_id = :user_id";
         jdbcTemplate.update(sql, namedParameters);

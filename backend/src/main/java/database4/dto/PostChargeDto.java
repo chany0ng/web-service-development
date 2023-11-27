@@ -4,5 +4,5 @@ import lombok.Getter;
 @Getter
 public class PostChargeDto {
     private int cash;
-    private String user_id;
+//    private String user_id;
 }

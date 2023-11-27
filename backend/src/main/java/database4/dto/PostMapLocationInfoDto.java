@@ -8,5 +8,5 @@ import java.math.BigDecimal;
 public class PostMapLocationInfoDto {
     private BigDecimal latitude;
     private BigDecimal longitude;
-    private String user_id;
+//    private String user_id;
 }

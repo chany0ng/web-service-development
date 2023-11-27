@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PostSurchargePayDto {
-    private String user_id;
+//    private String user_id;
     private int cash;
 }

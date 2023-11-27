@@ -36,11 +36,11 @@ public class RentalRepository {
         }
     }
 
-    public Optional<String> insertRental(PostRentalRentDto rentalRentDto) {
+    public Optional<String> insertRental(PostRentalRentDto rentalRentDto, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("bike_id", rentalRentDto.getBike_id())
                 .addValue("start_location", rentalRentDto.getStart_location())
-                .addValue("user_id", rentalRentDto.getUser_id());
+                .addValue("user_id", user_id);
 
         String insertRentalSql = "INSERT INTO rental(bike_id, start_location, user_id) " +
                 "(SELECT :bike_id, :start_location, :user_id FROM user WHERE ticket_id IS NOT NULL AND user_id = :user_id)";
@@ -58,7 +58,7 @@ public class RentalRepository {
         return (rowsUpdated > 0) ? Optional.of("자전거 상태 업데이트 성공") : Optional.empty();
     }
 
-    public int updateRental(PostRentalReturnDto postRentalReturnDto) {
+    public int updateRental(PostRentalReturnDto postRentalReturnDto, String user_id) {
         String rentalUpdateSql = "UPDATE rental r JOIN bike b ON r.bike_id = b.bike_id SET end_location = :end_location, " +
                 "rental_duration = CEIL(TIMESTAMPDIFF(SECOND, start_time, now())/60), " +
                 "fee = CEIL(CEIL(TIMESTAMPDIFF(SECOND, start_time, now())/60) / 15) * 250, " +
@@ -67,17 +67,17 @@ public class RentalRepository {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("end_location", postRentalReturnDto.getEnd_location())
                 .addValue("bike_id", postRentalReturnDto.getBike_id())
-                .addValue("user_id", postRentalReturnDto.getUser_id());
+                .addValue("user_id", user_id);
         return jdbcTemplate.update(rentalUpdateSql, namedParameters);
     }
 
-    public Map<String, Object> getRentalValues(PostRentalReturnDto postRentalReturnDto) {
+    public Map<String, Object> getRentalValues(String bike_id, String user_id) {
         String valueSelectSql = "SELECT fee, price, cash FROM rental r JOIN user u ON r.user_id = u.user_id " +
                 "JOIN ticket t ON t.ticket_id = u.ticket_id " +
                 "WHERE u.user_id = :user_id AND bike_id = :bike_id ORDER BY start_time DESC LIMIT 1";
         MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", postRentalReturnDto.getUser_id())
-                .addValue("bike_id", postRentalReturnDto.getBike_id());
+                .addValue("user_id", user_id)
+                .addValue("bike_id", bike_id);
         return jdbcTemplate.queryForObject(valueSelectSql, namedParameters, (resultSet, i) -> {
             Map<String, Object> map = new HashMap<>();
             map.put("price", resultSet.getInt("price"));

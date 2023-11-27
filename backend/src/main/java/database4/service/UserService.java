@@ -37,8 +37,8 @@ public class UserService {
         if(!bCryptPasswordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
-        String accessToken = tokenProvider.createToken(user.getId(), 20 * 1000L);
-        String refreshToken = tokenProvider.createToken(user.getId(), 24 * 60 * 60 * 1000L);
+        String accessToken = tokenProvider.createToken(user.getId(), accessTokenValidTime);
+        String refreshToken = tokenProvider.createToken(user.getId(), refreshTokenValidTime);
 
         refreshTokenService.save(RefreshToken.builder()
                 .id(user.getId())

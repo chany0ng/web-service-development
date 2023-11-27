@@ -3,6 +3,7 @@ package database4.service;
 import database4.dto.PostBreakdownReportDto;
 import database4.exceptions.BreakdownReportException;
 import database4.repository.BreakdownReportRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,9 @@ public class BreakdownReportService {
 
     @Transactional
     public String report(PostBreakdownReportDto postBreakdownReportDto){
-        breakdownReportRepository.insertReport(postBreakdownReportDto)
+        String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        breakdownReportRepository.insertReport(postBreakdownReportDto, user_id)
                 .orElseThrow(() -> new BreakdownReportException("고장신고 접수 실패"));
 
         breakdownReportRepository.updateBikeStatus(postBreakdownReportDto.getBike_id())

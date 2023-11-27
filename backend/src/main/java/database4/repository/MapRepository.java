@@ -28,7 +28,7 @@ public class MapRepository {
         return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetMapLocationDto.class));
     }
 
-    public Optional<ReturnPostMapLocationInfoDto> locationInfo(PostMapLocationInfoDto postMapLocationInfoDto) {
+    public Optional<ReturnPostMapLocationInfoDto> locationInfo(PostMapLocationInfoDto postMapLocationInfoDto, String user_id) {
         String sql = "SELECT distinct l.location_id, l.address, l.status location_status, GROUP_CONCAT(b.bike_id) bike_id, GROUP_CONCAT(b.status) bike_status, " +
                 "MAX(IF(f.location_id IS NULL, 0, 1)) AS favorite " +
                 "FROM location l LEFT JOIN BIKE b ON l.location_id = b.location_id " +
@@ -38,7 +38,7 @@ public class MapRepository {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("latitude", postMapLocationInfoDto.getLatitude())
                 .addValue("longitude", postMapLocationInfoDto.getLongitude())
-                .addValue("user_id", postMapLocationInfoDto.getUser_id());
+                .addValue("user_id", user_id);
 
         try{
             ReturnPostMapLocationInfoDto locationInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnPostMapLocationInfoDto.class));

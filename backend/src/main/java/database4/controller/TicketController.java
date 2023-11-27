@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api")
 public class TicketController {  // 사용자 이용권 구매 Controller
     private final TicketService ticketService;
 

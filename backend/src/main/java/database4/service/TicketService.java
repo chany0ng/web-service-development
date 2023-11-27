@@ -3,6 +3,7 @@ package database4.service;
 import database4.dto.*;
 import database4.exceptions.TicketPurchaseException;
 import database4.repository.TicketRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +20,12 @@ public class TicketService {
 
     @Transactional
     public String purchase(PostTicketPurchaseDto postTicketPurchaseDto){
-        String userId = postTicketPurchaseDto.getUser_id();
+        String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
+
         int prevCash = postTicketPurchaseDto.getCash();
         int hour = postTicketPurchaseDto.getHour();
 
-        Optional<String> existingTicketId = ticketRepository.getTicketIdByUserId(userId);
+        Optional<String> existingTicketId = ticketRepository.getTicketIdByUserId(user_id);
         if(existingTicketId.isPresent()) {
             TicketInfo ticketInfo = ticketRepository.getTicketInfoByHour(hour).orElseThrow(() -> new TicketPurchaseException("잘못된 시간 정보가 전달되었습니다."));
 
@@ -31,7 +33,7 @@ public class TicketService {
                 throw new TicketPurchaseException("소지금이 부족합니다.");
             }
 
-            boolean purchaseSuccess = ticketRepository.updateUserInfo(userId, ticketInfo);
+            boolean purchaseSuccess = ticketRepository.updateUserInfo(user_id, ticketInfo);
 
             return "이용권 구매에 성공했습니다.";
         } else{

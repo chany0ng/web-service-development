@@ -4,6 +4,7 @@ import database4.dto.PostSurchargeInfoDto;
 import database4.dto.PostSurchargePayDto;
 import database4.dto.ReturnGetSurchargeOverfeeInfoDto;
 import database4.repository.SurchargeRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,18 +18,22 @@ public class SurchargeService {
         this.surchargeRepository = surchargeRepository;
     }
 
-    public Optional<ReturnGetSurchargeOverfeeInfoDto> overfeeInfo(PostSurchargeInfoDto postSurchargeInfoDto){
-        return surchargeRepository.overfeeInfo(postSurchargeInfoDto);
+    public Optional<ReturnGetSurchargeOverfeeInfoDto> overfeeInfo(){
+        String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        return surchargeRepository.overfeeInfo(user_id);
     }
 
     @Transactional
     public boolean overfeePay(PostSurchargePayDto postSurchargePayDto){
-        int overfee = surchargeRepository.getOverfee(postSurchargePayDto.getUser_id());
+        String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        int overfee = surchargeRepository.getOverfee(user_id);
 
         if (postSurchargePayDto.getCash() > overfee) {
             return false;
         }
 
-        return surchargeRepository.overfeePay(postSurchargePayDto);
+        return surchargeRepository.overfeePay(postSurchargePayDto.getCash(), user_id);
     }
 }

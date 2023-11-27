@@ -2,6 +2,7 @@ package database4.service;
 
 import database4.dto.*;
 import database4.repository.MapRepository;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,9 @@ public class MapService {
     }
 
     public Optional<LocationInfoResponseDto> locationInfo(PostMapLocationInfoDto postMapLocationInfoDto) {
-        Optional<ReturnPostMapLocationInfoDto> locationInfoOptional = mapRepository.locationInfo(postMapLocationInfoDto);
+        String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        Optional<ReturnPostMapLocationInfoDto> locationInfoOptional = mapRepository.locationInfo(postMapLocationInfoDto, user_id);
 
         return locationInfoOptional.map(mapLocationInfo -> {
             LocationInfoResponseDto response = new LocationInfoResponseDto(mapLocationInfo.getLocation_id(), mapLocationInfo.getAddress(), mapLocationInfo.getLocation_status(), mapLocationInfo.isFavorite());

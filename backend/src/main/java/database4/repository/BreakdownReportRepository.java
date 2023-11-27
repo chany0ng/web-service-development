@@ -15,9 +15,9 @@ public class BreakdownReportRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<String> insertReport(PostBreakdownReportDto postBreakdownReportDto) {
+    public Optional<String> insertReport(PostBreakdownReportDto postBreakdownReportDto, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", postBreakdownReportDto.getUser_id())
+                .addValue("user_id", user_id)
                 .addValue("bike_id", postBreakdownReportDto.getBike_id())
                 .addValue("content", postBreakdownReportDto.getContent());
 

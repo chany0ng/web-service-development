@@ -8,5 +8,5 @@ import lombok.Setter;
 public class PostRentalHistoryDto {
     private String start_date;
     private String end_date;
-    private String user_id;
+//    private String user_id;
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api")
 public class SurchargeController { // 추가요금 결제 Controller
     private final SurchargeService surchargeService;
 
@@ -22,7 +23,7 @@ public class SurchargeController { // 추가요금 결제 Controller
     }
 
     @ResponseBody
-    @PostMapping("surcharge/info")
+    @GetMapping("surcharge/info")
     @Operation(
             summary = "추가요금 정보",
             description = "결제관리에서 추가요금 버튼을 클릭했을 때의 API"
@@ -32,8 +33,8 @@ public class SurchargeController { // 추가요금 결제 Controller
             @ApiResponse(responseCode = "400", description = "잘못된 값이 전달되어 조회 실패")
     })
     // 추가요금 금액 확인
-    public ResponseEntity<ReturnGetSurchargeOverfeeInfoDto> postSurchargeInfo(@RequestBody PostSurchargeInfoDto form){
-        Optional<ReturnGetSurchargeOverfeeInfoDto> overfee = surchargeService.overfeeInfo(form);
+    public ResponseEntity<ReturnGetSurchargeOverfeeInfoDto> postSurchargeInfo(){
+        Optional<ReturnGetSurchargeOverfeeInfoDto> overfee = surchargeService.overfeeInfo();
 
         return overfee
                 .map(ResponseEntity::ok)
