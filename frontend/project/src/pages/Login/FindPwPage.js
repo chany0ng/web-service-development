@@ -92,7 +92,7 @@ const FindPwPage = () => {
                   required
                   fullWidth
                   name="user_id"
-                  label="Id"
+                  label="아이디"
                   type="id"
                   id="user_id"
                   variant="standard"
@@ -132,9 +132,17 @@ const FindPwPage = () => {
                 />
               </Grid>
               {!isValid && (
-                <Grid item xs={12} sx={{ color: 'error.main' }}>
-                  <Alert variant="outlined" severity="error">
-                    입력값을 다시 확인해주세요!
+                <Grid
+                  item
+                  xs={8}
+                  sx={{ color: 'error.main', margin: '0 auto' }}
+                >
+                  <Alert
+                    variant="outlined"
+                    severity="error"
+                    sx={{ fontSize: '1.3rem' }}
+                  >
+                    모든 값을 입력해주세요
                   </Alert>
                 </Grid>
               )}

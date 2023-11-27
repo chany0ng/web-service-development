@@ -5,11 +5,8 @@
 const BASE_URL = 'http://localhost:3000/';
 // const [isLoading, setIsLoading] = useState(false); // 로딩중 유무 state
 // const [error, setError] = useState(null); // state로 에러 메시지 관리
-// 각 컴포넌트에서 위 처럼 설정하면 된다.
-//! API요청은 useEffect로 설정 -> 페이지 렌더링될 때 마다 데이터 불러오기
 export const getData = async (url) => {
   try {
-    // setIsLoading(true);
     const response = await fetch(`${BASE_URL}${url}`);
     if (!response.ok) {
       throw new Error('API GET요청 에러 발생');
@@ -17,15 +14,11 @@ export const getData = async (url) => {
     const data = response.json(); // json -> js로 변환
     return { status: response.status, data }; // API요청 템플릿을 만들어 놓은 것
   } catch (error) {
-    // setError(error.message);
     console.error(error);
     throw error;
-  } finally {
-    // setIsLoading(false);
   }
 };
 
-//! POST요청 하기, 보낼 때 json으로 변환해서 보낸다
 export const postData = async (url, body) => {
   try {
     const response = await fetch(`${BASE_URL}${url}`, {

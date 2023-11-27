@@ -2,7 +2,6 @@ import InnerTabBar from '../../../components/TabBar/InnerTabBar';
 import Article from '../../../layouts/Article';
 import TabBar from './../../../components/TabBar/TabBar';
 import Layout from '../../../layouts/Layout';
-import styles from './UserManageRentalHistory.module.scss';
 import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';

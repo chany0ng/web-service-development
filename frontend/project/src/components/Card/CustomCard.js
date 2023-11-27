@@ -1,6 +1,9 @@
 import styles from './CustomCard.module.scss';
 import { Container, Card, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 const CustomCard = (props) => {
+  const navigate = useNavigate();
   const info = {
     name: '박찬용',
     moeny: 15000,
@@ -23,7 +26,14 @@ const CustomCard = (props) => {
           <span>
             <h1>{info.name}</h1> 회원님
           </span>
-          <Button variant="contained" color="primary" sx={{ fontSize: '1rem' }}>
+          <Button
+            onClick={() => {
+              navigate('/user/info/edit');
+            }}
+            variant="contained"
+            color="primary"
+            sx={{ fontSize: '1rem' }}
+          >
             내 정보 관리 {`>`}
           </Button>
         </div>
@@ -33,6 +43,9 @@ const CustomCard = (props) => {
               현재 보유중인 금액 <h3>{info.moeny}원</h3>
             </div>
             <Button
+              onClick={() => {
+                navigate('/user/pay/charge');
+              }}
               variant="contained"
               color="primary"
               sx={{ fontSize: '1rem', marginLeft: '2rem' }}

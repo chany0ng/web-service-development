@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { MenuItem } from '@mui/material';
 import LoginBackground from '../../components/Background/LoginBackground';
-import { useState, useReducer } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postData } from '../../config';
 import { Alert } from '@mui/material';
@@ -37,27 +37,38 @@ const SignUpPage = () => {
     phone_number: ''
   });
   const [isValid, setIsValid] = useState(true);
+  const [errorMsg, setErrorMsg] = useState('입력을 확인해주세요!');
   const inputDataHandler = (e) => {
     e.preventDefault();
     const key = e.target.id || 'pw_question';
     const value = e.target.value;
     setInputData((prevData) => ({ ...prevData, [key]: value }));
   };
-
+  const checkUserInput = () => {
+    if (
+      inputData.user_id.trim() === '' ||
+      inputData.email.trim() === '' ||
+      inputData.password.trim() === '' ||
+      inputData.passwordCheck.trim() === '' ||
+      inputData.pw_question.trim() === '' ||
+      inputData.pw_answer.trim() === '' ||
+      inputData.phone_number.trim() === ''
+    ) {
+      setErrorMsg('입력하지 않은 값이 존재합니다');
+    } else if (inputData.passwordCheck.trim() !== inputData.password.trim()) {
+      setErrorMsg('비밀번호 동일여부를 확인해주세요');
+    } else if (!inputData.email.includes('@')) {
+      setErrorMsg('이메일에 @를 포함해주세요');
+    } else if (!/^\d+$/.test(inputData.phone_number)) {
+      setErrorMsg('전화번호는 숫자만 입력해주세요');
+    } else {
+      return true;
+    }
+  };
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
-      console.log(inputData.password.trim());
-      console.log(inputData.passwordCheck.trim());
-      if (
-        inputData.user_id.trim() === '' ||
-        inputData.password.trim() === '' ||
-        inputData.passwordCheck.trim() !== inputData.password.trim() ||
-        inputData.pw_question.trim() === '' ||
-        inputData.pw_answer.trim() === '' ||
-        inputData.phone_number.trim() === '' ||
-        !inputData.email.includes('@')
-      ) {
+      if (!checkUserInput()) {
         setIsValid(false);
       } else {
         setIsValid(true);
@@ -77,7 +88,7 @@ const SignUpPage = () => {
         }
       }
     } catch (error) {
-      console.error('회원가입 에러', error);
+      alert('회원가입 에러', error);
     }
   };
   return (
@@ -206,9 +217,17 @@ const SignUpPage = () => {
                 />
               </Grid>
               {!isValid && (
-                <Grid item xs={12} sx={{ color: 'error.main' }}>
-                  <Alert variant="outlined" severity="error">
-                    입력값을 다시 확인해주세요!
+                <Grid
+                  item
+                  xs={8}
+                  sx={{ color: 'error.main', margin: '0 auto' }}
+                >
+                  <Alert
+                    variant="outlined"
+                    severity="error"
+                    sx={{ fontSize: '1.3rem' }}
+                  >
+                    {errorMsg}
                   </Alert>
                 </Grid>
               )}
