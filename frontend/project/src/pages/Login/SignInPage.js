@@ -43,7 +43,7 @@ const SignInPage = () => {
         }
       }
     } catch (error) {
-      alert('로그인 에러', error);
+      console.log('로그인 에러', error);
     }
   };
 

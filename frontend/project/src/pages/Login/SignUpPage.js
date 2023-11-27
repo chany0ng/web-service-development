@@ -17,24 +17,22 @@ import { Alert } from '@mui/material';
 const passwordQuestion = [
   {
     question: 'school',
-    description: '졸업한 초등학교 이름'
-  },
-  {
-    question: 'school2',
-    description: '졸업한 중학교 이름'
+    description: '졸업한 초등학교 이름',
+    value: 1
   }
 ];
 
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [inputData, setInputData] = useState({
-    email: '',
-    user_id: '',
+    id: '',
     password: '',
     passwordCheck: '',
-    pw_question: '',
+    pw_question: 1,
     pw_answer: '',
-    phone_number: ''
+    email: '',
+    phone_number: '',
+    role: 'user'
   });
   const [isValid, setIsValid] = useState(true);
   const [errorMsg, setErrorMsg] = useState('입력을 확인해주세요!');
@@ -46,11 +44,10 @@ const SignUpPage = () => {
   };
   const checkUserInput = () => {
     if (
-      inputData.user_id.trim() === '' ||
+      inputData.id.trim() === '' ||
       inputData.email.trim() === '' ||
       inputData.password.trim() === '' ||
       inputData.passwordCheck.trim() === '' ||
-      inputData.pw_question.trim() === '' ||
       inputData.pw_answer.trim() === '' ||
       inputData.phone_number.trim() === ''
     ) {
@@ -72,24 +69,26 @@ const SignUpPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status } = await postData('api/signup', inputData);
+        const finalInputData = { ...inputData };
+        delete finalInputData.passwordCheck;
+        const { status } = await postData('api/signup', finalInputData);
         console.log(`회원가입 시도: ${status}`);
         if (status) {
           alert('회원가입 성공');
-          setInputData({
-            email: '',
-            user_id: '',
-            password: '',
-            passwordCheck: '',
-            pw_question: '',
-            pw_answer: '',
-            phone_number: ''
-          });
+          // setInputData({
+          //   email: '',
+          //   id: '',
+          //   password: '',
+          //   passwordCheck: '',
+          //   pw_question: '',
+          //   pw_answer: '',
+          //   phone_number: ''
+          // });
           navigate('/signin');
         }
       }
     } catch (error) {
-      alert('회원가입 에러', error);
+      console.log('회원가입 에러', error);
     }
   };
   return (
@@ -123,8 +122,8 @@ const SignUpPage = () => {
                   onChange={inputDataHandler}
                   required
                   fullWidth
-                  name="user_id"
-                  id="user_id"
+                  name="id"
+                  id="id"
                   label="Id"
                   type="id"
                   variant="standard"
@@ -172,7 +171,7 @@ const SignUpPage = () => {
                   helperText="비밀번호 찾기 질문을 선택해주세요"
                 >
                   {passwordQuestion.map((option) => (
-                    <MenuItem key={option.question} value={option.description}>
+                    <MenuItem key={option.value} value={option.value}>
                       {option.description}
                     </MenuItem>
                   ))}
