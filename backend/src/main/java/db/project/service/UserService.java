@@ -7,8 +7,11 @@ import db.project.domain.User;
 import db.project.domain.UserLoginRequest;
 import db.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,14 +35,19 @@ public class UserService {
 
     @Transactional
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        User user = userRepository.findUserById(userLoginRequest.getUserId())
+        if(userLoginRequest.getId() == null) {
+            throw new UsernameNotFoundException("존재하지 않는 아이디입니다.");
+        }
+
+        User user = userRepository.findUserById(userLoginRequest.getId())
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디입니다."));
+
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         if(!bCryptPasswordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
         String accessToken = tokenProvider.createToken(user.getId(), 20 * 1000L);
-        String refreshToken = tokenProvider.createToken(user.getId(), 24 * 60 * 60 * 1000L);
+        String refreshToken = tokenProvider.createToken(user.getId(), 5 * 60 * 1000L);
 
         refreshTokenService.save(RefreshToken.builder()
                 .id(user.getId())
@@ -50,6 +58,18 @@ public class UserService {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Transactional
+    public void logout() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication != null) {
+            String id = authentication.getName();
+            refreshTokenService.deleteById(id);
+        } else {
+            throw new AuthenticationCredentialsNotFoundException("인증되지 않음");
+        }
+
     }
 
 }

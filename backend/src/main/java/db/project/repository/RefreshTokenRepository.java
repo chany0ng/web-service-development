@@ -3,6 +3,7 @@ package db.project.repository;
 import db.project.domain.RefreshToken;
 import db.project.domain.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,6 +43,25 @@ public class RefreshTokenRepository {
         }
     }
 
+    public void deleteByRefreshToken(String refreshToken) {
+        String sql = "DELETE FROM refreshtoken WHERE REFRESHTOKEN= :refreshToken";
+        try{
+            SqlParameterSource sqlParameterSource = new MapSqlParameterSource("refreshToken", refreshToken);
+            namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        } catch (Exception e) {
+            throw new RuntimeException("데이터 액세스 예외 발생", e);
+        }
+    }
+
+    public void deleteById(String id) {
+        String sql = "DELETE FROM refreshtoken WHERE user_id= :id";
+        try{
+            SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id);
+            namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        } catch (Exception e) {
+            throw new RuntimeException("데이터 액세스 예외 발생", e);
+        }
+    }
 
     private final RowMapper<RefreshToken> refreshTokenMapper = (rs, rowNum) -> {
         RefreshToken refreshToken = RefreshToken.builder()
