@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -9,7 +9,6 @@ import { Alert } from '@mui/material';
 import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { MenuItem } from '@mui/material';
 import LoginBackground from '../../components/Background/LoginBackground';
 import { postData } from '../../config';
 import { useNavigate } from 'react-router-dom';
@@ -18,13 +17,12 @@ const SignInPage = () => {
   const navigate = useNavigate();
   const [inputData, setInputData] = useState({
     user_id: '',
-    password: '',
-    userType: ''
+    password: ''
   });
   const [isValid, setIsValid] = useState(true);
   const inputDataHandler = (e) => {
     e.preventDefault();
-    const key = e.target.id || 'userType';
+    const key = e.target.id;
     const value = e.target.value;
     setInputData((prevData) => ({ ...prevData, [key]: value }));
   };
@@ -40,11 +38,11 @@ const SignInPage = () => {
         if (status) {
           localStorage.setItem('token', data.token);
           // 로컬스토리지에 로그인상태 저장 -> 메인화면에서 useEffect로 받기
-          // navigate('/signin');
+          navigate('/user/main');
         }
       }
     } catch (error) {
-      console.error('로그인버튼 에러', error);
+      alert('로그인 에러', error);
     }
   };
 
@@ -79,7 +77,7 @@ const SignInPage = () => {
                   onChange={inputDataHandler}
                   fullWidth
                   name="user_id"
-                  label="Id"
+                  label="아이디"
                   type="id"
                   id="user_id"
                   variant="standard"
@@ -92,7 +90,7 @@ const SignInPage = () => {
                   fullWidth
                   onChange={inputDataHandler}
                   name="password"
-                  label="Password"
+                  label="비밀번호"
                   type="password"
                   id="password"
                   variant="standard"
@@ -101,9 +99,17 @@ const SignInPage = () => {
               </Grid>
 
               {!isValid && (
-                <Grid item xs={12} sx={{ color: 'error.main' }}>
-                  <Alert variant="outlined" severity="error">
-                    입력값을 다시 확인해주세요!
+                <Grid
+                  item
+                  xs={8}
+                  sx={{ color: 'error.main', margin: '0 auto' }}
+                >
+                  <Alert
+                    variant="outlined"
+                    severity="error"
+                    sx={{ fontSize: '1.3rem' }}
+                  >
+                    아이디와 비밀번호 모두 입력해주세요
                   </Alert>
                 </Grid>
               )}
