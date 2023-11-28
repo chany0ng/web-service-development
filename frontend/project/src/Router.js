@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import AuthCheck from './AuthCheck';
+import { LoginPageAuthCheck, MainPageAuthCheck } from './AuthCheck';
 import LandingPage from './pages/Login/LandingPage';
 import SignInPage from './pages/Login/SignInPage';
 import SignUpPage from './pages/Login/SignUpPage';
@@ -15,19 +15,39 @@ import UserManageRentalRanking from './pages/User/UserManage/UserManageRentalRan
 const Router = () => {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/signin" element={<SignInPage />} />
-      <Route path="/signup" element={<SignUpPage />} />
-      <Route path="/findpw" element={<FindPwPage />} />
-      <Route path="/user/main" element={<UserMainPage />} />
-      {/* <Route
-        path="/user/main"
+      <Route
+        path="/"
         element={
-          <AuthCheck>
-            <UserMainPage />
-          </AuthCheck>
+          <LoginPageAuthCheck>
+            <LandingPage />
+          </LoginPageAuthCheck>
         }
-      /> */}
+      />
+      <Route
+        path="/signin"
+        element={
+          <LoginPageAuthCheck>
+            <SignInPage />
+          </LoginPageAuthCheck>
+        }
+      />
+      <Route
+        path="/signup"
+        element={
+          <LoginPageAuthCheck>
+            <SignUpPage />
+          </LoginPageAuthCheck>
+        }
+      />
+      <Route
+        path="/findpw"
+        element={
+          <LoginPageAuthCheck>
+            <FindPwPage />
+          </LoginPageAuthCheck>
+        }
+      />
+      <Route path="/user/main" element={<UserMainPage />} />
       <Route path="/user/info/edit" element={<UserInfoEdit />} />
       <Route path="/user/info/bookmark" element={<UserInfoBookMark />} />
       <Route path="/user/pay/charge" element={<UserPayCharge />} />
@@ -45,3 +65,16 @@ const Router = () => {
 };
 
 export default Router;
+{
+  /* <Route path="/" element={<LoginPageAuthCheck><LandingPage /></LoginPageAuthCheck>} />
+<Route path="/signin" element={<LoginPageAuthCheck><SignInPage /></LoginPageAuthCheck>} />
+<Route path="/signup" element={<LoginPageAuthCheck><SignUpPage /></LoginPageAuthCheck>} />
+<Route path="/findpw" element={<LoginPageAuthCheck><FindPwPage /></LoginPageAuthCheck>} />
+<Route path="/user/main" element={<MainPageAuthCheck><UserMainPage /></MainPageAuthCheck>} />
+<Route path="/user/info/edit" element={<MainPageAuthCheck><UserInfoEdit /></MainPageAuthCheck>} />
+<Route path="/user/info/bookmark" element={<MainPageAuthCheck><UserInfoBookMark /></MainPageAuthCheck>} />
+<Route path="/user/pay/charge" element={<MainPageAuthCheck><UserPayCharge /></MainPageAuthCheck>} />
+<Route path="/user/pay/extra-charge" element={<MainPageAuthCheck><UserPayExtraCharge /></MainPageAuthCheck>} />
+<Route path="/user/manage/rental-history" element={<MainPageAuthCheck><UserManageRentalHistory /></MainPageAuthCheck>} />
+<Route path="/user/manage/rental-ranking" element={<MainPageAuthCheck><UserManageRentalRanking /></MainPageAuthCheck>} /> */
+}

@@ -1,20 +1,45 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { sendAccessToken } from './config';
 
-const AuthCheck = () => {
+export const LoginPageAuthCheck = async () => {
   const navigation = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem('token'); // 로컬 스토리지에서 토큰을 가져옴
-    console.log('Auth Check!');
-    if (!token) {
-      // 토큰이 없으면 로그인 페이지로 리다이렉트
-      alert('로그인이 필요합니다!');
-      navigation('/signin');
+  const accessToken = localStorage.getItem('accessToken');
+  const checkAccessToken = async () => {
+    if (accessToken) {
+      const { status } = await sendAccessToken(accessToken);
+      if (status === 401) {
+        navigation('/');
+      }
+      if (status === 200) {
+        navigation('/user/main');
+      }
     }
-  }, [navigation]);
+  };
+  useEffect(() => {
+    checkAccessToken();
+  }, []); // 의존성 배열 비움
 
   return null;
 };
 
-export default AuthCheck;
+export const MainPageAuthCheck = () => {
+  const navigation = useNavigate();
+  const accessToken = localStorage.getItem('accessToken');
+  const checkAccessToken = async () => {
+    if (accessToken) {
+      const { status } = await sendAccessToken(accessToken);
+      if (status === 401) {
+        navigation('/');
+      }
+    } else {
+      alert('로그인이 필요합니다!');
+      navigation('/');
+    }
+  };
+  useEffect(() => {
+    checkAccessToken();
+  }, []); // 의존성 배열 비움
+
+  return null;
+};
