@@ -33,8 +33,8 @@ public class UserRepository {
         try {
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             String sql = """
-                        INSERT INTO user (user_id, password, email, phone_number, pw_question, pw_answer, role, ticket_id)
-                        VALUES (:user_id, :password, :email, :phone_number, :pw_question, :pw_answer, :role, :ticket_id)        
+                        INSERT INTO user (user_id, password, email, phone_number, pw_question, pw_answer, role)
+                        VALUES (:user_id, :password, :email, :phone_number, :pw_question, :pw_answer, :role)        
                     """;
             SqlParameterSource parameterSource = new MapSqlParameterSource("user_id", user.getId())
                     .addValue("password", bCryptPasswordEncoder.encode(user.getPassword()))
@@ -42,8 +42,7 @@ public class UserRepository {
                     .addValue("phone_number", user.getPhone_number())
                     .addValue("pw_question", user.getPw_question())
                     .addValue("pw_answer", user.getPw_answer())
-                    .addValue("role", user.getRole())
-                    .addValue("ticket_id", user.getTicket_id());
+                    .addValue("role", user.getRole());
             int affctedRows = namedParameterJdbcTemplate.update(sql, parameterSource);
 
             return Optional.of(user.getId());
