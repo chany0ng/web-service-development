@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/signup", "/api/login", "/api/token").permitAll();
-                    auth.requestMatchers("/api/test").hasRole("ADMIN");
+                    //auth.requestMatchers("/api/test").hasRole("USER");
                     auth.requestMatchers("/error/**").permitAll();
                     auth.anyRequest().authenticated();
                 });

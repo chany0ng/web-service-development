@@ -32,28 +32,30 @@ public class UserController {
         UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
         return ResponseEntity.ok(userLoginResponse);
     }
+
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
         userService.logout();
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/test")
-    public void test() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null) {
-            Object principal = authentication.getPrincipal();
+//    @GetMapping("/test")
+//    public void test() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if(authentication != null) {
+//            Object principal = authentication.getPrincipal();
+//
+//            List<String> authorities = authentication.getAuthorities()
+//                    .stream()
+//                    .map(grantedAuthority -> grantedAuthority.getAuthority())
+//                    .collect(Collectors.toList());
+//            System.out.println("Principal: " + principal.toString());
+//            System.out.println("username: " + authentication.getName());
+//            System.out.println("Authorities: " + authorities);
+//        } else {
+//            System.out.println("인증된 사용자 없음");
+//        }
+//    }
 
-            List<String> authorities = authentication.getAuthorities()
-                    .stream()
-                    .map(grantedAuthority -> grantedAuthority.getAuthority())
-                    .collect(Collectors.toList());
-            System.out.println("Principal: " + principal.toString());
-            System.out.println("username: " + authentication.getName());
-            System.out.println("Authorities: " + authorities);
-        } else {
-            System.out.println("인증된 사용자 없음");
-        }
-    }
 
 }
