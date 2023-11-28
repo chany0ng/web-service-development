@@ -25,12 +25,13 @@ export const postData = async (url, body) => {
       body: JSON.stringify(body)
     });
     console.log('POST FETCH 성공!');
-    console.log(`서버에서 넘어온 데이터: ${response.data}`);
-    console.log(`서버에서 넘어온 status: ${response.status}`);
+
     if (!response.ok) {
       throw new Error('API POST요청 에러 발생');
     }
-    const data = response.json();
+    const data = await response.json();
+    console.log('서버에서 넘어온 데이터:', JSON.stringify(data));
+    console.log(`서버에서 넘어온 status: ${response.status}`);
     return { status: response.status, data };
   } catch (error) {
     throw error;

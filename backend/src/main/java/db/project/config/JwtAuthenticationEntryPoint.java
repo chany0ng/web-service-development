@@ -15,7 +15,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {
         String exception = (String)request.getAttribute("exception");
-        if(exception.equals("만료된 토큰")){
+        if(exception != null && exception.equals("만료된 토큰")){
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "만료된 토큰");
         } else {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
