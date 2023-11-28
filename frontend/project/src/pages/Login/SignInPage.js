@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -12,9 +12,14 @@ import Container from '@mui/material/Container';
 import LoginBackground from '../../components/Background/LoginBackground';
 import { postData } from '../../config';
 import { useNavigate } from 'react-router-dom';
+import { loginPageAuthCheck } from '../../AuthCheck';
 
 const SignInPage = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    loginPageAuthCheck(navigate);
+  }, []);
+
   const [inputData, setInputData] = useState({
     id: '',
     password: ''
@@ -26,7 +31,15 @@ const SignInPage = () => {
     const value = e.target.value;
     setInputData((prevData) => ({ ...prevData, [key]: value }));
   };
-
+  const idPwCheck = (data) => {
+    const message = data.message;
+    if (message.includes('아이디')) {
+      alert('존재하지 않는 ID입니다.');
+    }
+    if (message.includes('비밀번호')) {
+      alert('비밀번호가 일치하지 않습니다.');
+    }
+  };
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
@@ -36,7 +49,10 @@ const SignInPage = () => {
         setIsValid(true);
         const { status, data } = await postData('api/login', inputData);
         console.log(`로그인 시도: ${status}`);
-        if (status) {
+        if (status === 401) {
+          idPwCheck(data);
+        }
+        if (status === 200) {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
           // 로컬스토리지에 로그인상태 저장 -> 메인화면에서 useEffect로 받기
