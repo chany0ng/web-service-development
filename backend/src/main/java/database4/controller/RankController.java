@@ -33,6 +33,7 @@ public class RankController {  //rank Controller
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이용시간 랭킹 조회 성공")
     })
+    // 이용시간에 따른 랭킹 조회
     public ResponseEntity<RankTimeResponseDto> getRankTime() {
         RankTimeResponseDto returnGetRankTimeDto = rankService.timeRank();
 
@@ -48,6 +49,7 @@ public class RankController {  //rank Controller
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "이용횟수 랭킹 조회 성공")
     })
+    // 이용회수에 따른 랭킹 조회
     public ResponseEntity<RankCountResponseDto> getRankCount() {
         RankCountResponseDto rankCountResponseDto = rankService.countRank();
 

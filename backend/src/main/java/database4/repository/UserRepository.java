@@ -23,6 +23,7 @@ public class UserRepository {
         try {
             SqlParameterSource param = new MapSqlParameterSource("id", id);
             User user = namedParameterJdbcTemplate.queryForObject(sql, param, userMapper);
+
             return Optional.of(user);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
