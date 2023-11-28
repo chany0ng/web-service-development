@@ -1,45 +1,28 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { sendAccessToken } from './config';
 
-export const LoginPageAuthCheck = async () => {
-  const navigation = useNavigate();
+export const loginPageAuthCheck = async (navigation) => {
   const accessToken = localStorage.getItem('accessToken');
-  const checkAccessToken = async () => {
-    if (accessToken) {
-      const { status } = await sendAccessToken(accessToken);
-      if (status === 401) {
-        navigation('/');
-      }
-      if (status === 200) {
-        navigation('/user/main');
-      }
-    }
-  };
-  useEffect(() => {
-    checkAccessToken();
-  }, []); // 의존성 배열 비움
-
-  return null;
-};
-
-export const MainPageAuthCheck = () => {
-  const navigation = useNavigate();
-  const accessToken = localStorage.getItem('accessToken');
-  const checkAccessToken = async () => {
-    if (accessToken) {
-      const { status } = await sendAccessToken(accessToken);
-      if (status === 401) {
-        navigation('/');
-      }
-    } else {
-      alert('로그인이 필요합니다!');
+  if (accessToken) {
+    const { status } = await sendAccessToken(accessToken);
+    if (status === 401) {
       navigation('/');
     }
-  };
-  useEffect(() => {
-    checkAccessToken();
-  }, []); // 의존성 배열 비움
+    if (status === 200) {
+      navigation('/user/main');
+    }
+  }
+  alert('정상 접속!');
+};
 
-  return null;
+export const mainPageAuthCheck = async (navigation) => {
+  const accessToken = localStorage.getItem('accessToken');
+  if (accessToken) {
+    const { status } = await sendAccessToken(accessToken);
+    if (status === 401) {
+      navigation('/');
+    }
+  } else {
+    alert('로그인이 필요합니다!');
+    navigation('/');
+  }
 };
