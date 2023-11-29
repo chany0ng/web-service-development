@@ -18,7 +18,7 @@ export const getData = async (url) => {
     });
     let newStatus = null;
     if (response.status === 401) {
-      newStatus = await sendAccessToken();
+      newStatus = await sendAccessToken(accessToken);
       if (newStatus === 401) {
         return { status: 401, data: null };
       }
@@ -36,23 +36,37 @@ export const getData = async (url) => {
   }
 };
 
+// return 403: 권한 없음 -> /user/main
+// return 401: refresh도종료(로그아웃) -> '/'
+// return 200: 정상동작 -> data이용 가능
 export const postData = async (url, body) => {
   try {
     const accessToken = localStorage.getItem('accessToken');
-    const response = await fetch(`${BASE_URL}${url}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`
-      },
-      body: JSON.stringify(body)
-    });
+    let response = null;
+    if (!accessToken) {
+      response = await fetch(`${BASE_URL}${url}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+    } else {
+      response = await fetch(`${BASE_URL}${url}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `${accessToken}`
+        },
+        body: JSON.stringify(body)
+      });
+    }
     if (response.status === 403) {
       return { status: 403, data: null };
     }
     let newStatus = null;
     if (response.status === 401) {
-      newStatus = await sendAccessToken();
+      newStatus = await sendAccessToken(accessToken);
       if (newStatus === 401) {
         return { status: 401, data: null };
       }
@@ -66,7 +80,7 @@ export const postData = async (url, body) => {
     throw new Error('POST요청 데이터를 가져오는데 실패했습니다.');
   } catch (error) {
     console.error(error);
-    alert(error);
+    // alert(error);
   }
 };
 
@@ -104,7 +118,7 @@ export const sendAccessToken = async (accessToken) => {
       }
     });
     if (response.status === 401) {
-      return updateRefreshToken();
+      return await updateRefreshToken();
     } else if (response.status === 200) {
       return { status: 200 };
     } else {

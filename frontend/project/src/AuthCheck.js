@@ -11,7 +11,7 @@ export const loginPageAuthCheck = async (navigation) => {
       navigation('/user/main');
     }
   }
-  alert('정상 접속!');
+  alert('access token없는 접속!');
 };
 
 export const mainPageAuthCheck = async (navigation) => {
