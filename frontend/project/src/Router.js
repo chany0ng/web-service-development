@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import AuthCheck from './AuthCheck';
 import LandingPage from './pages/Login/LandingPage';
 import SignInPage from './pages/Login/SignInPage';
 import SignUpPage from './pages/Login/SignUpPage';
@@ -20,14 +19,6 @@ const Router = () => {
       <Route path="/signup" element={<SignUpPage />} />
       <Route path="/findpw" element={<FindPwPage />} />
       <Route path="/user/main" element={<UserMainPage />} />
-      {/* <Route
-        path="/user/main"
-        element={
-          <AuthCheck>
-            <UserMainPage />
-          </AuthCheck>
-        }
-      /> */}
       <Route path="/user/info/edit" element={<UserInfoEdit />} />
       <Route path="/user/info/bookmark" element={<UserInfoBookMark />} />
       <Route path="/user/pay/charge" element={<UserPayCharge />} />

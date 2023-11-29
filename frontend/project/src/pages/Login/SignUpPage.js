@@ -9,10 +9,11 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { MenuItem } from '@mui/material';
 import LoginBackground from '../../components/Background/LoginBackground';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postData } from '../../config';
 import { Alert } from '@mui/material';
+import { loginPageAuthCheck } from '../../AuthCheck';
 
 const passwordQuestion = [
   {
@@ -24,6 +25,9 @@ const passwordQuestion = [
 
 const SignUpPage = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    loginPageAuthCheck(navigate);
+  }, []);
   const [inputData, setInputData] = useState({
     id: '',
     password: '',
@@ -43,9 +47,6 @@ const SignUpPage = () => {
     setInputData((prevData) => ({ ...prevData, [key]: value }));
   };
   const checkUserInput = () => {
-    console.log(inputData.password);
-    console.log(inputData.passwordCheck);
-    console.log(inputData.pw_question);
     if (
       inputData.id.trim() === '' ||
       inputData.email.trim() === '' ||
@@ -74,20 +75,9 @@ const SignUpPage = () => {
         setIsValid(true);
         const finalInputData = { ...inputData };
         delete finalInputData.passwordCheck;
-        console.log(`보내는 데이터: ${finalInputData}`);
         const { status } = await postData('api/signup', finalInputData);
-        console.log(`회원가입 시도: ${status}`);
         if (status) {
           alert('회원가입 성공');
-          // setInputData({
-          //   email: '',
-          //   id: '',
-          //   password: '',
-          //   passwordCheck: '',
-          //   pw_question: '',
-          //   pw_answer: '',
-          //   phone_number: ''
-          // });
           navigate('/signin');
         }
       }

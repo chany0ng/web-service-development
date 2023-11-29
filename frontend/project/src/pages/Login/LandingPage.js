@@ -3,8 +3,15 @@ import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import styles from './LandingPage.module.scss';
 import LoginBackground from '../../components/Background/LoginBackground';
+import { loginPageAuthCheck } from '../../AuthCheck';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    loginPageAuthCheck(navigate);
+  }, []);
   return (
     <LoginBackground>
       <h1 className={styles.h1}>

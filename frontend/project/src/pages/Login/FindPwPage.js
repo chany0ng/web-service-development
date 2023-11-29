@@ -9,9 +9,10 @@ import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { MenuItem, Alert } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { postData } from '../../config';
 import { useNavigate } from 'react-router-dom';
+import { loginPageAuthCheck } from '../../AuthCheck';
 
 const passwordQuestion = [
   {
@@ -23,6 +24,9 @@ const passwordQuestion = [
 
 const FindPwPage = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    loginPageAuthCheck(navigate);
+  }, []);
   const [inputData, setInputData] = useState({
     id: '',
     pw_question: 1,
