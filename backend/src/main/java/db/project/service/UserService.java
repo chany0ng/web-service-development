@@ -28,8 +28,8 @@ public class UserService {
     private long accessTokenValidTime = 60 * 60 * 1000L; //1시간
     private long refreshTokenValidTime = 7 * 24 * 60 * 60 * 1000L; //일주일
 
-    public String save(User user) {
-        return userRepository.save(user)
+    public void save(User user) {
+        userRepository.save(user)
                 .orElseThrow(() -> new IllegalArgumentException("중복된 아이디입니다."));
     }
 
@@ -57,6 +57,7 @@ public class UserService {
         return UserLoginResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .role(user.getRole())
                 .build();
     }
 

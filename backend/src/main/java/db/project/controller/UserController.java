@@ -23,8 +23,8 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody User user) {
-        return ResponseEntity.ok(userService.save(user));
+    public ResponseEntity<Void> signup(@RequestBody User user) {
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/login")
@@ -36,6 +36,11 @@ public class UserController {
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
         userService.logout();
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<Void> check() {
         return ResponseEntity.ok().build();
     }
 
