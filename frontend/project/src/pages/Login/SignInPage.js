@@ -59,7 +59,7 @@ const SignInPage = () => {
         }
       }
     } catch (error) {
-      console.log('Sign In 에러', error);
+      console.error('Sign In 에러', error);
       alert(error);
     }
   };
