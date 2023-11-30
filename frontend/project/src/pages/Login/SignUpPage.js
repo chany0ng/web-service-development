@@ -79,14 +79,14 @@ const SignUpPage = () => {
         if (status === 200) {
           alert('회원가입 성공');
           navigate('/signin');
-        } else if (status === 500) {
+        }
+        if (status === 500) {
           alert('이미 존재하는 ID입니다!');
-        } else {
-          throw new Error(`${status} 에러 발생`);
         }
       }
     } catch (error) {
       console.error('회원가입 에러', error);
+      alert(error);
     }
   };
   return (

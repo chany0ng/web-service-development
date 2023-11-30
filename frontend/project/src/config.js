@@ -23,6 +23,9 @@ export const getFetch = async (url) => {
         const refreshStatus = await updateRefreshToken();
         return { status: refreshStatus };
       }
+      if (response.status !== 200 && response.status !== 403) {
+        throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      }
       return { status: response.status, data };
     } else {
       response = await fetch(`${BASE_URL}${url}`, {
@@ -32,6 +35,9 @@ export const getFetch = async (url) => {
         }
       });
       const data = await response.json();
+      if (response.status !== 200 && response.status !== 401) {
+        throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      }
       return { status: response.status, data };
     }
   } catch (error) {
@@ -57,8 +63,13 @@ export const postFetch = async (url, body) => {
         const refreshStatus = await updateRefreshToken();
         return { status: refreshStatus };
       }
+      if (response.status !== 200 && response.status !== 403) {
+        throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      }
       return { status: response.status, data };
-    } else {
+    }
+    // else: 로그인 관련 페이지에서만 적용
+    else {
       response = await fetch(`${BASE_URL}${url}`, {
         method: 'POST',
         headers: {
@@ -67,6 +78,12 @@ export const postFetch = async (url, body) => {
         body: JSON.stringify(body)
       });
       const data = await response.json();
+      if (
+        (response.status !== 200 && response.status !== 401) ||
+        response.status !== 500
+      ) {
+        throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      }
       return { status: response.status, data };
     }
   } catch (error) {
@@ -88,12 +105,14 @@ const updateRefreshToken = async () => {
       const data = await response.json();
       localStorage.setItem('accessToken', data.accessToken);
       alert('로그인이 갱신되었습니다!');
-    }
-    if (response.status === 401) {
+      return { status: response.status };
+    } else if (response.status === 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      return { status: response.status };
+    } else {
+      throw new Error(`Failed to refresh login. Status: ${response.status}`);
     }
-    return { status: response.status };
   } catch (error) {
     throw error;
   }
@@ -110,8 +129,8 @@ export const sendAccessToken = async (accessToken) => {
     });
     if (response.status === 401) {
       return await updateRefreshToken();
-    } else if (response.status === 200) {
-      return { status: 200 };
+    } else if (response.status === 200 || response.status === 403) {
+      return { status: response.status };
     } else {
       throw new Error('Access token 에러 발생');
     }
