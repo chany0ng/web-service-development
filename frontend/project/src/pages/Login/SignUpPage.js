@@ -11,7 +11,7 @@ import { MenuItem } from '@mui/material';
 import LoginBackground from '../../components/Background/LoginBackground';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { postData } from '../../config';
+import { postFetch } from '../../config';
 import { Alert } from '@mui/material';
 import { loginPageAuthCheck } from '../../AuthCheck';
 
@@ -75,14 +75,18 @@ const SignUpPage = () => {
         setIsValid(true);
         const finalInputData = { ...inputData };
         delete finalInputData.passwordCheck;
-        const { status } = await postData('api/signup', finalInputData);
-        if (status) {
+        const { status } = await postFetch('api/signup', finalInputData);
+        if (status === 200) {
           alert('회원가입 성공');
           navigate('/signin');
+        } else if (status === 500) {
+          alert('이미 존재하는 ID입니다!');
+        } else {
+          throw new Error(`${status} 에러 발생`);
         }
       }
     } catch (error) {
-      console.log('회원가입 에러', error);
+      console.error('회원가입 에러', error);
     }
   };
   return (
