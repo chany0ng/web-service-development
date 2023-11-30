@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { MenuItem, Alert } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { postData } from '../../config';
+import { postFetch } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { loginPageAuthCheck } from '../../AuthCheck';
 
@@ -47,7 +47,7 @@ const FindPwPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postData('url', inputData);
+        const { status, data } = await postFetch('url', inputData);
         if (status) {
           alert(`비밀번호는 ${data}입니다.`);
           navigate('/signin');

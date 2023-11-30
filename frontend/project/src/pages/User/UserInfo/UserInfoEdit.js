@@ -3,7 +3,7 @@ import TabBar from '../../../components/TabBar/TabBar';
 import InnerTabBar from '../../../components/TabBar/InnerTabBar';
 import { useState } from 'react';
 import styles from './UserInfoEdit.module.scss';
-import { postData } from '../../../config';
+import { postFetch } from '../../../config';
 import { Grid, Alert, Button } from '@mui/material';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import Article from '../../../layouts/Article';
@@ -43,7 +43,7 @@ const UserInfoEdit = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status } = await postData('url', inputData);
+        const { status } = await postFetch('url', inputData);
         if (status) {
           alert('개인정보 수정 완료!');
           // navigate('/user/info/edit');

@@ -10,7 +10,7 @@ import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import LoginBackground from '../../components/Background/LoginBackground';
-import { postData } from '../../config';
+import { postFetch } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { loginPageAuthCheck } from '../../AuthCheck';
 
@@ -47,7 +47,7 @@ const SignInPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postData('api/login', inputData);
+        const { status, data } = await postFetch('api/login', inputData);
         console.log(`로그인 시도: ${status}`);
         if (status === 401) {
           idPwCheck(data);
@@ -55,12 +55,12 @@ const SignInPage = () => {
         if (status === 200) {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
-          // 로컬스토리지에 로그인상태 저장 -> 메인화면에서 useEffect로 받기
           navigate('/user/main');
         }
       }
     } catch (error) {
-      console.log('로그인 에러', error);
+      console.log('Sign In 에러', error);
+      alert(error);
     }
   };
 
@@ -141,6 +141,7 @@ const SignInPage = () => {
             >
               Login
             </Button>
+            <a href="/oauth2/authorization/google">Google Login</a>
             <Grid container justifyContent="center">
               <Grid item xs={4}>
                 <Link
