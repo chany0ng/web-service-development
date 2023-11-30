@@ -33,7 +33,7 @@ public class SurchargeRepository {
         }
     }
 
-    public Integer getOverfee(String user_id) {
+    public int getOverfee(String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("user_id", user_id);
         String checkOverfee = "SELECT overfee FROM user WHERE user_id = :user_id";
