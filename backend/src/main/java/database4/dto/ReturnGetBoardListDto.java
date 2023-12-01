@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReturnPostBoardListDto {
+public class ReturnGetBoardListDto {
     private String title;
     private String date;
 }

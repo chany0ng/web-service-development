@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class BoardListResponseDto {
-    List<ReturnPostBoardListDto> boardList;
+    List<ReturnGetBoardListDto> boardList;
 
     public BoardListResponseDto() {
         this.boardList = new ArrayList<>();

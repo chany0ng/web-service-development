@@ -2,7 +2,7 @@ package database4.repository;
 
 import database4.dto.PostBoardCreateAndUpdateDto;
 import database4.dto.ReturnGetBoardInfoDto;
-import database4.dto.ReturnPostBoardListDto;
+import database4.dto.ReturnGetBoardListDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -21,12 +21,12 @@ public class BoardRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReturnPostBoardListDto> boardList(int page) {
+    public List<ReturnGetBoardListDto> boardList(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
         String sql = "SELECT title, created_at as date FROM board LIMIT :page, 10";
 
-        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnPostBoardListDto.class));
+        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardListDto.class));
     }
 
     public Optional<ReturnGetBoardInfoDto> boardInfo(int boardId, String user_id) {

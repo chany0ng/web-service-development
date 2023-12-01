@@ -20,10 +20,10 @@ public class BoardService {
 
     public BoardListResponseDto boardList(int page) {
         page = (page - 1) * 10;
-        List<ReturnPostBoardListDto> boardList = boardRepository.boardList(page);
+        List<ReturnGetBoardListDto> boardList = boardRepository.boardList(page);
 
         BoardListResponseDto response = new BoardListResponseDto();
-        for (ReturnPostBoardListDto board : boardList) {
+        for (ReturnGetBoardListDto board : boardList) {
             response.getBoardList().add(board);
         }
         return response;

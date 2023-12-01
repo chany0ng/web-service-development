@@ -9,14 +9,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api")
-@Slf4j
 public class BoardController {  // 게시판 Controller
     private final BoardService boardService;
 
@@ -34,7 +32,7 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "200", description = "게시판 리스트 열람 성공")
     })
     // 게시물 리스트
-    public ResponseEntity<BoardListResponseDto> boardList(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<BoardListResponseDto> getBoardList(@RequestParam(defaultValue = "1") int page) {
 
         BoardListResponseDto boardListResponseDto = boardService.boardList(page);
         return ResponseEntity.ok(boardListResponseDto);
@@ -55,7 +53,7 @@ public class BoardController {  // 게시판 Controller
             })
     })
     // 게시물 상세정보
-    public ResponseEntity<?> boardInfo(@PathVariable int boardId) {
+    public ResponseEntity<?> getBoardInfo(@PathVariable int boardId) {
         try{
             return ResponseEntity.ok(boardService.boardInfo(boardId));
         } catch (BoardException e) {
@@ -73,7 +71,7 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "200", description = "게시물 생성 성공")
     })
     // 게시물 생성
-    public ResponseEntity<Void> boardCreate(@RequestBody PostBoardCreateAndUpdateDto form) {
+    public ResponseEntity<Void> postBoardCreate(@RequestBody PostBoardCreateAndUpdateDto form) {
         boardService.boardCreate(form);
         return ResponseEntity.ok().build();
     }
@@ -98,7 +96,7 @@ public class BoardController {  // 게시판 Controller
             })
     })
     // 게시물 수정
-    public ResponseEntity<String> boardUpdate(@PathVariable int boardId, @RequestBody PostBoardCreateAndUpdateDto form) {
+    public ResponseEntity<String> postBoardUpdate(@PathVariable int boardId, @RequestBody PostBoardCreateAndUpdateDto form) {
 
         try {
             String result = boardService.boardUpdate(form, boardId);
@@ -129,7 +127,7 @@ public class BoardController {  // 게시판 Controller
             })
     })
     // 게시물 삭제
-    public ResponseEntity<String> boardDelete(@PathVariable int boardId) {
+    public ResponseEntity<String> postBoardDelete(@PathVariable int boardId) {
         try{
             String result = boardService.boardDelete(boardId);
             return ResponseEntity.ok(result);
