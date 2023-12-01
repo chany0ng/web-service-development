@@ -5,21 +5,22 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { postFetch } from './../config';
 const Header = ({ sections, title }) => {
   const navigate = useNavigate();
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
     try {
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
-      if (
-        localStorage.getItem('accessToken') ||
-        localStorage.getItem('refreshToken')
-      ) {
+      const response = await postFetch('api/logout', {});
+      if (response.status === 200) {
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        navigate('/');
+      } else {
         throw new Error('토큰이 정상적으로 삭제되지 않았습니다!');
       }
-      navigate('/');
     } catch (error) {
       console.error('로그아웃 중 에러 발생:', error);
+      alert(error);
     }
   };
   return (
@@ -49,7 +50,7 @@ const Header = ({ sections, title }) => {
         sx={{
           justifyContent: 'space-around',
           overflowX: 'auto',
-          padding: '8px',
+          padding: '10px',
           mb: '20px',
           borderBottom: 1,
           borderColor: 'primary.light',
