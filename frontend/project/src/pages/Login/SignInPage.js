@@ -48,7 +48,7 @@ const SignInPage = () => {
       } else {
         setIsValid(true);
         const { status, data } = await postFetch('api/login', inputData);
-        console.log(`로그인 시도: ${status}`);
+        console.log(`로그인: ${status}, ${data}`);
         if (status === 401) {
           idPwCheck(data);
         }

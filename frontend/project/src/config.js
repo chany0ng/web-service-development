@@ -79,8 +79,9 @@ export const postFetch = async (url, body) => {
       });
       const data = await response.json();
       if (
-        (response.status !== 200 && response.status !== 401) ||
-        response.status !== 500
+        response.status !== 200 &&
+        response.status !== 500 &&
+        response.status !== 401
       ) {
         throw new Error(`Failed to fetch data. Status: ${response.status}`);
       }
