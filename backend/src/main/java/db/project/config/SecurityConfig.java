@@ -1,6 +1,10 @@
 package db.project.config;
 
 import db.project.config.jwt.TokenProvider;
+import db.project.config.oauth.OAuth2SuccessHandler;
+import db.project.config.oauth.OAuth2UserCustomService;
+import db.project.repository.RefreshTokenRepository;
+import db.project.repository.UserRepository;
 import db.project.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -23,8 +27,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final TokenProvider tokenProvider;
+    private final OAuth2UserCustomService oAuth2UserCustomService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final RefreshTokenRepository refreshTokenRepository;
+    private final UserRepository userRepository;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http//.httpBasic(HttpBasicConfigurer::disable)
@@ -41,12 +48,16 @@ public class SecurityConfig {
 
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
+        http.oauth2Login(oauth2Login -> {
+            oauth2Login.userInfoEndpoint(userInfoEndpoint ->
+                    userInfoEndpoint.userService(oAuth2UserCustomService));
+            oauth2Login.successHandler(oAuth2SuccessHandler());
+        });
+
         http.exceptionHandling(exception ->  {
             exception.accessDeniedHandler(jwtAccessDeniedHandler);
             exception.authenticationEntryPoint(jwtAuthenticationEntryPoint);
         });
-
-
 
         return http.build();
     }
@@ -60,4 +71,9 @@ public class SecurityConfig {
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
         return new TokenAuthenticationFilter(tokenProvider);
     }
+    @Bean
+    public OAuth2SuccessHandler oAuth2SuccessHandler() {
+        return new OAuth2SuccessHandler(tokenProvider, refreshTokenRepository, userRepository);
+    }
+
 }

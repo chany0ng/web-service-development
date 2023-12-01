@@ -29,7 +29,7 @@ public class UserRepository {
         }
     }
 
-    public Optional<String> save(User user) {
+    public Optional<User> save(User user) {
         try {
             BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             String sql = """
@@ -45,7 +45,7 @@ public class UserRepository {
                     .addValue("role", user.getRole());
             int affctedRows = namedParameterJdbcTemplate.update(sql, parameterSource);
 
-            return Optional.of(user.getId());
+            return Optional.of(user);
         } catch (DuplicateKeyException e) {
             return Optional.empty();
         }

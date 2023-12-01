@@ -31,6 +31,8 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken' , name: 'jjwt-impl', version: '0.11.5'
 	runtimeOnly group: 'io.jsonwebtoken' , name: 'jjwt-jackson', version: '0.11.5'
 
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 	//배포 시 지울 것
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 }
