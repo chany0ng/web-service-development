@@ -141,7 +141,9 @@ const SignInPage = () => {
             >
               Login
             </Button>
-            <a href="/oauth2/authorization/google">Google Login</a>
+            <a href="http://localhost:8080/oauth2/authorization/google">
+              Google Login
+            </a>
             <Grid container justifyContent="center">
               <Grid item xs={4}>
                 <Link

@@ -60,7 +60,7 @@ const UserPayExtraCharge = () => {
       <TabBar title={outerTitle} select={outerTab} />
       <InnerTabBar title={innerTitle} select={innerTab} url={url} />
       <Article>
-        <p className={styles.notice}>
+        <div className={styles.notice}>
           <p>
             <span style={{ color: 'red' }}>이용 가능시간</span>은 첫 회
             대여시점을 기준으로 계산합니다.
@@ -74,7 +74,7 @@ const UserPayExtraCharge = () => {
             환불 규정 보기 이용권을 다른 사람에게 양도할 수 없으며,양도로 인해
             발생하는 불이익은 구매자가 책임지셔야 합니다.
           </p>
-        </p>
+        </div>
         <section className={styles.flexContainer}>
           <div className={styles.flexItem}>
             <span className={styles.first}>보유 금액 : </span>

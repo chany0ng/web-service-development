@@ -10,6 +10,8 @@ import UserPayCharge from './pages/User/UserPay/UserPayCharge';
 import UserPayExtraCharge from './pages/User/UserPay/UserPayExtraCharge';
 import UserManageRentalHistory from './pages/User/UserManage/UserManageRentalHistory';
 import UserManageRentalRanking from './pages/User/UserManage/UserManageRentalRanking';
+import UserTicketBuy from './pages/User/UserTicket/UserTicketBuy';
+import UserTicketGift from './pages/User/UserTicket/UserTicketGift';
 
 const Router = () => {
   return (
@@ -31,6 +33,8 @@ const Router = () => {
         path="/user/manage/rental-ranking"
         element={<UserManageRentalRanking />}
       />
+      <Route path="/user/ticket/buy" element={<UserTicketBuy />} />
+      <Route path="/user/ticket/gift" element={<UserTicketGift />} />
     </Routes>
   );
 };
