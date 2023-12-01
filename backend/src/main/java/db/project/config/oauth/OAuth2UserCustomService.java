@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,17 +29,20 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
         String id = email.substring(0, email.indexOf("@")) + "_google";
-        User user = userRepository.findUserById(id)
-                .orElse(userRepository.save(User.builder()
-                        .id(id)
-                        .password("")
-                        .phone_number("")
-                        .pw_question(1)
-                        .pw_answer("")
-                        .email(email)
-                        .role("user")
-                        .build()).get()
-                        );
+
+        Optional<User> user = userRepository.findUserById(id);
+        if (!user.isPresent()) {
+            userRepository.save(User.builder()
+                    .id(id)
+                    .password("")
+                    .phone_number("")
+                    .pw_question(1)
+                    .pw_answer("")
+                    .email(email)
+                    .role("user")
+                    .build());
+        }
+
     }
 
 }
