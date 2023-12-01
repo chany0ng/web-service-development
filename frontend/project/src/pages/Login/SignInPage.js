@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -10,13 +10,18 @@ import LoginOutlinedIcon from '@mui/icons-material/LoginOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import LoginBackground from '../../components/Background/LoginBackground';
-import { postData } from '../../config';
+import { postFetch } from '../../config';
 import { useNavigate } from 'react-router-dom';
+import { loginPageAuthCheck } from '../../AuthCheck';
 
 const SignInPage = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    loginPageAuthCheck(navigate);
+  }, []);
+
   const [inputData, setInputData] = useState({
-    user_id: '',
+    id: '',
     password: ''
   });
   const [isValid, setIsValid] = useState(true);
@@ -26,24 +31,36 @@ const SignInPage = () => {
     const value = e.target.value;
     setInputData((prevData) => ({ ...prevData, [key]: value }));
   };
-
+  const idPwCheck = (data) => {
+    const message = data.message;
+    if (message.includes('아이디')) {
+      alert('존재하지 않는 ID입니다.');
+    }
+    if (message.includes('비밀번호')) {
+      alert('비밀번호가 일치하지 않습니다.');
+    }
+  };
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
-      if (inputData.user_id.trim() === '' || inputData.password.trim() === '') {
+      if (inputData.id.trim() === '' || inputData.password.trim() === '') {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postData('api/login', inputData);
-        console.log(`로그인 시도: ${status}`);
-        if (status) {
-          localStorage.setItem('token', data.token);
-          // 로컬스토리지에 로그인상태 저장 -> 메인화면에서 useEffect로 받기
+        const { status, data } = await postFetch('api/login', inputData);
+        console.log(`로그인: ${status}, ${data}`);
+        if (status === 401) {
+          idPwCheck(data);
+        }
+        if (status === 200) {
+          localStorage.setItem('accessToken', data.accessToken);
+          localStorage.setItem('refreshToken', data.refreshToken);
           navigate('/user/main');
         }
       }
     } catch (error) {
-      alert('로그인 에러', error);
+      console.error('Sign In 에러', error);
+      alert(error);
     }
   };
 
@@ -74,13 +91,13 @@ const SignInPage = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  value={inputData.user_id}
+                  value={inputData.id}
                   onChange={inputDataHandler}
                   fullWidth
-                  name="user_id"
+                  name="id"
                   label="아이디"
                   type="id"
-                  id="user_id"
+                  id="id"
                   variant="standard"
                   helperText="20자 이하"
                 />
@@ -124,6 +141,7 @@ const SignInPage = () => {
             >
               Login
             </Button>
+            <a href="http://localhost:8080/oauth2/authorization/google">Google Login</a>
             <Grid container justifyContent="center">
               <Grid item xs={4}>
                 <Link

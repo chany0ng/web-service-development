@@ -1,36 +1,140 @@
-// API는 config.js 파일에 일괄적으로 관리하면서 import, export 통해 사용하면 좋습니다.
-// 백엔드 서버 IP 가 변경되면 fetch 함수를 일일이 찾아서 수정해주지 않아도 됩니다.
 // 로딩 중에, loading이라는 state변수 하나 만들어놓고 로딩상태아이콘 띄우기(212 강의)
 
-const BASE_URL = 'http://localhost:3000/';
+const BASE_URL = 'http://localhost:8080/';
+const ACCESS_URL = 'http://localhost:8080/api/check';
+const REFRESH_URL = 'http://localhost:8080/api/token';
 // const [isLoading, setIsLoading] = useState(false); // 로딩중 유무 state
 // const [error, setError] = useState(null); // state로 에러 메시지 관리
-export const getData = async (url) => {
+
+export const getFetch = async (url) => {
   try {
-    const response = await fetch(`${BASE_URL}${url}`);
-    if (!response.ok) {
-      throw new Error('API GET요청 에러 발생');
+    const accessToken = localStorage.getItem('accessToken');
+    let response = null;
+    if (accessToken) {
+      response = await fetch(`${BASE_URL}${url}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      const data = await response.json();
+      if (response.status === 401) {
+        const refreshStatus = await updateRefreshToken();
+        return { status: refreshStatus };
+      }
+      if (response.status !== 200 && response.status !== 403) {
+        throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      }
+      return { status: response.status, data };
+    } else {
+      response = await fetch(`${BASE_URL}${url}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      if (response.status !== 200 && response.status !== 401) {
+        throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      }
+      return { status: response.status, data };
     }
-    const data = response.json(); // json -> js로 변환
-    return { status: response.status, data }; // API요청 템플릿을 만들어 놓은 것
   } catch (error) {
-    console.error(error);
     throw error;
   }
 };
 
-export const postData = async (url, body) => {
+export const postFetch = async (url, body) => {
   try {
-    const response = await fetch(`${BASE_URL}${url}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application.json' },
-      body: JSON.stringify(body)
-    });
-    if (!response.ok) {
-      throw new Error('API POST요청 에러 발생');
+    const accessToken = localStorage.getItem('accessToken');
+    let response = null;
+    if (accessToken) {
+      response = await fetch(`${BASE_URL}${url}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify(body)
+      });
+      const data = await response.json();
+      if (response.status === 401) {
+        const refreshStatus = await updateRefreshToken();
+        return { status: refreshStatus };
+      }
+      if (response.status !== 200 && response.status !== 403) {
+        throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      }
+      return { status: response.status, data };
     }
-    const data = response.json();
-    return { status: response.status, data };
+    // else: 로그인 관련 페이지에서만 적용
+    else {
+      response = await fetch(`${BASE_URL}${url}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+      const data = await response.json();
+      if (
+        response.status !== 200 &&
+        response.status !== 500 &&
+        response.status !== 401
+      ) {
+        throw new Error(`Failed to fetch data. Status: ${response.status}`);
+      }
+      return { status: response.status, data };
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateRefreshToken = async () => {
+  try {
+    const refreshToken = localStorage.getItem('refreshToken');
+    const response = await fetch(`${REFRESH_URL}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(refreshToken)
+    });
+    if (response.status === 200) {
+      const data = await response.json();
+      localStorage.setItem('accessToken', data.accessToken);
+      alert('로그인이 갱신되었습니다!');
+      return { status: response.status };
+    } else if (response.status === 401) {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      return { status: response.status };
+    } else {
+      throw new Error(`Failed to refresh login. Status: ${response.status}`);
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const sendAccessToken = async (accessToken) => {
+  try {
+    const response = await fetch(ACCESS_URL, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    if (response.status === 401) {
+      return await updateRefreshToken();
+    } else if (response.status === 200 || response.status === 403) {
+      return { status: response.status };
+    } else {
+      throw new Error('Access token 에러 발생');
+    }
   } catch (error) {
     throw error;
   }

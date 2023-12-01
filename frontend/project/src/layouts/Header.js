@@ -8,7 +8,19 @@ import { useNavigate } from 'react-router-dom';
 const Header = ({ sections, title }) => {
   const navigate = useNavigate();
   const logoutHandler = () => {
-    navigate('/signin');
+    try {
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
+      if (
+        localStorage.getItem('accessToken') ||
+        localStorage.getItem('refreshToken')
+      ) {
+        throw new Error('토큰이 정상적으로 삭제되지 않았습니다!');
+      }
+      navigate('/');
+    } catch (error) {
+      console.error('로그아웃 중 에러 발생:', error);
+    }
   };
   return (
     <header className={styles.header}>

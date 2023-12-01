@@ -9,26 +9,27 @@ import KeyOutlinedIcon from '@mui/icons-material/KeyOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { MenuItem, Alert } from '@mui/material';
-import { useState } from 'react';
-import { postData } from '../../config';
+import { useState, useEffect } from 'react';
+import { postFetch } from '../../config';
 import { useNavigate } from 'react-router-dom';
+import { loginPageAuthCheck } from '../../AuthCheck';
 
 const passwordQuestion = [
   {
     question: 'school',
-    description: '졸업한 초등학교 이름'
-  },
-  {
-    question: 'school2',
-    description: '졸업한 중학교 이름'
+    description: '졸업한 초등학교 이름',
+    value: 1
   }
 ];
 
 const FindPwPage = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    loginPageAuthCheck(navigate);
+  }, []);
   const [inputData, setInputData] = useState({
-    user_id: '',
-    pw_question: '',
+    id: '',
+    pw_question: 1,
     pw_answer: ''
   });
   const [isValid, setIsValid] = useState(true);
@@ -42,15 +43,11 @@ const FindPwPage = () => {
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
-      if (
-        inputData.user_id.trim() === '' ||
-        inputData.pw_answer.trim() === '' ||
-        inputData.pw_question.trim() === ''
-      ) {
+      if (inputData.id.trim() === '' || inputData.pw_answer.trim() === '') {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postData('url', inputData);
+        const { status, data } = await postFetch('url', inputData);
         if (status) {
           alert(`비밀번호는 ${data}입니다.`);
           navigate('/signin');
@@ -87,14 +84,14 @@ const FindPwPage = () => {
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
-                  value={inputData.user_id}
+                  value={inputData.id}
                   onChange={inputDataHandler}
                   required
                   fullWidth
-                  name="user_id"
+                  name="id"
                   label="아이디"
                   type="id"
-                  id="user_id"
+                  id="id"
                   variant="standard"
                 />
               </Grid>
@@ -111,7 +108,7 @@ const FindPwPage = () => {
                   helperText="비밀번호 찾기 질문을 선택해주세요"
                 >
                   {passwordQuestion.map((option) => (
-                    <MenuItem key={option.question} value={option.description}>
+                    <MenuItem key={option.question} value={option.value}>
                       {option.description}
                     </MenuItem>
                   ))}
