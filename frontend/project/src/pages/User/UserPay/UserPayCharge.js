@@ -10,8 +10,8 @@ const innerTitle = ['카드 금액 충전', '추가요금 결제'];
 const outerTab = 'pay';
 const innerTab = 'charge';
 const url = {
-  charge: '/user/pay/charge',
-  'extra-charge': '/user/pay/extra-charge'
+  charge: '/user/payment/charge',
+  'extra-charge': '/user/payment/extra-charge'
 };
 
 const UserPayCharge = () => {
