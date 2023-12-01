@@ -1,26 +1,22 @@
-package db.project.config;
+package database4.config;
 
-import db.project.config.jwt.TokenProvider;
-import db.project.config.oauth.OAuth2SuccessHandler;
-import db.project.config.oauth.OAuth2UserCustomService;
-import db.project.repository.RefreshTokenRepository;
-import db.project.repository.UserRepository;
-import db.project.service.UserService;
+import database4.config.jwt.TokenProvider;
+import database4.config.oauth.OAuth2SuccessHandler;
+import database4.config.oauth.OAuth2UserCustomService;
+import database4.repository.RefreshTokenRepository;
+import database4.repository.UserRepository;
+import database4.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity

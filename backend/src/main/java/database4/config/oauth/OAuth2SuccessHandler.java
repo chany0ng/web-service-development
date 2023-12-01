@@ -1,10 +1,10 @@
-package db.project.config.oauth;
+package database4.config.oauth;
 
-import db.project.config.jwt.TokenProvider;
-import db.project.domain.User;
-import db.project.repository.RefreshTokenRepository;
-import db.project.repository.UserRepository;
-import db.project.service.UserService;
+import database4.config.jwt.TokenProvider;
+import database4.domain.User;
+import database4.repository.RefreshTokenRepository;
+import database4.repository.UserRepository;
+import database4.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

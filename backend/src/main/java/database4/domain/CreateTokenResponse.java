@@ -1,4 +1,4 @@
-package db.project.domain;
+package database4.domain;
 
 
 import lombok.Builder;

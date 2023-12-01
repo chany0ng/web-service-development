@@ -1,7 +1,7 @@
-package db.project.config.oauth;
+package database4.config.oauth;
 
-import db.project.domain.User;
-import db.project.repository.UserRepository;
+import database4.domain.User;
+import database4.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
