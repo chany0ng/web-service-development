@@ -47,14 +47,15 @@ const FindPwPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postFetch('url', inputData);
-        if (status) {
+        const { status, data } = await postFetch('api/findpw', inputData);
+        if (status === 200) {
           alert(`비밀번호는 ${data}입니다.`);
           navigate('/signin');
         }
       }
     } catch (error) {
-      console.error(error);
+      console.error('비밀번호 찾기 에러', error);
+      alert(error);
     }
   };
   return (

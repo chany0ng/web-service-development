@@ -14,7 +14,9 @@ import UserTicketBuy from './pages/User/UserTicket/UserTicketBuy';
 import UserTicketGift from './pages/User/UserTicket/UserTicketGift';
 import UserNoticeList from './pages/User/UserNotice/UserNoticeList';
 import UserNoticeView from './pages/User/UserNotice/UserNoticeView';
-
+import UserReportList from './pages/User/UserReport/UserReportList';
+import UserReportView from './pages/User/UserReport/UserReportView';
+import UserReportWrite from './pages/User/UserReport/UserReportWrite';
 const Router = () => {
   return (
     <Routes>
@@ -47,6 +49,18 @@ const Router = () => {
       <Route
         path="/user/notice/noticeView/:postNumber"
         element={<UserNoticeView />}
+      />
+      <Route
+        path="/user/report/reportList/:pageNumber"
+        element={<UserReportList />}
+      />
+      <Route
+        path="/user/report/reportView/:postNumber"
+        element={<UserReportView />}
+      />
+      <Route
+        path="/user/report/reportBoardEdit"
+        element={<UserReportWrite />}
       />
     </Routes>
   );
