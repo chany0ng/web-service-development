@@ -9,8 +9,8 @@ import { useNavigate } from 'react-router-dom';
 const innerTitle = ['일일권 구매', '일일권 선물'];
 const innerTab = 'buy';
 const url = {
-  buy: '/user/ticket/buy',
-  gift: '/user/ticket/gift'
+  buy: '/user/tickets/purchase',
+  gift: '/user/tickets/gift'
 };
 const UserTicketBuy = () => {
   const [checked, setChecked] = useState(false);
