@@ -13,6 +13,7 @@ import UserManageRentalRanking from './pages/User/UserManage/UserManageRentalRan
 import UserTicketBuy from './pages/User/UserTicket/UserTicketBuy';
 import UserTicketGift from './pages/User/UserTicket/UserTicketGift';
 import UserNoticeList from './pages/User/UserNotice/UserNoticeList';
+import UserNoticeView from './pages/User/UserNotice/UserNoticeView';
 
 const Router = () => {
   return (
@@ -42,6 +43,10 @@ const Router = () => {
       <Route
         path="/user/notice/noticeList/:pageNumber"
         element={<UserNoticeList />}
+      />
+      <Route
+        path="/user/notice/noticeView/:postNumber"
+        element={<UserNoticeView />}
       />
     </Routes>
   );
