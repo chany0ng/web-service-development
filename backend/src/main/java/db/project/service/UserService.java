@@ -1,16 +1,11 @@
 package db.project.service;
 
 import db.project.config.jwt.TokenProvider;
-import db.project.domain.RefreshToken;
-import db.project.domain.UserLoginResponse;
-import db.project.domain.User;
-import db.project.domain.UserLoginRequest;
+import db.project.domain.*;
 import db.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +19,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final RefreshTokenService refreshTokenService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private long accessTokenValidTime = 60 * 60 * 1000L; //1시간
     private long refreshTokenValidTime = 7 * 24 * 60 * 60 * 1000L; //일주일
@@ -42,7 +38,6 @@ public class UserService {
         User user = userRepository.findUserById(userLoginRequest.getId())
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디입니다."));
 
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         if(!bCryptPasswordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
         }
@@ -66,4 +61,23 @@ public class UserService {
         refreshTokenService.deleteById(id);
     }
 
+    public PWQuestionResponse findPWQuestion(PWQuestionRequest pwQuestionRequest) {
+        String question = userRepository.findPWQuestionById(pwQuestionRequest.getId())
+                .orElseThrow(() -> new IllegalArgumentException("가입하지 않은 id입니다."));
+        return PWQuestionResponse.builder()
+                .pw_question(question)
+                .build();
+    }
+
+    public void checkPWAnswer(CheckAnswerRequest checkAnswerRequest) {
+        User user = userRepository.findUserById(checkAnswerRequest.getId())
+                .orElseThrow(() -> new IllegalArgumentException("가입하지 않은 id입니다."));
+        if(!checkAnswerRequest.getPw_answer().equals(user.getPw_answer())) {
+            throw new IllegalArgumentException("비밀번호 찾기 답변이 틀렸습니다.");
+        }
+    }
+
+    public void updatePW(UpdatePWRequest updatePWRequest) {
+        userRepository.updatePW(updatePWRequest.getId(), updatePWRequest.getNew_password());
+    }
 }
