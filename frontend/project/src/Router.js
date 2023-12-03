@@ -12,6 +12,7 @@ import UserManageRentalHistory from './pages/User/UserManage/UserManageRentalHis
 import UserManageRentalRanking from './pages/User/UserManage/UserManageRentalRanking';
 import UserTicketBuy from './pages/User/UserTicket/UserTicketBuy';
 import UserTicketGift from './pages/User/UserTicket/UserTicketGift';
+import UserNoticeList from './pages/User/UserNotice/UserNoticeList';
 
 const Router = () => {
   return (
@@ -23,8 +24,11 @@ const Router = () => {
       <Route path="/user/main" element={<UserMainPage />} />
       <Route path="/user/info/edit" element={<UserInfoEdit />} />
       <Route path="/user/info/bookmark" element={<UserInfoBookMark />} />
-      <Route path="/user/pay/charge" element={<UserPayCharge />} />
-      <Route path="/user/pay/extra-charge" element={<UserPayExtraCharge />} />
+      <Route path="/user/payment/charge" element={<UserPayCharge />} />
+      <Route
+        path="/user/payment/extra-charge"
+        element={<UserPayExtraCharge />}
+      />
       <Route
         path="/user/manage/rental-history"
         element={<UserManageRentalHistory />}
@@ -33,8 +37,12 @@ const Router = () => {
         path="/user/manage/rental-ranking"
         element={<UserManageRentalRanking />}
       />
-      <Route path="/user/ticket/buy" element={<UserTicketBuy />} />
-      <Route path="/user/ticket/gift" element={<UserTicketGift />} />
+      <Route path="/user/tickets/purchase" element={<UserTicketBuy />} />
+      <Route path="/user/tickets/gift" element={<UserTicketGift />} />
+      <Route
+        path="/user/notice/noticeList/:pageNumber"
+        element={<UserNoticeList />}
+      />
     </Routes>
   );
 };
