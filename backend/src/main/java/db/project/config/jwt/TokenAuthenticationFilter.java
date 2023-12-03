@@ -1,4 +1,4 @@
-package db.project.config;
+package db.project.config.jwt;
 
 import db.project.config.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;

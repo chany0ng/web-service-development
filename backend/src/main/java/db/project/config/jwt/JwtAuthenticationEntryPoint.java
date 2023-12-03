@@ -1,4 +1,4 @@
-package db.project.config;
+package db.project.config.jwt;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.HttpServletRequest;
