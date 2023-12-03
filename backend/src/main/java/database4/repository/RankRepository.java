@@ -2,7 +2,6 @@ package database4.repository;
 
 import database4.dto.ReturnGetRankCountDto;
 import database4.dto.ReturnGetRankTimeDto;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

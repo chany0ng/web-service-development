@@ -20,8 +20,11 @@ public class BoardService {
 
     public BoardListResponseDto boardList(int page) {
         page = (page - 1) * 10;
-        List<ReturnGetBoardListDto> boardList = boardRepository.boardList(page);
-
+        Optional<List<ReturnGetBoardListDto>> boardListOptional = boardRepository.boardList(page);
+        if(boardListOptional.isEmpty()) {
+            throw new BoardException("잘못된 페이지 접근입니다.");
+        }
+        List<ReturnGetBoardListDto> boardList = boardListOptional.get();
         BoardListResponseDto response = new BoardListResponseDto();
         for (ReturnGetBoardListDto board : boardList) {
             response.getBoardList().add(board);
@@ -31,8 +34,17 @@ public class BoardService {
 
     public ReturnGetBoardInfoDto boardInfo(int boardId) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        return boardRepository.boardInfo(boardId - 1, user_id)
-                .orElseThrow(() -> new BoardException("존재하지 않는 게시물 입니다."));
+        Optional<ReturnGetBoardInfoDto> returnGetBoardInfoDtoOptional = boardRepository.boardInfo(boardId - 1);
+        if(returnGetBoardInfoDtoOptional.isEmpty()) {
+            throw new BoardException("존재하지 않는 게시물 입니다.");
+        }
+        ReturnGetBoardInfoDto returnGetBoardInfoDto = returnGetBoardInfoDtoOptional.get();
+        if(user_id.equals(returnGetBoardInfoDto.getUser_id())) {
+            returnGetBoardInfoDto.setAuthor(true);
+        } else {
+            returnGetBoardInfoDto.setAuthor(false);
+        }
+        return returnGetBoardInfoDto;
     }
 
     public void boardCreate(PostBoardCreateAndUpdateDto postBoardCreateAndUpdateDto) {

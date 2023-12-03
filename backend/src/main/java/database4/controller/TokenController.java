@@ -1,16 +1,17 @@
-package db.project.controller;
+package database4.controller;
 
-import db.project.config.jwt.TokenProvider;
-import db.project.domain.CreateTokenRequest;
-import db.project.domain.CreateTokenResponse;
-import db.project.service.RefreshTokenService;
+import database4.config.jwt.TokenProvider;
+import database4.domain.CreateTokenRequest;
+import database4.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
 @RequestMapping("/api")
 @RestController
@@ -19,11 +20,12 @@ public class TokenController {
     private final TokenProvider tokenProvider;
 
     @PostMapping("/token")
-    public ResponseEntity<CreateTokenResponse> createAccessToken(HttpServletRequest request, @RequestBody CreateTokenRequest createTokenRequest) {
+    public ResponseEntity<String> createAccessToken(HttpServletRequest request, @RequestBody CreateTokenRequest createTokenRequest) {
+        //System.out.println(refreshToken);
         String accessToken = refreshTokenService.createNewAccessToken(createTokenRequest.getRefreshToken(), request);
+
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(CreateTokenResponse.builder()
-                        .accessToken(accessToken)
-                        .build());
+                .body(accessToken);
+        //return ResponseEntity.ok("ok");
     }
 }

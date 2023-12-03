@@ -1,7 +1,5 @@
 package database4.repository;
 
-import database4.dto.PostSurchargeInfoDto;
-import database4.dto.PostSurchargePayDto;
 import database4.dto.ReturnGetSurchargeOverfeeInfoDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

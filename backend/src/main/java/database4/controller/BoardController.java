@@ -29,13 +29,18 @@ public class BoardController {  // 게시판 Controller
             description = "자유게시판 버튼을 클릭했을 때의 API"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "게시판 리스트 열람 성공")
+            @ApiResponse(responseCode = "200", description = "게시판 리스트 열람 성공"),
+            @ApiResponse(responseCode = "400", description = "게시물 리스트 열람 실패")
     })
     // 게시물 리스트
     public ResponseEntity<BoardListResponseDto> getBoardList(@RequestParam(defaultValue = "1") int page) {
 
-        BoardListResponseDto boardListResponseDto = boardService.boardList(page);
-        return ResponseEntity.ok(boardListResponseDto);
+        try{
+            return ResponseEntity.ok(boardService.boardList(page));
+        } catch (BoardException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
     }
 
     @GetMapping("board/info/{boardId}")

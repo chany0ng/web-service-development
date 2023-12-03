@@ -2,7 +2,6 @@ package database4.controller;
 
 import database4.dto.RankCountResponseDto;
 import database4.dto.RankTimeResponseDto;
-import database4.dto.ReturnGetRankTimeDto;
 import database4.service.RankService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

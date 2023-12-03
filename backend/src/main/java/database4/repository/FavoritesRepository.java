@@ -1,6 +1,5 @@
 package database4.repository;
 
-import database4.dto.PostFavoritesChangeDto;
 import database4.dto.PostFavoritesSearchDto;
 import database4.dto.ReturnFavoritesDto;
 import org.springframework.dao.DuplicateKeyException;

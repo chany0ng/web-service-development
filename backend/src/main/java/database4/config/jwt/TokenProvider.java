@@ -27,39 +27,39 @@ public class TokenProvider {
     protected void init() {
         key = Base64.getEncoder().encodeToString(jwtProperties.getSecretKey().getBytes());
     }
-   public String createToken(String id, long expiration) {
-       Date now = new Date();
+    public String createToken(String id, long expiration) {
+        Date now = new Date();
 
-       return Jwts.builder()
-               .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-               .setIssuer(jwtProperties.getIssuer())
-               .setIssuedAt(now)
-               .setExpiration(new Date(now.getTime() + expiration))
-               .setSubject(id)
-               .signWith(SignatureAlgorithm.HS256, key)
-               .compact();
-   }
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setIssuer(jwtProperties.getIssuer())
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + expiration))
+                .setSubject(id)
+                .signWith(SignatureAlgorithm.HS256, key)
+                .compact();
+    }
 
-   public boolean validToken(String token, HttpServletRequest request) {
-       try {
-           Jwts.parser()
-                   .setSigningKey(key)
-                   .parseClaimsJws(token);
-           return true;
-       } catch (ExpiredJwtException ex) {
-           request.setAttribute("exception", "만료된 토큰");
-           return false;
-       }
-   }
-   public Authentication getAuthentication(String token) {
-       Claims claims = getClaims(token);
-       UserDetails userDetails = userDetailService.loadUserByUsername(claims.getSubject());
-       return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
-   }
-   private Claims getClaims(String token) {
-       return Jwts.parser()
-               .setSigningKey(key)
-               .parseClaimsJws(token)
-               .getBody();
-   }
+    public boolean validToken(String token, HttpServletRequest request) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(key)
+                    .parseClaimsJws(token);
+            return true;
+        } catch (ExpiredJwtException ex) {
+            request.setAttribute("exception", "만료된 토큰");
+            return false;
+        }
+    }
+    public Authentication getAuthentication(String token) {
+        Claims claims = getClaims(token);
+        UserDetails userDetails = userDetailService.loadUserByUsername(claims.getSubject());
+        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
+    }
+    private Claims getClaims(String token) {
+        return Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody();
+    }
 }

@@ -21,25 +21,26 @@ public class BoardRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReturnGetBoardListDto> boardList(int page) {
+    public Optional<List<ReturnGetBoardListDto>> boardList(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
         String sql = "SELECT title, created_at as date FROM board LIMIT :page, 10";
 
-        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardListDto.class));
+        try {
+            List<ReturnGetBoardListDto> returnGetBoardListDtoList = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardListDto.class));
+            return Optional.of(returnGetBoardListDtoList);
+        } catch (BadSqlGrammarException e) {
+            return Optional.empty();
+        }
     }
 
-    public Optional<ReturnGetBoardInfoDto> boardInfo(int boardId, String user_id) {
+    public Optional<ReturnGetBoardInfoDto> boardInfo(int boardId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("boardId", boardId);
         String sql = "SELECT user_id, title, content, created_at as date, views FROM board LIMIT :boardId, 1";
         try{
             ReturnGetBoardInfoDto returnGetBoardInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardInfoDto.class));
-            if(user_id.equals(returnGetBoardInfoDto.getUser_id())) {
-                returnGetBoardInfoDto.setAuthor(true);
-            } else {
-                returnGetBoardInfoDto.setAuthor(false);
-            }
+
             return Optional.of(returnGetBoardInfoDto);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
