@@ -47,7 +47,7 @@ const SignInPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postFetch('api/login', inputData);
+        const { status, data } = await postFetch('api/auth/login', inputData);
         if (status === 401) {
           idPwCheck(data);
         }
