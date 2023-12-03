@@ -56,7 +56,7 @@ public class UserController {
             userService.updatePW(updatePWRequest);
             return ResponseEntity.ok("{}");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{ \"message\" : \"서버 오류\" }");
         }
     }
 
