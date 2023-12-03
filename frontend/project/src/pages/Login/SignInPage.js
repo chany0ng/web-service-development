@@ -48,7 +48,6 @@ const SignInPage = () => {
       } else {
         setIsValid(true);
         const { status, data } = await postFetch('api/login', inputData);
-        console.log(`로그인: ${status}, ${data}`);
         if (status === 401) {
           idPwCheck(data);
         }
@@ -60,6 +59,19 @@ const SignInPage = () => {
       }
     } catch (error) {
       console.error('Sign In 에러', error);
+      alert(error);
+    }
+  };
+  const googleLogin = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await fetch(
+        'http://localhost:8080/oauth2/authorization/google'
+      );
+      console.log(response?.status);
+      console.log(response?.data);
+      console.log(response);
+    } catch (error) {
       alert(error);
     }
   };
@@ -141,7 +153,10 @@ const SignInPage = () => {
             >
               Login
             </Button>
-            <a href="http://localhost:8080/oauth2/authorization/google">
+            <a
+              href="http://localhost:8080/oauth2/authorization/google"
+              onClick={googleLogin}
+            >
               Google Login
             </a>
             <Grid container justifyContent="center">
