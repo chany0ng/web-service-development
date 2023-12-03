@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class PostRentalRentDto {
     private String bike_id;
-//    private String user_id;
     private String start_location;
 
     public PostRentalRentDto() {

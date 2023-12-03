@@ -8,7 +8,6 @@ import lombok.Setter;
 public class PostRentalReturnDto {
     private String bike_id;
     private String end_location;
-//    private String user_id;
 
     public PostRentalReturnDto() {
     }

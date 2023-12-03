@@ -58,7 +58,7 @@ public class BoardRepository {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    public Optional<Integer> selectBoardId(int board_id) {
+    public Optional<Integer> getBoardId(int board_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("board_id", board_id);
         String sql = "SELECT board_id AS boardId FROM board limit :board_id, 1";

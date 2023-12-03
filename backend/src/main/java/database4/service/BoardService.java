@@ -55,7 +55,7 @@ public class BoardService {
     @Transactional
     public String boardUpdate(PostBoardCreateAndUpdateDto postBoardCreateAndUpdateDto, int board_id) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Integer> boardId = boardRepository.selectBoardId(board_id - 1);
+        Optional<Integer> boardId = boardRepository.getBoardId(board_id - 1);
         if(boardId.isEmpty()) {
             throw new BoardException("존재하지 않는 게시물 입니다.");
         }
@@ -72,7 +72,7 @@ public class BoardService {
     @Transactional
     public String boardDelete(int board_id) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Integer> boardId = boardRepository.selectBoardId(board_id - 1);
+        Optional<Integer> boardId = boardRepository.getBoardId(board_id - 1);
         if(boardId.isEmpty()) {
             throw new BoardException("존재하지 않는 게시물 입니다.");
         }

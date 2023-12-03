@@ -1,6 +1,5 @@
 package database4.controller;
 
-import database4.dto.PostSurchargePayDto;
 import database4.dto.ReturnGetSurchargeOverfeeInfoDto;
 import database4.service.SurchargeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,18 +40,18 @@ public class SurchargeController { // 추가요금 결제 Controller
     }
 
     @ResponseBody
-    @PostMapping("surcharge/pay")
+    @GetMapping("surcharge/pay")
     @Operation(
             summary = "추가요금 지불",
             description = "추가요금 입력 후 결제 버튼을 클릭했을 때의 API"
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "추가요금 지불 성공"),
-            @ApiResponse(responseCode = "400", description = "입력받은 금액이 추가요금 보다 많아 추가요금 지불 실패")
+            @ApiResponse(responseCode = "400", description = "소지금이 추가요금보다 적어 추가요금 지불 실패")
     })
     // 추가요금 지불
-    public ResponseEntity<Void> postSurchargePay(@RequestBody PostSurchargePayDto form){
-        Boolean checkOverfee = surchargeService.overfeePay(form);
+    public ResponseEntity<Void> postSurchargePay(){
+        Boolean checkOverfee = surchargeService.overfeePay();
         if(checkOverfee){
             return ResponseEntity.ok().build();
         } else{
