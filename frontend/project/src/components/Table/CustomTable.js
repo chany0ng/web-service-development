@@ -50,6 +50,7 @@ const CustomTable = ({ headData, bodyData }) => {
             {bodyData.map((row, index) => (
               <StyledTableRow
                 key={index}
+                sx={{ cursor: 'pointer' }}
                 onClick={
                   onClickPageHandler ? () => onClickPageHandler(row) : null
                 }
