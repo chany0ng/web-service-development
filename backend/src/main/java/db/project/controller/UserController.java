@@ -1,11 +1,10 @@
 package db.project.controller;
 
-import db.project.service.UserService;
 import db.project.config.jwt.TokenProvider;
-import db.project.dto.UserLoginResponse;
-import db.project.dto.User;
-import db.project.dto.UserLoginRequest;
+import db.project.dto.*;
+import db.project.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,8 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @RestController
 public class UserController {
     private final TokenProvider tokenProvider;
@@ -23,14 +23,48 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResponseEntity<String> signup(@RequestBody User user) {
-        return ResponseEntity.ok(userService.save(user));
+        userService.save(user);
+        return ResponseEntity.ok("{}");
     }
 
     @PostMapping("/login")
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
-        UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
-        return ResponseEntity.ok(userLoginResponse);
+        return ResponseEntity.ok(userService.login(userLoginRequest));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        userService.logout();
+        return ResponseEntity.ok("{}");
+    }
+
+    @PostMapping("/findPW-question")
+    public ResponseEntity<PWQuestionResponse> findPWQuestion(@RequestBody PWQuestionRequest pwQuestionRequest) {
+        return ResponseEntity.ok(userService.findPWQuestion(pwQuestionRequest));
+    }
+
+    @PostMapping("/findPW-verification")
+    public ResponseEntity<String> checkPWAnswer(@RequestBody CheckAnswerRequest checkAnswerRequest) {
+        userService.checkPWAnswer(checkAnswerRequest);
+        return ResponseEntity.ok("{}");
+    }
+
+    @PostMapping("/findPW-reset")
+    public ResponseEntity<String> updatePW(@RequestBody UpdatePWRequest updatePWRequest) {
+        try {
+            userService.updatePW(updatePWRequest);
+            return ResponseEntity.ok("{}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{ \"message\" : \"서버 오류\" }");
+        }
+    }
+
+
+    @GetMapping("/check")
+    public ResponseEntity<String> check() {
+        return ResponseEntity.ok().build();
+    }
+
 
     @GetMapping("/test")
     public void test() {
@@ -49,5 +83,6 @@ public class UserController {
             System.out.println("인증된 사용자 없음");
         }
     }
+
 
 }

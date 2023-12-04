@@ -1,4 +1,4 @@
-package db.project.config;
+package db.project.config.jwt;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
