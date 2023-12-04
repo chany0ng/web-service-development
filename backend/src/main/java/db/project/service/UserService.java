@@ -1,7 +1,7 @@
 package db.project.service;
 
 import db.project.config.jwt.TokenProvider;
-import db.project.domain.*;
+import db.project.dto.*;
 import db.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
