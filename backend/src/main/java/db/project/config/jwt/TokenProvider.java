@@ -1,6 +1,5 @@
 package db.project.config.jwt;
 
-import db.project.domain.User;
 import db.project.service.UserDetailService;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
@@ -8,14 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

@@ -1,7 +1,7 @@
 package db.project.service;
 
 import db.project.config.jwt.TokenProvider;
-import db.project.domain.RefreshToken;
+import db.project.dto.RefreshToken;
 import db.project.repository.RefreshTokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

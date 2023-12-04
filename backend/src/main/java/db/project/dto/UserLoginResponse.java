@@ -1,4 +1,4 @@
-package db.project.domain;
+package db.project.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

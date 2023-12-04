@@ -1,10 +1,9 @@
 package db.project.config.oauth;
 
 import db.project.config.jwt.TokenProvider;
-import db.project.domain.User;
+import db.project.dto.User;
 import db.project.repository.RefreshTokenRepository;
 import db.project.repository.UserRepository;
-import db.project.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;

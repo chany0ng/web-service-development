@@ -1,8 +1,8 @@
 package db.project.controller;
 
 import db.project.config.jwt.TokenProvider;
-import db.project.domain.CreateTokenRequest;
-import db.project.domain.CreateTokenResponse;
+import db.project.dto.CreateTokenRequest;
+import db.project.dto.CreateTokenResponse;
 import db.project.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

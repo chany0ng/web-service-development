@@ -1,9 +1,7 @@
 package db.project.repository;
 
-import db.project.domain.RefreshToken;
-import db.project.domain.User;
+import db.project.dto.RefreshToken;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;

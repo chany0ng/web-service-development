@@ -1,6 +1,6 @@
 package db.project.config.oauth;
 
-import db.project.domain.User;
+import db.project.dto.User;
 import db.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -8,7 +8,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 import java.util.Optional;
@@ -24,7 +23,7 @@ public class OAuth2UserCustomService extends DefaultOAuth2UserService {
         saveOrLogin(user);
         return user;
     }
-    @Transactional
+
     private void saveOrLogin(OAuth2User oAuth2User) {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         String email = (String) attributes.get("email");
