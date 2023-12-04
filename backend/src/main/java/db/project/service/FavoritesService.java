@@ -1,6 +1,5 @@
 package db.project.service;
 
-import database4.dto.*;
 import db.project.dto.FavoritesResponseDto;
 import db.project.dto.PostFavoritesChangeDto;
 import db.project.dto.PostFavoritesSearchDto;

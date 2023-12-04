@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .headers(headers -> headers.frameOptions(Customizer.withDefaults()))
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/api/auth/**").permitAll();
+                    auth.requestMatchers("/api/auth/**", "/swagger-ui/**", "v3/api-docs/**").permitAll();
                     //auth.requestMatchers("/api/test").hasRole("USER");
                     auth.requestMatchers("/error/**").permitAll();
                     auth.anyRequest().authenticated();

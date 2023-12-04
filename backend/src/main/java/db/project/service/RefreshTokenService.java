@@ -29,4 +29,7 @@ public class RefreshTokenService {
         return tokenProvider.createToken(id, 30 * 60 * 1000L);
     }
 
+    public void deleteById(String id) {
+        refreshTokenRepository.deleteById(id);
+    }
 }
