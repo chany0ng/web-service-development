@@ -1,8 +1,8 @@
-package dp.project.repository;
+package db.project.repository;
 
-import dp.project.dto.PostMapLocationInfoDto;
-import dp.project.dto.ReturnGetMapLocationDto;
-import dp.project.dto.ReturnPostMapLocationInfoDto;
+import db.project.dto.PostMapLocationInfoDto;
+import db.project.dto.ReturnGetMapLocationDto;
+import db.project.dto.ReturnPostMapLocationInfoDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

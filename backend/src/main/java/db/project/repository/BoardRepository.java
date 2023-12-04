@@ -1,8 +1,8 @@
-package dp.project.repository;
+package db.project.repository;
 
-import dp.project.dto.PostBoardCreateAndUpdateDto;
-import dp.project.dto.ReturnGetBoardInfoDto;
-import dp.project.dto.ReturnGetBoardListDto;
+import db.project.dto.PostBoardCreateAndUpdateDto;
+import db.project.dto.ReturnGetBoardInfoDto;
+import db.project.dto.ReturnGetBoardListDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

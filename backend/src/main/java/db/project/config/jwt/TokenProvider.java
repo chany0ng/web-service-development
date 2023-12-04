@@ -1,6 +1,6 @@
-package dp.project.config.jwt;
+package db.project.config.jwt;
 
-import dp.project.service.UserDetailService;
+import db.project.service.UserDetailService;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;

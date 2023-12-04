@@ -1,8 +1,8 @@
-package dp.project.controller;
+package db.project.controller;
 
-import dp.project.dto.NoticeListResponseDto;
-import dp.project.exceptions.NoticeException;
-import dp.project.service.NoticeService;
+import db.project.dto.NoticeListResponseDto;
+import db.project.exceptions.NoticeException;
+import db.project.service.NoticeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

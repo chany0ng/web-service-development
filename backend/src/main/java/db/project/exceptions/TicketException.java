@@ -1,4 +1,4 @@
-package dp.project.exceptions;
+package db.project.exceptions;
 
 public class TicketException extends RuntimeException{
     public TicketException(String message) {

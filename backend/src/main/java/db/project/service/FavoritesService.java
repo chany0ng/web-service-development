@@ -1,11 +1,11 @@
-package dp.project.service;
+package db.project.service;
 
 import database4.dto.*;
-import dp.project.dto.FavoritesResponseDto;
-import dp.project.dto.PostFavoritesChangeDto;
-import dp.project.repository.FavoritesRepository;
-import dp.project.dto.PostFavoritesSearchDto;
-import dp.project.dto.ReturnFavoritesDto;
+import db.project.dto.FavoritesResponseDto;
+import db.project.dto.PostFavoritesChangeDto;
+import db.project.dto.PostFavoritesSearchDto;
+import db.project.dto.ReturnFavoritesDto;
+import db.project.repository.FavoritesRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 

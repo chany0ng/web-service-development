@@ -1,9 +1,9 @@
-package dp.project.controller;
+package db.project.controller;
 
-import dp.project.dto.BoardListResponseDto;
-import dp.project.dto.PostBoardCreateAndUpdateDto;
-import dp.project.exceptions.BoardException;
-import dp.project.service.BoardService;
+import db.project.dto.BoardListResponseDto;
+import db.project.dto.PostBoardCreateAndUpdateDto;
+import db.project.exceptions.BoardException;
+import db.project.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

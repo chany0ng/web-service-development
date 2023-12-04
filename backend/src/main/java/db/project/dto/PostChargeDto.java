@@ -1,4 +1,4 @@
-package dp.project.dto;
+package db.project.dto;
 import lombok.Getter;
 
 @Getter
