@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("api")
 public class BoardController {  // 게시판 Controller
@@ -22,7 +23,7 @@ public class BoardController {  // 게시판 Controller
         this.boardService = boardService;
     }
 
-    @GetMapping("board/list")
+    @GetMapping("board/list/{page}")
     @ResponseBody
     @Operation(
             summary = "자유게시판 리스트",
@@ -33,7 +34,7 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "400", description = "게시물 리스트 열람 실패")
     })
     // 게시물 리스트
-    public ResponseEntity<BoardListResponseDto> getBoardList(@RequestParam(defaultValue = "1") int page) {
+    public ResponseEntity<BoardListResponseDto> getBoardList(@PathVariable int page) {
 
         try{
             return ResponseEntity.ok(boardService.boardList(page));

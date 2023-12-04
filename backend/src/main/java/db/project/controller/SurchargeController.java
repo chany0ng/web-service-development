@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class SurchargeController { // 추가요금 결제 Controller
