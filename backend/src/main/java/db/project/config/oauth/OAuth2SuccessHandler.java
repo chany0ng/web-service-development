@@ -43,6 +43,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setStatus(HttpServletResponse.SC_OK);
         response.getWriter().write("{ \"accessToken\": \"" + accessToken + "\", \"refreshToken\": \""+ refreshToken + "\" } ");
 
-        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/user/main");
+        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/login/oauth2/code/google");
     }
 }
