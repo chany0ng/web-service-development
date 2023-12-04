@@ -3,13 +3,11 @@
 const BASE_URL = 'http://localhost:8080/';
 const ACCESS_URL = 'http://localhost:8080/api/check';
 const REFRESH_URL = 'http://localhost:8080/api/token';
-// const [isLoading, setIsLoading] = useState(false); // 로딩중 유무 state
-// const [error, setError] = useState(null); // state로 에러 메시지 관리
-
 export const getFetch = async (url) => {
   try {
     const accessToken = localStorage.getItem('accessToken');
     let response = null;
+
     if (accessToken) {
       response = await fetch(`${BASE_URL}${url}`, {
         method: 'GET',
@@ -18,16 +16,12 @@ export const getFetch = async (url) => {
           Authorization: `Bearer ${accessToken}`
         }
       });
-      const data = await response.json();
+
       if (response.status === 401) {
-        const refreshStatus = await updateRefreshToken();
+        response = await updateRefreshToken();
         // 401만 반환 -> '/' 리다이렉트
-        return { status: refreshStatus };
       }
-      if (response.status !== 200 && response.status !== 403) {
-        throw new Error(`Failed to fetch data. Status: ${response.status}`);
-      }
-      return { status: response.status, data };
+      return response;
     } else {
       response = await fetch(`${BASE_URL}${url}`, {
         method: 'GET',
@@ -35,11 +29,8 @@ export const getFetch = async (url) => {
           'Content-Type': 'application/json'
         }
       });
-      const data = await response.json();
-      if (response.status !== 200 && response.status !== 401) {
-        throw new Error(`Failed to fetch data. Status: ${response.status}`);
-      }
-      return { status: response.status, data };
+
+      return response;
     }
   } catch (error) {
     throw error;
@@ -59,16 +50,13 @@ export const postFetch = async (url, body) => {
         },
         body: JSON.stringify(body)
       });
-      const data = await response.json();
+      // const data = await response.json();
       if (response.status === 401) {
-        const refreshStatus = await updateRefreshToken();
+        response = await updateRefreshToken();
         // 401만 반환 -> '/' 리다이렉트
-        return { status: refreshStatus };
+        return response;
       }
-      if (response.status !== 200 && response.status !== 403) {
-        throw new Error(`Failed to fetch data. Status: ${response.status}`);
-      }
-      return { status: response.status, data };
+      return response;
     }
     // else: 로그인 관련 페이지에서만 적용
     else {
@@ -79,15 +67,7 @@ export const postFetch = async (url, body) => {
         },
         body: JSON.stringify(body)
       });
-      const data = await response.json();
-      if (
-        response.status !== 200 &&
-        response.status !== 500 &&
-        response.status !== 401
-      ) {
-        throw new Error(`Failed to fetch data. Status: ${response.status}`);
-      }
-      return { status: response.status, data };
+      return response;
     }
   } catch (error) {
     throw error;
@@ -113,7 +93,7 @@ const updateRefreshToken = async () => {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       alert('로그인이 만료되었습니다!');
-      return { status: response.status };
+      return response;
     } else {
       throw new Error(`Failed to refresh login. Status: ${response.status}`);
     }
@@ -133,11 +113,8 @@ export const sendAccessToken = async (accessToken) => {
     });
     if (response.status === 401) {
       return await updateRefreshToken();
-    } else if (response.status === 200 || response.status === 403) {
-      return { status: response.status };
-    } else {
-      throw new Error('Access token 에러 발생');
     }
+    return response;
   } catch (error) {
     throw error;
   }

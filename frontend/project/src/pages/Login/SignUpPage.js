@@ -15,11 +15,16 @@ import { postFetch } from '../../config';
 import { Alert } from '@mui/material';
 import { loginPageAuthCheck } from '../../AuthCheck';
 
-const passwordQuestion = [
+const pwQuestionList = [
   {
-    question: 'school',
+    question: 'elementary',
     description: '졸업한 초등학교 이름',
     value: 1
+  },
+  {
+    question: 'middle',
+    description: '졸업한 중학교 이름',
+    value: 2
   }
 ];
 
@@ -75,12 +80,12 @@ const SignUpPage = () => {
         setIsValid(true);
         const finalInputData = { ...inputData };
         delete finalInputData.passwordCheck;
-        const { status } = await postFetch('api/auth/signup', finalInputData);
-        if (status === 200) {
+        const response = await postFetch('api/auth/signup', finalInputData);
+        if (response.status === 200) {
           alert('회원가입 성공');
           navigate('/signin');
         }
-        if (status === 500) {
+        if (response.status === 500) {
           alert('이미 존재하는 ID입니다!');
         }
       }
@@ -91,7 +96,7 @@ const SignUpPage = () => {
   };
   return (
     <LoginBackground>
-      <Container component="main" maxWidth="sm" style={{ marginTop: '150px' }}>
+      <Container component="main" sx={{ marginTop: '150px', width: '50vw' }}>
         <Box
           sx={{
             margin: 5,
@@ -168,7 +173,7 @@ const SignUpPage = () => {
                   variant="standard"
                   helperText="비밀번호 찾기 질문을 선택해주세요"
                 >
-                  {passwordQuestion.map((option) => (
+                  {pwQuestionList.map((option) => (
                     <MenuItem key={option.value} value={option.value}>
                       {option.description}
                     </MenuItem>

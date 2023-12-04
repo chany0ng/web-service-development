@@ -47,11 +47,12 @@ const SignInPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postFetch('api/auth/login', inputData);
-        if (status === 401) {
+        const response = await postFetch('api/auth/login', inputData);
+        const data = await response.json();
+        if (response.status === 401) {
           idPwCheck(data);
         }
-        if (status === 200) {
+        if (response.status === 200) {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
           navigate('/user/main');
@@ -65,7 +66,7 @@ const SignInPage = () => {
 
   return (
     <LoginBackground>
-      <Container component="main" maxWidth="sm">
+      <Container component="main" sx={{ width: '50vw' }}>
         <Box
           sx={{
             margin: 5,
@@ -140,9 +141,17 @@ const SignInPage = () => {
             >
               Login
             </Button>
-            <a href="http://localhost:8080/oauth2/authorization/google">
+            {/* <a href="http://localhost:8080/oauth2/authorization/google">
               Google Login
-            </a>
+            </a> */}
+            <img
+              onClick={() => {
+                navigate('http://localhost:8080/oauth2/authorization/google');
+              }}
+              src="/images/googleLogin.svg"
+              alt="logo"
+              style={{ cursor: 'pointer', margin: '10px' }}
+            />
             <Grid container justifyContent="center">
               <Grid item xs={4}>
                 <Link
