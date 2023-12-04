@@ -62,19 +62,6 @@ const SignInPage = () => {
       alert(error);
     }
   };
-  const googleLogin = async (e) => {
-    try {
-      e.preventDefault();
-      const response = await fetch(
-        'http://localhost:8080/oauth2/authorization/google'
-      );
-      console.log(response?.status);
-      console.log(response?.data);
-      console.log(response);
-    } catch (error) {
-      alert(error);
-    }
-  };
 
   return (
     <LoginBackground>
@@ -153,10 +140,7 @@ const SignInPage = () => {
             >
               Login
             </Button>
-            <a
-              href="http://localhost:8080/oauth2/authorization/google"
-              onClick={googleLogin}
-            >
+            <a href="http://localhost:8080/oauth2/authorization/google">
               Google Login
             </a>
             <Grid container justifyContent="center">

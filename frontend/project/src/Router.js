@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from './pages/Login/LandingPage';
+import GoogleLogin from './pages/Login/GoogleLogin';
 import SignInPage from './pages/Login/SignInPage';
 import SignUpPage from './pages/Login/SignUpPage';
 import FindPwPage from './pages/Login/FindPwPage';
@@ -62,6 +63,7 @@ const Router = () => {
         path="/user/report/reportBoardEdit"
         element={<UserReportWrite />}
       />
+      <Route path="/login/oauth2/code/google" element={<GoogleLogin />} />
     </Routes>
   );
 };
