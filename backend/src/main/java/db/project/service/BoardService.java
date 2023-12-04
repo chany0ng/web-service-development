@@ -1,6 +1,5 @@
 package db.project.service;
 
-import database4.dto.*;
 import db.project.dto.BoardListResponseDto;
 import db.project.dto.PostBoardCreateAndUpdateDto;
 import db.project.dto.ReturnGetBoardInfoDto;
