@@ -55,7 +55,7 @@ const Footer = () => {
 
       {/* 저작권 정보 */}
       <div className={styles.copyright}>
-        <p>
+        <p style={{ textAlign: 'center' }}>
           © {new Date().getFullYear()} Kwangwoon University. Computer
           Information Engineering. All rights reserved.
         </p>

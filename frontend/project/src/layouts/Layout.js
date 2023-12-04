@@ -5,9 +5,9 @@ import Footer from './Footer';
 const sections = [
   { title: '메인 화면', url: '/user/main' },
   { title: '내 정보 관리', url: '/user/info/edit' },
-  { title: '대여소 조회', url: '/user/info/bookmark' },
-  { title: '이용권 구매', url: '#' },
-  { title: '공지/문의', url: '#' }
+  { title: '대여소 조회', url: '#' },
+  { title: '이용권 구매', url: '/user/tickets/purchase' },
+  { title: '공지/문의', url: '/user/notice/noticeList/1' }
 ];
 
 const Layout = ({ children }) => {
