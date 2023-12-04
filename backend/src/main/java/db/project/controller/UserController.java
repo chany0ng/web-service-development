@@ -2,9 +2,9 @@ package db.project.controller;
 
 import db.project.service.UserService;
 import db.project.config.jwt.TokenProvider;
-import db.project.domain.UserLoginResponse;
-import db.project.domain.User;
-import db.project.domain.UserLoginRequest;
+import db.project.dto.UserLoginResponse;
+import db.project.dto.User;
+import db.project.dto.UserLoginRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

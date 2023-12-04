@@ -1,10 +1,10 @@
 package db.project.service;
 
 import db.project.config.jwt.TokenProvider;
-import db.project.domain.RefreshToken;
-import db.project.domain.User;
-import db.project.domain.UserLoginRequest;
-import db.project.domain.UserLoginResponse;
+import db.project.dto.RefreshToken;
+import db.project.dto.User;
+import db.project.dto.UserLoginRequest;
+import db.project.dto.UserLoginResponse;
 import db.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;

@@ -1,6 +1,6 @@
 package db.project.service;
 
-import db.project.domain.User;
+import db.project.dto.User;
 import db.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
