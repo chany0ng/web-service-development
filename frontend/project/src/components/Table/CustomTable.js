@@ -6,6 +6,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { useContext } from 'react';
+import { MyContext } from './../../pages/User/UserNotice/UserNoticeList';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -30,6 +32,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 const CustomTable = ({ headData, bodyData }) => {
   // 현재 예시 데이터 사용중
+  const onClickPageHandler = useContext(MyContext);
   return (
     <TableContainer component={Paper} sx={{ marginTop: '30px' }}>
       <Table sx={{ minWidth: '50vw' }} aria-label="customized table">
@@ -45,7 +48,12 @@ const CustomTable = ({ headData, bodyData }) => {
         {bodyData && bodyData.length > 0 ? (
           <TableBody>
             {bodyData.map((row, index) => (
-              <StyledTableRow key={index}>
+              <StyledTableRow
+                key={index}
+                onClick={
+                  onClickPageHandler ? () => onClickPageHandler(row) : null
+                }
+              >
                 {Object.values(row).map((cellValue, cellIndex) => (
                   <StyledTableCell key={cellIndex} align="center">
                     {cellValue}

@@ -21,6 +21,7 @@ export const getFetch = async (url) => {
       const data = await response.json();
       if (response.status === 401) {
         const refreshStatus = await updateRefreshToken();
+        // 401만 반환 -> '/' 리다이렉트
         return { status: refreshStatus };
       }
       if (response.status !== 200 && response.status !== 403) {
@@ -61,6 +62,7 @@ export const postFetch = async (url, body) => {
       const data = await response.json();
       if (response.status === 401) {
         const refreshStatus = await updateRefreshToken();
+        // 401만 반환 -> '/' 리다이렉트
         return { status: refreshStatus };
       }
       if (response.status !== 200 && response.status !== 403) {
@@ -106,10 +108,11 @@ const updateRefreshToken = async () => {
       const data = await response.json();
       localStorage.setItem('accessToken', data.accessToken);
       alert('로그인이 갱신되었습니다!');
-      return { status: response.status };
+      window.location.reload();
     } else if (response.status === 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      alert('로그인이 만료되었습니다!');
       return { status: response.status };
     } else {
       throw new Error(`Failed to refresh login. Status: ${response.status}`);

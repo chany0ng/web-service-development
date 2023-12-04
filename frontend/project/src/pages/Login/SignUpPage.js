@@ -75,7 +75,7 @@ const SignUpPage = () => {
         setIsValid(true);
         const finalInputData = { ...inputData };
         delete finalInputData.passwordCheck;
-        const { status } = await postFetch('api/signup', finalInputData);
+        const { status } = await postFetch('api/auth/signup', finalInputData);
         if (status === 200) {
           alert('회원가입 성공');
           navigate('/signin');
