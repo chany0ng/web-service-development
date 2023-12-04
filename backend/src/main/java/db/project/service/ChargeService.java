@@ -13,9 +13,9 @@ public class ChargeService {
         this.chargeRepository = chargeRepository;
     }
 
-    public boolean charge(PostChargeDto postChargeDto) {
+    public void charge(PostChargeDto postChargeDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        return chargeRepository.charge(postChargeDto, user_id);
+        chargeRepository.charge(postChargeDto, user_id);
     }
 }

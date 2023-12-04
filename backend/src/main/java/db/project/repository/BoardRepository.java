@@ -79,22 +79,22 @@ public class BoardRepository {
         }
     }
 
-    public Optional<String> boardUpdate(PostBoardCreateAndUpdateDto postBoardCreateAndUpdateDto, int boardId) {
+    public void boardUpdate(PostBoardCreateAndUpdateDto postBoardCreateAndUpdateDto, int boardId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("title", postBoardCreateAndUpdateDto.getTitle())
                 .addValue("content", postBoardCreateAndUpdateDto.getContent())
                 .addValue("boardId", boardId);
         String sql = "UPDATE board SET title =:title, content =:content WHERE board_id =:boardId";
+
         int rowsUpdated = jdbcTemplate.update(sql, namedParameters);
-        return (rowsUpdated > 0) ? Optional.of("게시물이 업데이트 되었습니다.") : Optional.empty();
     }
 
-    public Optional<String> boardDelete(int boardId) {
+    public void boardDelete(int boardId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("boardId", boardId);
         String sql = "DELETE FROM board WHERE board_id =:boardId";
+
         int rowsUpdated = jdbcTemplate.update(sql, namedParameters);
-        return (rowsUpdated > 0) ? Optional.of("게시물이 삭제되었습니다.") : Optional.empty();
     }
 
     public String isAuthor(int boardId) {
