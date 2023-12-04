@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { postFetch } from '../../../config';
-import { useNavigate } from 'react-router-dom';
 const UserNoticeView = () => {
   const navigate = useNavigate();
   const location = useLocation();
