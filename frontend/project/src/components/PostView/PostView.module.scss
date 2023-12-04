@@ -1,0 +1,25 @@
+.article {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  > div {
+    padding: 10px;
+  }
+  div:first-child {
+    text-align: left;
+    border-bottom: 1px solid black;
+    h2,
+    p {
+      padding: 5px;
+    }
+  }
+  div:nth-child(2) {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: left;
+    font-size: larger;
+    white-space: pre-wrap;
+    border-bottom: 1px solid black;
+    margin-bottom: 30px;
+  }
+}
