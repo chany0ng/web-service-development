@@ -7,7 +7,7 @@ import { Card, Button, Container } from '@mui/material';
 
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['카드 금액 충전', '추가요금 결제'];
-const outerTab = 'pay';
+const outerTab = 'payment';
 const innerTab = 'charge';
 const url = {
   charge: '/user/payment/charge',

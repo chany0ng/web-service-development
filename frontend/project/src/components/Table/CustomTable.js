@@ -50,9 +50,9 @@ const CustomTable = ({ headData, bodyData }) => {
             {bodyData.map((row, index) => (
               <StyledTableRow
                 key={index}
-                onClick={() => {
-                  onClickPageHandler(row);
-                }}
+                onClick={
+                  onClickPageHandler ? () => onClickPageHandler(row) : null
+                }
               >
                 {Object.values(row).map((cellValue, cellIndex) => (
                   <StyledTableCell key={cellIndex} align="center">
