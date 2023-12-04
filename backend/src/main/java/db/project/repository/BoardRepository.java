@@ -21,6 +21,13 @@ public class BoardRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public int getBoardCount() {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        String sql = "SELECT count(board_id) boardCount FROM board";
+
+        return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+    }
+
     public Optional<List<ReturnGetBoardListDto>> boardList(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);

@@ -2,6 +2,7 @@ package db.project.controller;
 
 import db.project.dto.BoardListResponseDto;
 import db.project.dto.PostBoardCreateAndUpdateDto;
+import db.project.dto.ReturnGetBoardInfoDto;
 import db.project.exceptions.BoardException;
 import db.project.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,18 +53,14 @@ public class BoardController {  // 게시판 Controller
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 열람 성공"),
-            @ApiResponse(responseCode = "400", description = "게시물 열람 실패", content = {
-                    @Content(mediaType = "text/plain", examples = {
-                            @ExampleObject(value = "존재하지 않는 게시물 입니다.")
-                    })
-            })
+            @ApiResponse(responseCode = "400", description = "게시물 열람 실패")
     })
     // 게시물 상세정보
-    public ResponseEntity<?> getBoardInfo(@PathVariable int boardId) {
+    public ResponseEntity<ReturnGetBoardInfoDto> getBoardInfo(@PathVariable int boardId) {
         try{
             return ResponseEntity.ok(boardService.boardInfo(boardId));
         } catch (BoardException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
     }
 

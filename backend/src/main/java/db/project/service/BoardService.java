@@ -21,14 +21,18 @@ public class BoardService {
         this.boardRepository = boardRepository;
     }
 
+    @Transactional
     public BoardListResponseDto boardList(int page) {
         page = (page - 1) * 10;
         Optional<List<ReturnGetBoardListDto>> boardListOptional = boardRepository.boardList(page);
         if(boardListOptional.isEmpty()) {
             throw new BoardException("잘못된 페이지 접근입니다.");
         }
+
+        int boardCount = boardRepository.getBoardCount();
+
         List<ReturnGetBoardListDto> boardList = boardListOptional.get();
-        BoardListResponseDto response = new BoardListResponseDto();
+        BoardListResponseDto response = new BoardListResponseDto(boardCount);
         for (ReturnGetBoardListDto board : boardList) {
             response.getBoardList().add(board);
         }

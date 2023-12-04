@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class NoticeListResponseDto {
-    List<ReturnGetNoticeListDto> noticeList;
+    private List<ReturnGetNoticeListDto> noticeList;
 
     public NoticeListResponseDto() {
         this.noticeList = new ArrayList<>();
