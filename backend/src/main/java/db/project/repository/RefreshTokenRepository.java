@@ -61,6 +61,7 @@ public class RefreshTokenRepository {
         }
     }
 
+
     private final RowMapper<RefreshToken> refreshTokenMapper = (rs, rowNum) -> {
         RefreshToken refreshToken = RefreshToken.builder()
                 .id(rs.getString("user_id"))

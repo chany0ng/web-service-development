@@ -15,19 +15,19 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/api")
 @RestController
 public class UserController {
     private final TokenProvider tokenProvider;
     private final UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping("/auth/signup")
     public ResponseEntity<String> signup(@RequestBody User user) {
         userService.save(user);
         return ResponseEntity.ok("{}");
     }
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest userLoginRequest) {
         return ResponseEntity.ok(userService.login(userLoginRequest));
     }
@@ -38,18 +38,18 @@ public class UserController {
         return ResponseEntity.ok("{}");
     }
 
-    @PostMapping("/findPW-question")
+    @PostMapping("/auth/findPW-question")
     public ResponseEntity<PWQuestionResponse> findPWQuestion(@RequestBody PWQuestionRequest pwQuestionRequest) {
         return ResponseEntity.ok(userService.findPWQuestion(pwQuestionRequest));
     }
 
-    @PostMapping("/findPW-verification")
+    @PostMapping("/auth/findPW-verification")
     public ResponseEntity<String> checkPWAnswer(@RequestBody CheckAnswerRequest checkAnswerRequest) {
         userService.checkPWAnswer(checkAnswerRequest);
         return ResponseEntity.ok("{}");
     }
 
-    @PostMapping("/findPW-reset")
+    @PostMapping("/auth/findPW-reset")
     public ResponseEntity<String> updatePW(@RequestBody UpdatePWRequest updatePWRequest) {
         try {
             userService.updatePW(updatePWRequest);
@@ -66,23 +66,23 @@ public class UserController {
     }
 
 
-    @GetMapping("/test")
-    public void test() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication != null) {
-            Object principal = authentication.getPrincipal();
-
-            List<String> authorities = authentication.getAuthorities()
-                    .stream()
-                    .map(grantedAuthority -> grantedAuthority.getAuthority())
-                    .collect(Collectors.toList());
-            System.out.println("Principal: " + principal.toString());
-            System.out.println("username: " + authentication.getName());
-            System.out.println("Authorities: " + authorities);
-        } else {
-            System.out.println("인증된 사용자 없음");
-        }
-    }
+//    @GetMapping("/test")
+//    public void test() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if(authentication != null) {
+//            Object principal = authentication.getPrincipal();
+//
+//            List<String> authorities = authentication.getAuthorities()
+//                    .stream()
+//                    .map(grantedAuthority -> grantedAuthority.getAuthority())
+//                    .collect(Collectors.toList());
+//            System.out.println("Principal: " + principal.toString());
+//            System.out.println("username: " + authentication.getName());
+//            System.out.println("Authorities: " + authorities);
+//        } else {
+//            System.out.println("인증된 사용자 없음");
+//        }
+//    }
 
 
 }

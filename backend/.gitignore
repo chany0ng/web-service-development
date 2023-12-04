@@ -4,7 +4,10 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+
 *.yml
+*.properties
+
 ### STS ###
 .apt_generated
 .classpath
@@ -25,6 +28,10 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+build
+
+src/main/resources/
+
 
 ### NetBeans ###
 /nbproject/private/
@@ -35,5 +42,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-../.idea
