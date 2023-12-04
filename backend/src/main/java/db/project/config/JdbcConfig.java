@@ -1,4 +1,4 @@
-package dp.project.config;
+package db.project.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

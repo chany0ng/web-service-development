@@ -1,6 +1,6 @@
-package dp.project.repository;
+package db.project.repository;
 
-import dp.project.domain.User;
+import db.project.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;

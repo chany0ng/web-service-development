@@ -1,9 +1,9 @@
-package dp.project.controller;
+package db.project.controller;
 
-import dp.project.dto.LocationInfoResponseDto;
-import dp.project.dto.LocationListResponseDto;
-import dp.project.dto.PostMapLocationInfoDto;
-import dp.project.service.MapService;
+import db.project.dto.LocationInfoResponseDto;
+import db.project.dto.LocationListResponseDto;
+import db.project.dto.PostMapLocationInfoDto;
+import db.project.service.MapService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

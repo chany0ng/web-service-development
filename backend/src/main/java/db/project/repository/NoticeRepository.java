@@ -1,7 +1,7 @@
-package dp.project.repository;
+package db.project.repository;
 
-import dp.project.dto.ReturnGetNoticeInfoDto;
-import dp.project.dto.ReturnGetNoticeListDto;
+import db.project.dto.ReturnGetNoticeInfoDto;
+import db.project.dto.ReturnGetNoticeListDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;

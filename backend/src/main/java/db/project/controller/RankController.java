@@ -1,8 +1,8 @@
-package dp.project.controller;
+package db.project.controller;
 
-import dp.project.dto.RankCountResponseDto;
-import dp.project.dto.RankTimeResponseDto;
-import dp.project.service.RankService;
+import db.project.service.RankService;
+import db.project.dto.RankCountResponseDto;
+import db.project.dto.RankTimeResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

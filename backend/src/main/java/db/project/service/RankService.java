@@ -1,10 +1,10 @@
-package dp.project.service;
+package db.project.service;
 
-import dp.project.dto.RankCountResponseDto;
-import dp.project.dto.RankTimeResponseDto;
-import dp.project.dto.ReturnGetRankCountDto;
-import dp.project.dto.ReturnGetRankTimeDto;
-import dp.project.repository.RankRepository;
+import db.project.dto.RankCountResponseDto;
+import db.project.dto.RankTimeResponseDto;
+import db.project.dto.ReturnGetRankCountDto;
+import db.project.dto.ReturnGetRankTimeDto;
+import db.project.repository.RankRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

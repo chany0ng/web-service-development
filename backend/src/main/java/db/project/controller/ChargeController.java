@@ -1,7 +1,7 @@
-package dp.project.controller;
+package db.project.controller;
 
-import dp.project.dto.PostChargeDto;
-import dp.project.service.ChargeService;
+import db.project.dto.PostChargeDto;
+import db.project.service.ChargeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

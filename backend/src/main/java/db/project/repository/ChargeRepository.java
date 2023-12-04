@@ -1,6 +1,6 @@
-package dp.project.repository;
+package db.project.repository;
 
-import dp.project.dto.PostChargeDto;
+import db.project.dto.PostChargeDto;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;

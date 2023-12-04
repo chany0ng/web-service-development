@@ -1,7 +1,7 @@
-package dp.project.repository;
+package db.project.repository;
 
-import dp.project.dto.PostRentalRentDto;
-import dp.project.dto.PostRentalReturnDto;
+import db.project.dto.PostRentalRentDto;
+import db.project.dto.PostRentalReturnDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

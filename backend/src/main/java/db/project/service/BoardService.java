@@ -1,12 +1,12 @@
-package dp.project.service;
+package db.project.service;
 
 import database4.dto.*;
-import dp.project.dto.BoardListResponseDto;
-import dp.project.dto.PostBoardCreateAndUpdateDto;
-import dp.project.dto.ReturnGetBoardInfoDto;
-import dp.project.dto.ReturnGetBoardListDto;
-import dp.project.exceptions.BoardException;
-import dp.project.repository.BoardRepository;
+import db.project.dto.BoardListResponseDto;
+import db.project.dto.PostBoardCreateAndUpdateDto;
+import db.project.dto.ReturnGetBoardInfoDto;
+import db.project.dto.ReturnGetBoardListDto;
+import db.project.exceptions.BoardException;
+import db.project.repository.BoardRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

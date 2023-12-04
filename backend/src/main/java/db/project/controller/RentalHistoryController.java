@@ -1,8 +1,8 @@
-package dp.project.controller;
+package db.project.controller;
 
-import dp.project.dto.PostRentalHistoryDto;
-import dp.project.dto.RentalHistoryResponseDto;
-import dp.project.service.RentalHistoryService;
+import db.project.service.RentalHistoryService;
+import db.project.dto.PostRentalHistoryDto;
+import db.project.dto.RentalHistoryResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

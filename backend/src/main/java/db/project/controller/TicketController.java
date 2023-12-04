@@ -1,10 +1,10 @@
-package dp.project.controller;
+package db.project.controller;
 
-import dp.project.dto.PostTicketGiftDto;
-import dp.project.dto.PostTicketPurchaseDto;
-import dp.project.dto.TicketListResponseDto;
-import dp.project.exceptions.TicketException;
-import dp.project.service.TicketService;
+import db.project.service.TicketService;
+import db.project.dto.PostTicketGiftDto;
+import db.project.dto.PostTicketPurchaseDto;
+import db.project.dto.TicketListResponseDto;
+import db.project.exceptions.TicketException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

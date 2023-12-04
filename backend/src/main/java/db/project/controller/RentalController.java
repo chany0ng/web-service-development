@@ -1,11 +1,11 @@
-package dp.project.controller;
+package db.project.controller;
 
-import dp.project.dto.PostRentalRentDto;
-import dp.project.dto.PostRentalReturnDto;
-import dp.project.dto.ReturnPostRentalReturnDto;
-import dp.project.exceptions.RentalRentException;
-import dp.project.exceptions.RentalReturnException;
-import dp.project.service.RentalService;
+import db.project.service.RentalService;
+import db.project.dto.PostRentalRentDto;
+import db.project.dto.PostRentalReturnDto;
+import db.project.dto.ReturnPostRentalReturnDto;
+import db.project.exceptions.RentalRentException;
+import db.project.exceptions.RentalReturnException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

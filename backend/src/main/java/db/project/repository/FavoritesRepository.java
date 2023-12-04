@@ -1,7 +1,7 @@
-package dp.project.repository;
+package db.project.repository;
 
-import dp.project.dto.PostFavoritesSearchDto;
-import dp.project.dto.ReturnFavoritesDto;
+import db.project.dto.PostFavoritesSearchDto;
+import db.project.dto.ReturnFavoritesDto;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

@@ -1,9 +1,9 @@
-package dp.project.controller;
+package db.project.controller;
 
-import dp.project.dto.FavoritesResponseDto;
-import dp.project.dto.PostFavoritesChangeDto;
-import dp.project.dto.PostFavoritesSearchDto;
-import dp.project.service.FavoritesService;
+import db.project.dto.FavoritesResponseDto;
+import db.project.dto.PostFavoritesChangeDto;
+import db.project.dto.PostFavoritesSearchDto;
+import db.project.service.FavoritesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

@@ -1,8 +1,8 @@
-package dp.project.controller;
+package db.project.controller;
 
-import dp.project.dto.PostBreakdownReportDto;
-import dp.project.exceptions.BreakdownReportException;
-import dp.project.service.BreakdownReportService;
+import db.project.dto.PostBreakdownReportDto;
+import db.project.exceptions.BreakdownReportException;
+import db.project.service.BreakdownReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;

@@ -1,7 +1,7 @@
-package dp.project.repository;
+package db.project.repository;
 
-import dp.project.dto.PostRentalHistoryDto;
-import dp.project.dto.ReturnPostRentalHistoryDto;
+import db.project.dto.PostRentalHistoryDto;
+import db.project.dto.ReturnPostRentalHistoryDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

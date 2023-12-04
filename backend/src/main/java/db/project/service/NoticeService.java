@@ -1,11 +1,11 @@
-package dp.project.service;
+package db.project.service;
 
 import database4.dto.*;
-import dp.project.exceptions.NoticeException;
-import dp.project.repository.NoticeRepository;
-import dp.project.dto.NoticeListResponseDto;
-import dp.project.dto.ReturnGetNoticeInfoDto;
-import dp.project.dto.ReturnGetNoticeListDto;
+import db.project.dto.NoticeListResponseDto;
+import db.project.dto.ReturnGetNoticeInfoDto;
+import db.project.dto.ReturnGetNoticeListDto;
+import db.project.exceptions.NoticeException;
+import db.project.repository.NoticeRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

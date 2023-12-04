@@ -1,6 +1,6 @@
-package dp.project.config;
+package db.project.config;
 
-import dp.project.config.jwt.TokenProvider;
+import db.project.config.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

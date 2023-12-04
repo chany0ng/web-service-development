@@ -1,7 +1,7 @@
-package dp.project.repository;
+package db.project.repository;
 
-import dp.project.dto.ReturnGetRankCountDto;
-import dp.project.dto.ReturnGetRankTimeDto;
+import db.project.dto.ReturnGetRankCountDto;
+import db.project.dto.ReturnGetRankTimeDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;

@@ -1,6 +1,6 @@
-package dp.project.repository;
+package db.project.repository;
 
-import dp.project.dto.PostBreakdownReportDto;
+import db.project.dto.PostBreakdownReportDto;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;

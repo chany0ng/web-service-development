@@ -1,4 +1,4 @@
-package dp.project.exceptions;
+package db.project.exceptions;
 
 public class BoardException extends RuntimeException{
     public BoardException(String message) {

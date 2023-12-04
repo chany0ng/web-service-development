@@ -1,4 +1,4 @@
-package dp.project.exceptions;
+package db.project.exceptions;
 
 public class NoticeException extends RuntimeException{
     public NoticeException(String message) {

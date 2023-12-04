@@ -1,6 +1,6 @@
-package dp.project.config;
+package db.project.config;
 
-import dp.project.config.jwt.TokenProvider;
+import db.project.config.jwt.TokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
