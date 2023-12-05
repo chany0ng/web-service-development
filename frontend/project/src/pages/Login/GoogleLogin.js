@@ -12,7 +12,7 @@ const GoogleLogin = () => {
     const refreshToken = params.get('refreshToken');
     localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
-    // navigate('/user/main');
+    navigate('/user/main');
   });
   return (
     <section className={styles['dots-container']}>

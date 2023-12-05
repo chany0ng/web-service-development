@@ -4,9 +4,10 @@ import InnerTabBar from '../../../components/TabBar/InnerTabBar';
 import Article from '../../../layouts/Article';
 import styles from './UserInfoBookMark.module.scss';
 import { Card, Container, Button } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CustomTable from '../../../components/Table/CustomTable';
-
+import { mainPageAuthCheck } from '../../../AuthCheck';
+import { useNavigate } from 'react-router-dom';
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['개인정보 수정', '대여소 즐겨찾기'];
 const outerTab = 'info';
@@ -34,6 +35,10 @@ const body = [
 ];
 
 const UserInfoBookMark = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
   const [station, setStation] = useState('');
   const inputStationHandler = (e) => {
     e.preventDefault();

@@ -6,6 +6,9 @@ import { Card, Button, Container } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { userInfo } from '../../../recoil';
+import { mainPageAuthCheck } from '../../../AuthCheck';
 const innerTitle = ['일일권 구매', '일일권 선물'];
 const innerTab = 'buy';
 const url = {
@@ -13,6 +16,11 @@ const url = {
   gift: '/user/tickets/gift'
 };
 const UserTicketBuy = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
+  const [user, setUser] = useRecoilState(userInfo);
   const [checked, setChecked] = useState(false);
   const [isLackOfMoney, setIsLackOfMoney] = useState(false);
   const existMoney = 0;
@@ -21,7 +29,6 @@ const UserTicketBuy = () => {
   const lackNotice = (
     <h1 className={styles.moneyLack}>보유 금액이 부족합니다!</h1>
   );
-  const navigate = useNavigate();
   const movePageHandler = () => {
     navigate('/user/pay/charge');
   };
@@ -52,10 +59,10 @@ const UserTicketBuy = () => {
           </p>
           <p>대여시간은 기본 1시간입니다.</p>
           <p>
-            초과 시 5분마다 추가요금 <span style={{ color: 'red' }}>200원</span>
-            이 부과됩니다.
+            초과 시 15분마다 추가요금{' '}
+            <span style={{ color: 'red' }}>250원</span>이 부과됩니다.
           </p>
-          <p>예시 - 기본 초과 1~5분: 200원, 6~10분: 400원</p>
+          <p>예시 - 기본 초과 1~15분: 250원, 16~30분: 500원</p>
         </div>
         <Container maxWidth="sm">
           <Card
@@ -67,7 +74,7 @@ const UserTicketBuy = () => {
             }}
             className={styles.card}
           >
-            <h2>일일권 구매하기</h2>
+            <h2>이용권 구매하기</h2>
             <div className={styles.favorite}>
               <div className={styles.money}>
                 <span>현재 보유 금액:</span>
@@ -86,7 +93,6 @@ const UserTicketBuy = () => {
                 </div>
               </div>
 
-              {/* 보유금액 부족 시, 에러 문구 표시할 부분 */}
               <div style={{ marginTop: '20px', fontSize: '1.15rem' }}>
                 <Checkbox
                   checked={checked}
@@ -97,7 +103,6 @@ const UserTicketBuy = () => {
                 추가요금자동결제, 환불규정, 이용약관에 동의하며 결제를
                 진행합니다.
               </div>
-              {/* {isLackOfMoney && lackNotice} */}
               {isLackOfMoney && (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   {lackNotice}

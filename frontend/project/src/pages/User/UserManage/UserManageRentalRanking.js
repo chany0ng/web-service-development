@@ -5,7 +5,9 @@ import Layout from '../../../layouts/Layout';
 import CustomTable from '../../../components/Table/CustomTable';
 import { BarChart } from '@mui/x-charts/BarChart';
 import styles from './UserManageRentalRanking.module.scss';
-
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { mainPageAuthCheck } from '../../../AuthCheck';
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['대여/반납 이력', '대여소 랭킹'];
 const outerTab = 'manage';
@@ -28,6 +30,10 @@ const body = [
 ];
 
 const UserManageRentalRanking = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
   return (
     <Layout>
       <TabBar title={outerTitle} select={outerTab} />

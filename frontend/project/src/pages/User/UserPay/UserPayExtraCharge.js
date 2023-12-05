@@ -6,7 +6,7 @@ import styles from './UserPayExtraCharge.module.scss';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-
+import { mainPageAuthCheck } from '../../../AuthCheck';
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['카드 금액 충전', '추가요금 결제'];
 const outerTab = 'payment';
@@ -17,6 +17,10 @@ const url = {
 };
 
 const UserPayExtraCharge = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
   //todo 추가요금 있는 사람은 무조건 여기로 오게
   const existMoney = 3500;
   const overFee = 0;
@@ -46,7 +50,6 @@ const UserPayExtraCharge = () => {
     }
   }, [existMoney, overFee]);
 
-  const navigate = useNavigate();
   const movePageHandler = () => {
     navigate('/user/pay/charge');
   };

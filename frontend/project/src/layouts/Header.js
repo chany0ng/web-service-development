@@ -15,6 +15,8 @@ const Header = ({ sections, title }) => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
         navigate('/');
+      } else if (response.status === 401) {
+        navigate('/');
       } else {
         throw new Error('토큰이 정상적으로 삭제되지 않았습니다!');
       }

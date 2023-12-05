@@ -4,7 +4,9 @@ import InnerTabBar from '../../../components/TabBar/InnerTabBar';
 import Layout from '../../../layouts/Layout';
 import Article from '../../../layouts/Article';
 import { Card, Button, Container } from '@mui/material';
-
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { mainPageAuthCheck } from '../../../AuthCheck';
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['카드 금액 충전', '추가요금 결제'];
 const outerTab = 'payment';
@@ -17,6 +19,10 @@ const url = {
 const UserPayCharge = () => {
   //todo: useEffct-> 보유금액 가져오기
   //todo: 금액 충전 버튼 클릭 기능 추가
+  const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
   const existCash = 15000;
   return (
     <Layout>

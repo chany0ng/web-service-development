@@ -1,12 +1,14 @@
 import Layout from '../../../layouts/Layout';
 import TabBar from '../../../components/TabBar/TabBar';
 import InnerTabBar from '../../../components/TabBar/InnerTabBar';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './UserInfoEdit.module.scss';
 import { postFetch } from '../../../config';
 import { Grid, Alert, Button } from '@mui/material';
 import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import Article from '../../../layouts/Article';
+import { useNavigate } from 'react-router-dom';
+import { mainPageAuthCheck } from '../../../AuthCheck';
 
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['개인정보 수정', '대여소 즐겨찾기'];
@@ -15,6 +17,10 @@ const innerTab = 'edit';
 const url = { edit: '/user/info/edit', bookmark: '/user/info/bookmark' };
 
 const UserInfoEdit = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
   const [inputData, setInputData] = useState({
     email: 'sibal@naver.com',
     user_id: 'abc123',

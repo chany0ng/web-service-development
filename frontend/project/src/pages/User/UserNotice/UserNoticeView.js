@@ -4,8 +4,13 @@ import { postFetch, getFetch } from '../../../config';
 import Layout from '../../../layouts/Layout';
 import PostView from '../../../components/PostView/PostView';
 import Article from '../../../layouts/Article';
+import { mainPageAuthCheck } from '../../../AuthCheck';
+
 const UserNoticeView = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
   const location = useLocation();
   const postNumber = location.state?.postNumber;
   const moveToList = () => {

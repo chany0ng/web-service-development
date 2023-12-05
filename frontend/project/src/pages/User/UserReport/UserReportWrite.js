@@ -12,7 +12,7 @@ import { TextField } from '@mui/material';
 import Checkbox from '@mui/material/Checkbox';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-
+import { mainPageAuthCheck } from '../../../AuthCheck';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -32,6 +32,9 @@ const url = {
 };
 const UserReportWrite = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
   const [checked, setChecked] = useState({
     타이어: false,
     체인: false,

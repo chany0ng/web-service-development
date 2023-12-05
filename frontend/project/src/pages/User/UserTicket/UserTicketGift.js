@@ -13,7 +13,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { TextField } from '@mui/material';
-
+import { mainPageAuthCheck } from '../../../AuthCheck';
 const innerTitle = ['일일권 구매', '일일권 선물'];
 const innerTab = 'gift';
 const url = {
@@ -22,6 +22,10 @@ const url = {
 };
 
 const UserTicketGift = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
   const [user, setUser] = useRecoilState(userInfo);
   const [checked, setChecked] = useState(false);
   const [isLackOfMoney, setIsLackOfMoney] = useState(false);
@@ -40,7 +44,6 @@ const UserTicketGift = () => {
   const lackNotice = (
     <h1 className={styles.moneyLack}>보유 금액이 부족합니다!</h1>
   );
-  const navigate = useNavigate();
   const movePageHandler = () => {
     navigate('/user/payment/charge');
   };

@@ -44,7 +44,7 @@ const CustomCard = (props) => {
             </div>
             <Button
               onClick={() => {
-                navigate('/user/pay/charge');
+                navigate('/user/payment/charge');
               }}
               variant="contained"
               color="primary"

@@ -7,7 +7,7 @@ import { useParams } from 'react-router-dom';
 import { postFetch, getFetch } from '../../../config';
 import { useNavigate } from 'react-router-dom';
 import CustomPagination from '../../../components/Pagination/CustomPagination';
-
+import { mainPageAuthCheck } from '../../../AuthCheck';
 const innerTitle = ['공지사항', '고장 신고'];
 const innerTab = 'notice';
 const url = {
@@ -34,8 +34,8 @@ export const MyContext = createContext();
 const UserNoticeList = () => {
   const navigate = useNavigate();
   useEffect(() => {
-    // 토큰검사
-  });
+    mainPageAuthCheck(navigate);
+  }, []);
   const { pageNumber } = useParams();
   // const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(
