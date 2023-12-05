@@ -12,7 +12,7 @@ const innerTitle = ['공지사항', '고장 신고'];
 const innerTab = 'notice';
 const url = {
   notice: '/user/notice/noticeList/1',
-  report: '/user/report/reportList/1'
+  report: '/user/report/reportBoardEdit'
 };
 const headData = ['글 번호', '제목', '작성 시각', '조회수'];
 const posts = [
@@ -47,27 +47,28 @@ const UserNoticeList = () => {
   const handlePageChange = (e, newPage) => {
     setCurrentPage(newPage);
   };
-  // page가 바뀌면, 실행되는 함수
-  const fetchPosts = async (pageNumber) => {
-    try {
-      // const { status, data } = await getFetch(`url/${pageNumber}`);
-      const status = 200;
-      if (status === 200) {
-        // setPosts(data);
-        setTotalPages(75);
-      } else if (status === 401) {
-        navigate('/');
-      }
-    } catch (error) {
-      console.error(error);
-      alert(error);
-    }
-  };
+
   useEffect(() => {
     navigate(`/user/notice/noticeList/${currentPage}`);
   }, [currentPage]);
 
   useEffect(() => {
+    // page가 바뀌면, 실행되는 함수
+    const fetchPosts = async (pageNumber) => {
+      try {
+        // const response = await getFetch(`api/notice/list/${pageNumber}`);
+        const response = 100;
+        if (response.status === 200) {
+          // setPosts(data);
+          setTotalPages(75);
+        } else if (response.status === 401) {
+          navigate('/');
+        }
+      } catch (error) {
+        console.error(error);
+        alert(error);
+      }
+    };
     fetchPosts(currentPage);
   }, [currentPage]);
 
@@ -76,7 +77,6 @@ const UserNoticeList = () => {
     navigate(`/user/notice/noticeView/${row.board_id}`, {
       state: { postNumber: row.board_id }
     });
-    // alert(`row: ${row.board_id}`);
   };
 
   return (
@@ -84,7 +84,6 @@ const UserNoticeList = () => {
       <Layout>
         <InnerTabBar title={innerTitle} select={innerTab} url={url} />
         <Article>
-          <div>공지사항 리스트</div>
           <PostList posts={posts} headData={headData} />
           <CustomPagination
             page={currentPage}
