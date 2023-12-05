@@ -20,6 +20,13 @@ public class NoticeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public int getNoticeCount() {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        String sql = "SELECT count(notice_id) noticeCount FROM Notice";
+
+        return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+    }
+
     public Optional<List<ReturnGetNoticeListDto>> noticeList(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);

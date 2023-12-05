@@ -30,16 +30,17 @@ public class SecurityConfig {
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http//.httpBasic(HttpBasicConfigurer::disable)
+        http// .httpBasic(HttpBasicConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .csrf(CsrfConfigurer::disable)
                 .headers(headers -> headers.frameOptions(Customizer.withDefaults()))
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
-                    //auth.requestMatchers("/api/test").hasRole("USER");
+                    // auth.requestMatchers("/api/test").hasRole("USER");
                     auth.requestMatchers("/error/**").permitAll();
                     auth.anyRequest().authenticated();
                 });
@@ -47,12 +48,11 @@ public class SecurityConfig {
         http.addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         http.oauth2Login(oauth2Login -> {
-            oauth2Login.userInfoEndpoint(userInfoEndpoint ->
-                    userInfoEndpoint.userService(oAuth2UserCustomService));
+            oauth2Login.userInfoEndpoint(userInfoEndpoint -> userInfoEndpoint.userService(oAuth2UserCustomService));
             oauth2Login.successHandler(oAuth2SuccessHandler());
         });
 
-        http.exceptionHandling(exception ->  {
+        http.exceptionHandling(exception -> {
             exception.accessDeniedHandler(jwtAccessDeniedHandler);
             exception.authenticationEntryPoint(jwtAuthenticationEntryPoint);
         });
@@ -69,6 +69,7 @@ public class SecurityConfig {
     public TokenAuthenticationFilter tokenAuthenticationFilter() {
         return new TokenAuthenticationFilter(tokenProvider);
     }
+
     @Bean
     public OAuth2SuccessHandler oAuth2SuccessHandler() {
         return new OAuth2SuccessHandler(tokenProvider, refreshTokenRepository, userRepository);
