@@ -1,20 +1,20 @@
 package db.project.controller;
 
+import db.project.exceptions.ErrorResponse;
 import db.project.service.RentalService;
 import db.project.dto.PostRentalRentDto;
 import db.project.dto.PostRentalReturnDto;
 import db.project.dto.ReturnPostRentalReturnDto;
-import db.project.exceptions.RentalRentException;
-import db.project.exceptions.RentalReturnException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class RentalController {  // 자전거 대여, 반납 Controller
@@ -32,25 +32,18 @@ public class RentalController {  // 자전거 대여, 반납 Controller
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "대여 성공", content = {
-                    @Content(mediaType = "text/plain", examples = {
-                            @ExampleObject(value = "대여에 성공했습니다.")})
+                    @Content(examples = {
+                            @ExampleObject(value = "{}")})
             }),
-            @ApiResponse(responseCode = "400", description = "대여 실패", content = {
-                    @Content(mediaType = "text/plain", examples = {
-                            @ExampleObject(value = "미납금이 존재해 대여에 실패했습니다.", name = "OverfeeOwned"),
-                            @ExampleObject(value = "보유중인 이용권이 없습니다.", name = "InvalidTicket"),
-                            @ExampleObject(value = "자전거 상태 업데이트 실패", name = "BikeStatusUpdateFailed")
-                    })
-            })
+            @ApiResponse(responseCode = "400", description = "이용권 미보유", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "402", description = "미납금 존재", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 자전거 대여
     public ResponseEntity<String> postRent(@RequestBody PostRentalRentDto form){
-        try {
-            String result = rentalService.rentalRent(form);
-            return ResponseEntity.ok(result);
-        } catch (RentalRentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+        rentalService.rentalRent(form);
+
+        return ResponseEntity.ok("{}");
     }
 
     @ResponseBody
@@ -61,14 +54,12 @@ public class RentalController {  // 자전거 대여, 반납 Controller
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "반납 성공"),
-            @ApiResponse(responseCode = "400", description = "잘못된 값이 전달되어 반납 실패")
+            @ApiResponse(responseCode = "400", description = "반납 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<ReturnPostRentalReturnDto> postReturn(@RequestBody PostRentalReturnDto form){
-        try {
-            ReturnPostRentalReturnDto postRentalReturnDto = rentalService.rentalReturn(form);
-            return ResponseEntity.ok(postRentalReturnDto);
-        } catch (RentalReturnException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        ReturnPostRentalReturnDto postRentalReturnDto = rentalService.rentalReturn(form);
+
+        return ResponseEntity.ok(postRentalReturnDto);
     }
 }
