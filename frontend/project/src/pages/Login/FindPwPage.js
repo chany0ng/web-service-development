@@ -14,11 +14,16 @@ import { postFetch } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { loginPageAuthCheck } from '../../AuthCheck';
 
-const passwordQuestion = [
+const pwQuestionList = [
   {
-    question: 'school',
+    question: 'elementary',
     description: '졸업한 초등학교 이름',
     value: 1
+  },
+  {
+    question: 'middle',
+    description: '졸업한 중학교 이름',
+    value: 2
   }
 ];
 
@@ -47,9 +52,11 @@ const FindPwPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postFetch('api/findpw', inputData);
-        if (status === 200) {
-          alert(`비밀번호는 ${data}입니다.`);
+        const finalInputData = { ...inputData };
+        delete finalInputData.pw_question;
+        const response = await postFetch('api/findpw-verification', inputData);
+        if (response.status === 200) {
+          // 변수 하나로 맞았는지 체크. 모달창에서 새로운 비밀번호 전송.
           navigate('/signin');
         }
       }
@@ -60,7 +67,7 @@ const FindPwPage = () => {
   };
   return (
     <LoginBackground>
-      <Container component="main" maxWidth="sm">
+      <Container component="main" sx={{ width: '50vw' }}>
         <Box
           sx={{
             margin: 5,
@@ -108,7 +115,7 @@ const FindPwPage = () => {
                   variant="standard"
                   helperText="비밀번호 찾기 질문을 선택해주세요"
                 >
-                  {passwordQuestion.map((option) => (
+                  {pwQuestionList.map((option) => (
                     <MenuItem key={option.question} value={option.value}>
                       {option.description}
                     </MenuItem>

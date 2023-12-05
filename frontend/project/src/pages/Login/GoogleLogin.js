@@ -10,7 +10,7 @@ const GoogleLogin = () => {
     // const params = new URLSearchParams(window.location.search);
     const accessToken = params.get('accessToken');
     const refreshToken = params.get('refreshToken');
-    localStorage.setItem('acceessToken', accessToken);
+    localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
     // navigate('/user/main');
   });
