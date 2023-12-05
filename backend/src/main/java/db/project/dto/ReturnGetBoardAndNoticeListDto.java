@@ -5,13 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
-public class ReturnGetNoticeInfoDto {
+@AllArgsConstructor
+public class ReturnGetBoardAndNoticeListDto {
     private String title;
-    private String content;
     private String date;
-    private int views;
 }
