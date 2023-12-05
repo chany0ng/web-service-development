@@ -47,8 +47,7 @@ const SignInPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postFetch('api/login', inputData);
-        console.log(`로그인: ${status}, ${data}`);
+        const { status, data } = await postFetch('api/auth/login', inputData);
         if (status === 401) {
           idPwCheck(data);
         }
@@ -141,7 +140,9 @@ const SignInPage = () => {
             >
               Login
             </Button>
-            <a href="http://localhost:8080/oauth2/authorization/google">Google Login</a>
+            <a href="http://localhost:8080/oauth2/authorization/google">
+              Google Login
+            </a>
             <Grid container justifyContent="center">
               <Grid item xs={4}>
                 <Link

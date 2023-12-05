@@ -8,7 +8,7 @@ const TabBar = ({ title, select }) => {
   const navigate = useNavigate();
   const tabClickHandler = (num) => {
     if (num === 1) navigate('/user/info/edit');
-    if (num === 2) navigate('/user/pay/charge');
+    if (num === 2) navigate('/user/payment/charge');
     if (num === 3) navigate('/user/manage/rental-history');
   };
   return (
@@ -24,7 +24,7 @@ const TabBar = ({ title, select }) => {
       </div>
       <div
         className={`${
-          select === 'pay' ? styles.activeTab : styles['flex-item']
+          select === 'payment' ? styles.activeTab : styles['flex-item']
         }`}
         onClick={() => tabClickHandler(2)}
       >

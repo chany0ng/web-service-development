@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll();
                     //auth.requestMatchers("/api/test").hasRole("USER");
+                    auth.requestMatchers("/api/admin").hasRole("ADMIN");
                     auth.requestMatchers("/error/**").permitAll();
                     auth.anyRequest().authenticated();
                 });
