@@ -1,20 +1,16 @@
 package db.project.controller;
 
-import db.project.exceptions.ErrorResponse;
 import db.project.service.SurchargeService;
 import db.project.dto.ReturnGetSurchargeOverfeeInfoDto;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class SurchargeController { // 추가요금 결제 Controller
@@ -31,13 +27,16 @@ public class SurchargeController { // 추가요금 결제 Controller
             description = "결제관리에서 추가요금 버튼을 클릭했을 때의 API"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "추가요금 조회 성공")
+            @ApiResponse(responseCode = "200", description = "추가요금 조회 성공"),
+            @ApiResponse(responseCode = "400", description = "잘못된 값이 전달되어 조회 실패")
     })
     // 추가요금 금액 확인
     public ResponseEntity<ReturnGetSurchargeOverfeeInfoDto> postSurchargeInfo(){
-        ReturnGetSurchargeOverfeeInfoDto overfee = surchargeService.overfeeInfo();
+        Optional<ReturnGetSurchargeOverfeeInfoDto> overfee = surchargeService.overfeeInfo();
 
-        return ResponseEntity.ok(overfee);
+        return overfee
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
     @ResponseBody
@@ -47,17 +46,17 @@ public class SurchargeController { // 추가요금 결제 Controller
             description = "추가요금 입력 후 결제 버튼을 클릭했을 때의 API"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "추가요금 지불 성공", content = {
-                    @Content(examples = {
-                            @ExampleObject(value = "{}")})
-            }),
-            @ApiResponse(responseCode = "402", description = "소지금 부족", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "200", description = "추가요금 지불 성공"),
+            @ApiResponse(responseCode = "400", description = "소지금이 추가요금보다 적어 추가요금 지불 실패")
     })
     // 추가요금 지불
-    public ResponseEntity<String> postSurchargePay(){
-        surchargeService.overfeePay();
-        return ResponseEntity.ok("{}");
+    public ResponseEntity<Void> postSurchargePay(){
+        Boolean checkOverfee = surchargeService.overfeePay();
+        if(checkOverfee){
+            return ResponseEntity.ok().build();
+        } else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
 
     }
 }

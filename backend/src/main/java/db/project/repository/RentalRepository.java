@@ -48,13 +48,14 @@ public class RentalRepository {
         return (checkInsert > 0) ? Optional.of("rental 성공") : Optional.empty();
     }
 
-    public void updateBikeStatus(String bikeId) {
+    public Optional<String> updateBikeStatus(String bikeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("bike_id", bikeId);
 
         String updateBikeSql = "UPDATE bike SET status = 'rented' WHERE  bike_id = :bike_id";
-
         int rowsUpdated = jdbcTemplate.update(updateBikeSql, namedParameters);
+
+        return (rowsUpdated > 0) ? Optional.of("자전거 상태 업데이트 성공") : Optional.empty();
     }
 
     public int updateRental(PostRentalReturnDto postRentalReturnDto, String user_id) {

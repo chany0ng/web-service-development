@@ -3,8 +3,8 @@ package db.project.service;
 import db.project.dto.PostRentalRentDto;
 import db.project.dto.PostRentalReturnDto;
 import db.project.dto.ReturnPostRentalReturnDto;
-import db.project.exceptions.ErrorCode;
-import db.project.exceptions.RentalException;
+import db.project.exceptions.RentalRentException;
+import db.project.exceptions.RentalReturnException;
 import db.project.repository.RentalRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,13 +21,15 @@ public class RentalService {
     }
 
     @Transactional
-    public void rentalRent(PostRentalRentDto rentalRentDto) {
+    public String rentalRent(PostRentalRentDto rentalRentDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        rentalRepository.checkOverfee(user_id).orElseThrow(() -> new RentalException("EXIST UNPAID AMOUNT", ErrorCode.EXIST_UNPAID_AMOUNT));
+        rentalRepository.checkOverfee(user_id).orElseThrow(() -> new RentalRentException("미납금이 존재해 대여에 실패했습니다."));
 
-        rentalRepository.insertRental(rentalRentDto, user_id).orElseThrow(() -> new RentalException("DON'T HAVE TICKET", ErrorCode.NO_TICKET));
+        rentalRepository.insertRental(rentalRentDto, user_id).orElseThrow(() -> new RentalRentException("보유중인 이용권이 없습니다."));
+        rentalRepository.updateBikeStatus(rentalRentDto.getBike_id()).orElseThrow(() -> new RentalRentException("자전거 상태 업데이트 실패"));
 
-        rentalRepository.updateBikeStatus(rentalRentDto.getBike_id());
+        return "대여에 성공했습니다.";
+
     }
 
     @Transactional
@@ -67,6 +69,6 @@ public class RentalService {
                 }
             }
         }
-        throw new RentalException("FAIL BIKE RETURN", ErrorCode.FAIL_BIKE_RETURN);
+        throw new RentalReturnException("반납에 실패했습니다.");
     }
 }

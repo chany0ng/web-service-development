@@ -2,7 +2,6 @@ package db.project.service;
 
 import db.project.dto.PostBreakdownReportDto;
 import db.project.exceptions.BreakdownReportException;
-import db.project.exceptions.ErrorCode;
 import db.project.repository.BreakdownReportRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,10 +20,10 @@ public class BreakdownReportService {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
         breakdownReportRepository.insertReport(postBreakdownReportDto, user_id)
-                .orElseThrow(() -> new BreakdownReportException("FAILURE TO RECEIVE FAULT REPORT", ErrorCode.FAIL_REPORT));
+                .orElseThrow(() -> new BreakdownReportException("고장신고 접수 실패"));
 
         breakdownReportRepository.updateBikeStatus(postBreakdownReportDto.getBike_id())
-                .orElseThrow(() -> new BreakdownReportException("BIKE STATUS UPDATE FAILED", ErrorCode.FAIL_REPORT));
+                .orElseThrow(() -> new BreakdownReportException("자전거 상태 업데이트 실패"));
 
         return "고장신고가 접수되었습니다.";
 

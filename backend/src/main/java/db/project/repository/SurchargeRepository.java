@@ -25,8 +25,12 @@ public class SurchargeRepository {
 
         String sql = "SELECT overfee FROM user WHERE user_id = :user_id";
 
-        ReturnGetSurchargeOverfeeInfoDto overfee = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetSurchargeOverfeeInfoDto.class));
-        return Optional.of(overfee);
+        try{
+            ReturnGetSurchargeOverfeeInfoDto overfee = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetSurchargeOverfeeInfoDto.class));
+            return Optional.of(overfee);
+        } catch (EmptyResultDataAccessException e){
+            return Optional.empty();
+        }
     }
 
     public Map<String, Object> getOverfeeAndCash(String user_id) {

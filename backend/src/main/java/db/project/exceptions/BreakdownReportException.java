@@ -1,13 +1,7 @@
 package db.project.exceptions;
 
-import lombok.Getter;
-
-@Getter
 public class BreakdownReportException extends RuntimeException{
-    private ErrorCode errorCode;
-
-    public BreakdownReportException(String message, ErrorCode errorCode) {
+    public BreakdownReportException(String message) {
         super(message);
-        this.errorCode = errorCode;
     }
 }

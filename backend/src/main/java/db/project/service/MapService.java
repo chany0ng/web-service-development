@@ -1,12 +1,9 @@
 package db.project.service;
 
 import db.project.dto.*;
-import db.project.exceptions.ErrorCode;
-import db.project.exceptions.MapException;
 import db.project.repository.MapRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,20 +25,13 @@ public class MapService {
        return response;
     }
 
-    @Transactional
     public Optional<LocationInfoResponseDto> locationInfo(PostMapLocationInfoDto postMapLocationInfoDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<ReturnPostMapLocationInfoDto> locationInfoOptional = mapRepository.locationInfo(postMapLocationInfoDto);
-        if(locationInfoOptional.isEmpty()) {
-            throw new MapException("FAILURE VIEW INFO", ErrorCode.FAIL_MAP_INFO);
-        }
-        Optional<Boolean> isFavorite = mapRepository.getIsFavorite(locationInfoOptional.get().getLocation_id(), user_id);
-
-        Optional<Boolean> isRented = mapRepository.getIsRented(user_id);
+        Optional<ReturnPostMapLocationInfoDto> locationInfoOptional = mapRepository.locationInfo(postMapLocationInfoDto, user_id);
 
         return locationInfoOptional.map(mapLocationInfo -> {
-            LocationInfoResponseDto response = new LocationInfoResponseDto(isRented.get(), mapLocationInfo.getLocation_id(), mapLocationInfo.getAddress(), mapLocationInfo.getLocation_status(), isFavorite.get());
+            LocationInfoResponseDto response = new LocationInfoResponseDto(mapLocationInfo.getLocation_id(), mapLocationInfo.getAddress(), mapLocationInfo.getLocation_status(), mapLocationInfo.isFavorite());
             String[] bikeId = mapLocationInfo.getBike_id().split(",");
             String[] bikeStatus = mapLocationInfo.getBike_status().split(",");
 

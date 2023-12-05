@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 public class FavoritesResponseDto {
-    private List<ReturnFavoritesDto> locations;
+    List<ReturnFavoritesDto> locations;
 
     public FavoritesResponseDto() {
         this.locations = new ArrayList<>();

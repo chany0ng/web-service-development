@@ -1,8 +1,6 @@
 package db.project.service;
 
 import db.project.dto.ReturnGetSurchargeOverfeeInfoDto;
-import db.project.exceptions.ErrorCode;
-import db.project.exceptions.SurchargeException;
 import db.project.repository.SurchargeRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -19,14 +17,14 @@ public class SurchargeService {
         this.surchargeRepository = surchargeRepository;
     }
 
-    public ReturnGetSurchargeOverfeeInfoDto overfeeInfo(){
+    public Optional<ReturnGetSurchargeOverfeeInfoDto> overfeeInfo(){
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        return surchargeRepository.overfeeInfo(user_id).get();
+        return surchargeRepository.overfeeInfo(user_id);
     }
 
     @Transactional
-    public void overfeePay(){
+    public boolean overfeePay(){
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Map<String, Object> overfeeAndCash = surchargeRepository.getOverfeeAndCash(user_id);
@@ -35,9 +33,8 @@ public class SurchargeService {
         int cash = (int) overfeeAndCash.get("cash");
 
         if (cash < overfee) {
-            throw new SurchargeException("NOT ENOUGH MONEY", ErrorCode.NOT_ENOUGH_MONEY);
+            return false;
         }
-
-        surchargeRepository.overfeePay(overfee, user_id);
+        return surchargeRepository.overfeePay(overfee, user_id);
     }
 }

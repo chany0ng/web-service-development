@@ -2,21 +2,19 @@ package db.project.controller;
 
 import db.project.dto.BoardListResponseDto;
 import db.project.dto.PostBoardCreateAndUpdateDto;
-import db.project.dto.ReturnGetBoardInfoDto;
-import db.project.exceptions.ErrorResponse;
+import db.project.exceptions.BoardException;
 import db.project.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api")
+@RequestMapping("api")
 public class BoardController {  // 게시판 Controller
     private final BoardService boardService;
 
@@ -24,7 +22,7 @@ public class BoardController {  // 게시판 Controller
         this.boardService = boardService;
     }
 
-    @GetMapping("board/list/{page}")
+    @GetMapping("board/list")
     @ResponseBody
     @Operation(
             summary = "자유게시판 리스트",
@@ -32,13 +30,17 @@ public class BoardController {  // 게시판 Controller
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시판 리스트 열람 성공"),
-            @ApiResponse(responseCode = "404", description = "페이지를 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "400", description = "게시물 리스트 열람 실패")
     })
     // 게시물 리스트
-    public ResponseEntity<BoardListResponseDto> getBoardList(@PathVariable int page) {
+    public ResponseEntity<BoardListResponseDto> getBoardList(@RequestParam(defaultValue = "1") int page) {
 
-        return ResponseEntity.ok(boardService.boardList(page));
+        try{
+            return ResponseEntity.ok(boardService.boardList(page));
+        } catch (BoardException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+
     }
 
     @GetMapping("board/info/{boardId}")
@@ -49,13 +51,19 @@ public class BoardController {  // 게시판 Controller
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 열람 성공"),
-            @ApiResponse(responseCode = "404", description = "게시물을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "400", description = "게시물 열람 실패", content = {
+                    @Content(mediaType = "text/plain", examples = {
+                            @ExampleObject(value = "존재하지 않는 게시물 입니다.")
+                    })
+            })
     })
     // 게시물 상세정보
-    public ResponseEntity<ReturnGetBoardInfoDto> getBoardInfo(@PathVariable int boardId) {
-
-        return ResponseEntity.ok(boardService.boardInfo(boardId));
+    public ResponseEntity<?> getBoardInfo(@PathVariable int boardId) {
+        try{
+            return ResponseEntity.ok(boardService.boardInfo(boardId));
+        } catch (BoardException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @PostMapping("board/create")
@@ -68,10 +76,9 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "200", description = "게시물 생성 성공")
     })
     // 게시물 생성
-    public ResponseEntity<String> postBoardCreate(@RequestBody PostBoardCreateAndUpdateDto form) {
+    public ResponseEntity<Void> postBoardCreate(@RequestBody PostBoardCreateAndUpdateDto form) {
         boardService.boardCreate(form);
-
-        return ResponseEntity.ok("{}");
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("board/update/{boardId}")
@@ -82,18 +89,26 @@ public class BoardController {  // 게시판 Controller
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 업데이트 성공", content = {
-                    @Content(examples = {
-                            @ExampleObject(value = "{}")})
+                    @Content(mediaType = "text/plain", examples = {
+                            @ExampleObject(value = "게시물이 업데이트 되었습니다.")})
             }),
-            @ApiResponse(responseCode = "403", description = "게시물 저자가 아님", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "페이지를 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "400", description = "게시물 업데이트 실패", content = {
+                    @Content(mediaType = "text/plain", examples = {
+                            @ExampleObject(value = "존재하지 않는 게시물 입니다.", name = "NonExist"),
+                            @ExampleObject(value = "게시물 업데이트 실패", name = "UpdateFailed"),
+                            @ExampleObject(value = "게시물의 작성자가 아닙니다.", name = "MismatchAuthor")
+                    })
+            })
     })
     // 게시물 수정
     public ResponseEntity<String> postBoardUpdate(@PathVariable int boardId, @RequestBody PostBoardCreateAndUpdateDto form) {
-        boardService.boardUpdate(form, boardId);
 
-        return ResponseEntity.ok("{}");
+        try {
+            String result = boardService.boardUpdate(form, boardId);
+            return ResponseEntity.ok(result);
+        } catch (BoardException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
 
     }
 
@@ -105,18 +120,25 @@ public class BoardController {  // 게시판 Controller
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "게시물 삭제 성공", content = {
-                    @Content(examples = {
-                            @ExampleObject(value = "{}")})
+                    @Content(mediaType = "text/plain", examples = {
+                            @ExampleObject(value = "게시물이 삭제되었습니다.")})
             }),
-            @ApiResponse(responseCode = "403", description = "게시물 저자가 아님", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "404", description = "페이지를 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+            @ApiResponse(responseCode = "400", description = "게시물 삭제 실패", content = {
+                    @Content(mediaType = "text/plain", examples = {
+                            @ExampleObject(value = "존재하지 않는 게시물 입니다.", name = "NonExist"),
+                            @ExampleObject(value = "게시물 삭제 실패", name = "DeleteFailed"),
+                            @ExampleObject(value = "게시물의 작성자가 아닙니다.", name = "MismatchAuthor")
+                    })
+            })
     })
     // 게시물 삭제
     public ResponseEntity<String> postBoardDelete(@PathVariable int boardId) {
-        boardService.boardDelete(boardId);
-
-        return ResponseEntity.ok("{}");
+        try{
+            String result = boardService.boardDelete(boardId);
+            return ResponseEntity.ok(result);
+        } catch (BoardException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
 
     }
 }

@@ -41,13 +41,16 @@ public class TicketRepository {
         });
     }
 
-    public TicketInfo getTicketInfoByHour(int hour) {
+    public Optional<TicketInfo> getTicketInfoByHour(int hour) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("hour", hour);
 
         String sql = "SELECT ticket_id, price FROM ticket WHERE hour = :hour";
-
-        return jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(TicketInfo.class));
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(TicketInfo.class)));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void updatePurchaseUserInfo(String userId, TicketInfo ticketInfo) {

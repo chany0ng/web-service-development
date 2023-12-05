@@ -3,18 +3,15 @@ package db.project.controller;
 import db.project.dto.FavoritesResponseDto;
 import db.project.dto.PostFavoritesChangeDto;
 import db.project.dto.PostFavoritesSearchDto;
-import db.project.exceptions.ErrorResponse;
 import db.project.service.FavoritesService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class FavoritesController {  // 즐겨찾기 controller
@@ -48,17 +45,20 @@ public class FavoritesController {  // 즐겨찾기 controller
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "즐겨찾기 변경 성공", content = {
-                    @Content(examples = {
-                            @ExampleObject(value = "{}")})
+                    @Content(mediaType = "text/plain", examples = {
+                            @ExampleObject(value = "즐겨찾기 추가 성공", name = "FavoritesAdd"),
+                            @ExampleObject(value = "즐겨찾기 삭제 성공", name = "FavoritesDelete")
+                    })
             }),
-            @ApiResponse(responseCode = "409", description = "즐겨찾기 중복", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-            @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
-
+            @ApiResponse(responseCode = "500", description = "즐겨찾기 변경 실패", content = {
+                    @Content(mediaType = "text/plain", examples = {
+                            @ExampleObject(value = "이미 즐겨찾기에 추가된 대여소 입니다.")
+                    })
+            })
     })
     // 즐겨찾기 추가 또는 삭제
     public ResponseEntity<String> postFavoritesChange(@RequestBody PostFavoritesChangeDto form) {
-        favoritesService.locationChange(form);
-        return ResponseEntity.ok("{}");
+        return ResponseEntity.ok(favoritesService.locationChange(form));
     }
 
     @GetMapping("favorites/list")
