@@ -141,17 +141,18 @@ const SignInPage = () => {
             >
               Login
             </Button>
-            {/* <a href="http://localhost:8080/oauth2/authorization/google">
-              Google Login
-            </a> */}
-            <img
-              onClick={() => {
-                navigate('http://localhost:8080/oauth2/authorization/google');
-              }}
-              src="/images/googleLogin.svg"
-              alt="logo"
-              style={{ cursor: 'pointer', margin: '10px' }}
-            />
+            <a href="http://localhost:8080/oauth2/authorization/google">
+              <img
+                src="/images/googleLogin.svg"
+                alt="logo"
+                style={{
+                  cursor: 'pointer',
+                  margin: '10px',
+                  border: '1px solid gray',
+                  borderRadius: '3px'
+                }}
+              />
+            </a>
             <Grid container justifyContent="center">
               <Grid item xs={4}>
                 <Link
