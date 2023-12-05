@@ -1,6 +1,7 @@
 package db.project.service;
 
 import db.project.dto.*;
+import db.project.exceptions.ErrorCode;
 import db.project.exceptions.TicketException;
 import db.project.repository.TicketRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,27 +21,25 @@ public class TicketService {
     }
 
     @Transactional
-    public String purchase(PostTicketPurchaseDto postTicketPurchaseDto){
+    public void purchase(PostTicketPurchaseDto postTicketPurchaseDto){
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
         int hour = postTicketPurchaseDto.getHour();
 
         Map<String, Object> overfeeAndCash = ticketRepository.getCashAndTicketIdByUserId(user_id);
         if((int) overfeeAndCash.get("ticket_id") != 0) {
-            throw new TicketException("이미 이용권을 보유 중입니다.");
+            throw new TicketException("ALREADY HAVE TICKET", ErrorCode.TICKET_DUPLICATION);
         }
 
         int cash = (int) overfeeAndCash.get("cash");
 
-        TicketInfo ticketInfo = ticketRepository.getTicketInfoByHour(hour).orElseThrow(() -> new TicketException("잘못된 시간 정보가 전달되었습니다."));
+        TicketInfo ticketInfo = ticketRepository.getTicketInfoByHour(hour);
 
         if (ticketInfo.getPrice() > cash) {
-            throw new TicketException("소지금이 부족합니다.");
+            throw new TicketException("NOT ENOUGH MONEY", ErrorCode.NOT_ENOUGH_MONEY);
         }
 
         ticketRepository.updatePurchaseUserInfo(user_id, ticketInfo);
-
-        return "이용권 구매에 성공했습니다.";
     }
 
     public TicketListResponseDto ticketList(){
@@ -54,7 +53,7 @@ public class TicketService {
     }
 
     @Transactional
-    public String gift(PostTicketGiftDto postTicketGiftDto){
+    public void gift(PostTicketGiftDto postTicketGiftDto){
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
         int hour = postTicketGiftDto.getHour();
@@ -62,19 +61,18 @@ public class TicketService {
 
         Optional<String> existingTicketId = ticketRepository.getTicketIdByPhoneNumber(phone_number);
         if(existingTicketId.isPresent()) {
-            TicketInfo ticketInfo = ticketRepository.getTicketInfoByHour(hour).orElseThrow(() -> new TicketException("잘못된 시간 정보가 전달되었습니다."));
+            TicketInfo ticketInfo = ticketRepository.getTicketInfoByHour(hour);
 
             int cash = ticketRepository.getCashByUserId(user_id);
 
             if (ticketInfo.getPrice() > cash) {
-                throw new TicketException("소지금이 부족합니다.");
+                throw new TicketException("NOT ENOUGH MONEY", ErrorCode.NOT_ENOUGH_MONEY);
             }
             ticketRepository.updateGiftGiverInfo(user_id, ticketInfo.getPrice());
-            ticketRepository.updateGiftReceiverInfo(phone_number, ticketInfo.getTicketId());
 
-            return "이용권 선물에 성공했습니다.";
+            ticketRepository.updateGiftReceiverInfo(phone_number, ticketInfo.getTicketId());
         } else{
-            throw new TicketException("해당 사용자가 이용권을 보유 중입니다.");
+            throw new TicketException("ALREADY HAVE TICKET", ErrorCode.TICKET_DUPLICATION);
         }
     }
 }
