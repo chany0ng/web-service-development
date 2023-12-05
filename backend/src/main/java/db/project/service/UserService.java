@@ -23,6 +23,7 @@ public class UserService {
 
     private long accessTokenValidTime = 60 * 60 * 1000L; //1시간
     private long refreshTokenValidTime = 7 * 24 * 60 * 60 * 1000L; //일주일
+    private String adminPassword = "admin!";
 
     public void save(User user) {
         userRepository.save(user)
@@ -37,9 +38,15 @@ public class UserService {
 
         User user = userRepository.findUserById(userLoginRequest.getId())
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 아이디입니다."));
-
-        if(!bCryptPasswordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
-            throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+        //관리자인 경우
+        if(user.getRole().equals("admin")) {
+            if(!userLoginRequest.getPassword().equals(adminPassword)) {
+                throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+            }
+        } else {
+            if (!bCryptPasswordEncoder.matches(userLoginRequest.getPassword(), user.getPassword())) {
+                throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+            }
         }
         String accessToken = tokenProvider.createToken(user.getId(),  accessTokenValidTime);
         String refreshToken = tokenProvider.createToken(user.getId(), refreshTokenValidTime);
