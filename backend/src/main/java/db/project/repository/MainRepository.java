@@ -20,7 +20,7 @@ public class MainRepository {
         String sql = "SELECT u.user_id, email, phone_number, cash, IF(u.ticket_id IS NULL, 0, hour) AS hour, " +
                 "IF(r.user_id IS NOT NULL AND end_location IS NULL, TRUE, FALSE) AS isRented, IF(r.user_id IS NOT NULL AND end_location IS NULL, bike_id, NULL) AS bike_id " +
                 "FROM user u LEFT JOIN ticket t ON u.ticket_id = t.ticket_id " +
-                "LEFT JOIN rental r ON u.user_id = r.user_id WHERE u.user_id =:user_id";
+                "LEFT JOIN rental r ON u.user_id = r.user_id WHERE u.user_id =:user_id LIMIT 1";
 
         ReturnGetMainDto returnGetMainDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetMainDto.class));
         return returnGetMainDto;
