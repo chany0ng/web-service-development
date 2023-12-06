@@ -38,10 +38,8 @@ public class MapService {
         }
         Optional<Boolean> isFavorite = mapRepository.getIsFavorite(locationInfoOptional.get().getLocation_id(), user_id);
 
-        Optional<Boolean> isRented = mapRepository.getIsRented(user_id);
-
         return locationInfoOptional.map(mapLocationInfo -> {
-            LocationInfoResponseDto response = new LocationInfoResponseDto(isRented.get(), mapLocationInfo.getLocation_id(), mapLocationInfo.getAddress(), mapLocationInfo.getLocation_status(), isFavorite.get());
+            LocationInfoResponseDto response = new LocationInfoResponseDto(mapLocationInfo.getLocation_id(), mapLocationInfo.getAddress(), mapLocationInfo.getLocation_status(), isFavorite.get());
             String[] bikeId = mapLocationInfo.getBike_id().split(",");
             String[] bikeStatus = mapLocationInfo.getBike_status().split(",");
 

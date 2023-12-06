@@ -55,6 +55,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(e.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(BikeCreateAndDeleteException.class)
+    public ResponseEntity<ErrorResponse> handleTicketException(BikeCreateAndDeleteException e){
+        ErrorResponse response = new ErrorResponse(e.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(e.getErrorCode().getStatus()));
+    }
+
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<ErrorResponse> handleException(Exception e){
 //        ErrorResponse response = new ErrorResponse(ErrorCode.INTER_SERVER_ERROR);
