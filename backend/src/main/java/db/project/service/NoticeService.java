@@ -78,9 +78,9 @@ public class NoticeService {
     }
 
     @Transactional
-    public void noticeDelete(int notice_id) {
+    public void noticeDelete(PostBoardAndNoticeDeleteDto postBoardAndNoticeDeleteDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Integer> noticeId = noticeRepository.getNoticeId(notice_id - 1);
+        Optional<Integer> noticeId = noticeRepository.getNoticeId(postBoardAndNoticeDeleteDto.getId() - 1);
         if(noticeId.isEmpty()) {
             throw new NoticeException("page not post", ErrorCode.NOT_FOUND_POST);
         }

@@ -1,9 +1,6 @@
 package db.project.service;
 
-import db.project.dto.BoardAndNoticeListResponseDto;
-import db.project.dto.PostBoardAndNoticeCreateAndUpdateDto;
-import db.project.dto.ReturnGetBoardAndNoticeInfoDto;
-import db.project.dto.ReturnGetBoardAndNoticeListDto;
+import db.project.dto.*;
 import db.project.exceptions.BoardException;
 import db.project.exceptions.ErrorCode;
 import db.project.repository.BoardRepository;
@@ -81,9 +78,9 @@ public class BoardService {
     }
 
     @Transactional
-    public void boardDelete(int board_id) {
+    public void boardDelete(PostBoardAndNoticeDeleteDto postBoardDeleteDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Integer> boardId = boardRepository.getBoardId(board_id - 1);
+        Optional<Integer> boardId = boardRepository.getBoardId(postBoardDeleteDto.getId() - 1);
         if(boardId.isEmpty()) {
             throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
         }

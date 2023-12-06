@@ -2,6 +2,7 @@ package db.project.controller;
 
 import db.project.dto.BoardAndNoticeListResponseDto;
 import db.project.dto.PostBoardAndNoticeCreateAndUpdateDto;
+import db.project.dto.PostBoardAndNoticeDeleteDto;
 import db.project.dto.ReturnGetBoardAndNoticeInfoDto;
 import db.project.exceptions.ErrorResponse;
 import db.project.service.BoardService;
@@ -100,7 +101,7 @@ public class BoardController {  // 게시판 Controller
 
     }
 
-    @GetMapping("board/delete/{boardId}")
+    @PostMapping("board/delete")
     @ResponseBody
     @Operation(
             summary = "게시물 삭제",
@@ -116,8 +117,8 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 게시물 삭제
-    public ResponseEntity<String> getBoardDelete(@PathVariable int boardId) {
-        boardService.boardDelete(boardId);
+    public ResponseEntity<String> getBoardDelete(@RequestBody PostBoardAndNoticeDeleteDto form) {
+        boardService.boardDelete(form);
 
         return ResponseEntity.ok("{}");
 
