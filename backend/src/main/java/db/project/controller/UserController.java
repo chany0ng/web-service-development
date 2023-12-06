@@ -44,26 +44,22 @@ public class UserController {
         userService.findPW(findPWRequest);
         return ResponseEntity.ok("{}");
     }
-    @PostMapping("/auth/findPW-update")
+    @PostMapping("/auth/findPW/update")
     public ResponseEntity<String> updatePW(@RequestBody UpdatePWRequest updatePWRequest) {
-        try {
-            userService.updatePW(updatePWRequest);
-            return ResponseEntity.ok("{}");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{ \"message\" : \"서버 오류\" }");
-        }
+        userService.updatePW(updatePWRequest);
+        return ResponseEntity.ok("{}");
     }
-    @PostMapping("/update/myInfo")
+    @PostMapping("/myInfo/update")
     public ResponseEntity<String> updateMyInfo(@RequestBody UpdateMyInfoRequest updateMyInfoRequest) {
-        try{
-            userService.updateUser(updateMyInfoRequest);
-            return ResponseEntity.ok().body("{}");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{ \"message\" : \"서버 오류\" }");
-        }
+        userService.updateUser(updateMyInfoRequest);
+        return ResponseEntity.ok().body("{}");
     }
 
-
+    @PostMapping("/myInfo/updatePW")
+    public ResponseEntity<String> updateMyInfoPW(@RequestBody UpdatePWRequest updatePWRequest) {
+        userService.updatePW(updatePWRequest);
+        return ResponseEntity.ok("{}");
+    }
 
     @GetMapping("/check")
     public ResponseEntity<String> check() {

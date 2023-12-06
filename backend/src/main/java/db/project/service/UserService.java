@@ -81,11 +81,17 @@ public class UserService {
     }
 
     public void updatePW(UpdatePWRequest updatePWRequest) {
-        userRepository.updatePW(updatePWRequest.getId(), updatePWRequest.getNew_password());
+        int affectedRows = userRepository.updatePW(updatePWRequest.getId(), updatePWRequest.getNew_password());
+        if(affectedRows == 0) {
+            throw new IllegalArgumentException("업데이트 오류");
+        }
     }
 
     public void updateUser(UpdateMyInfoRequest updateMyInfoRequest) {
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        userRepository.updateUser(id, updateMyInfoRequest.getEmail(), updateMyInfoRequest.getPhone_number());
+        int affectedRows = userRepository.updateUser(id, updateMyInfoRequest.getEmail(), updateMyInfoRequest.getPhone_number());
+        if(affectedRows == 0) {
+            throw new IllegalArgumentException("업데이트 오류");
+        }
     }
 }

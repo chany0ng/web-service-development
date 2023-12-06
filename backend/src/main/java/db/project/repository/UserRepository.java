@@ -53,20 +53,20 @@ public class UserRepository {
         }
 
     }
-    public void updatePW(String id, String password) {
+    public int updatePW(String id, String password) {
         String sql = "UPDATE USER SET password= :password WHERE user_id= :id";
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id)
                 .addValue("password", bCryptPasswordEncoder.encode(password));
-        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        return namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
 
-    public void updateUser(String id, String email, String phone_number) {
+    public int updateUser(String id, String email, String phone_number) {
         String sql = "UPDATE USER SET email= :email, phone_number= :phone_number WHERE user_id= :id";
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id)
                 .addValue("email", email)
                 .addValue("phone_number", phone_number);
-        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        return namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
 
     private final RowMapper<User> userMapper = (rs, rowNum) -> {
