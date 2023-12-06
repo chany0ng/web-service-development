@@ -1,6 +1,8 @@
 package db.project.controller;
 
 import db.project.dto.PostBreakdownReportDto;
+import db.project.dto.BreakdownReportListResponseDto;
+import db.project.dto.PostBreakdownReportRepairDto;
 import db.project.exceptions.BreakdownReportException;
 import db.project.exceptions.ErrorResponse;
 import db.project.service.BreakdownReportService;
@@ -39,13 +41,46 @@ public class BreakdownReportController {  // 고장신고 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 고장신고
-    public ResponseEntity<String> report(@RequestBody PostBreakdownReportDto form){
+    public ResponseEntity<String> postReport(@RequestBody PostBreakdownReportDto form){
         try{
             String result = breakdownReportService.report(form);
             return ResponseEntity.ok("{}");
         } catch (BreakdownReportException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
 
+    @ResponseBody
+    @GetMapping("/admin/report/list/{page}")
+    @Operation(
+            summary = "고장신고 리스트",
+            description = "고장신고 관리 버튼을 클릭했을 때의 API"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "고장신고 리스트 열람 성공"),
+            @ApiResponse(responseCode = "404", description = "페이지를 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
+    })
+    // 고장신고 List
+    public ResponseEntity<BreakdownReportListResponseDto> getReportList(@PathVariable int page) {
+        return ResponseEntity.ok(breakdownReportService.reportList(page));
+    }
+
+    @ResponseBody
+    @PostMapping("/admin/report/repair")
+    @Operation(
+            summary = "고장신고 수리",
+            description = "고장신고 리스트에서 수리 버튼을 클릭했을 때의 API"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "고장신고 수리 성공", content = {
+                    @Content(examples = {
+                            @ExampleObject(value = "{}")})
+            })
+    })
+    public ResponseEntity<String> postReportRepair(@RequestBody PostBreakdownReportRepairDto form) {
+        breakdownReportService.updateReportStatus(form);
+
+        return ResponseEntity.ok("{}");
     }
 }

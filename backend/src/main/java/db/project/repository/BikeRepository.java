@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class BikeCreateAndDeleteRepository {
+public class BikeRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
@@ -43,7 +43,7 @@ public class BikeCreateAndDeleteRepository {
 
     }
 
-    public Optional<String> bikeCrete(PostBikeCreateDto postBikeCreateDto) {
+    public Optional<String> bikeCreate(PostBikeCreateDto postBikeCreateDto) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("bike_id", postBikeCreateDto.getBike_id())
                 .addValue("location_id", postBikeCreateDto.getLocation_id());

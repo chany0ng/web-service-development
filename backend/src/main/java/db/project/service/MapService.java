@@ -19,9 +19,9 @@ public class MapService {
         this.mapRepository = mapRepository;
     }
 
-    public LocationListResponseDto locationList(){
+    public MapLocationListResponseDto locationList(){
        List<ReturnGetMapLocationDto> mapLocationList = mapRepository.locationList();
-       LocationListResponseDto response = new LocationListResponseDto();
+       MapLocationListResponseDto response = new MapLocationListResponseDto();
        for (ReturnGetMapLocationDto mapLocation : mapLocationList) {
            response.getLocations().add(mapLocation);
         }
@@ -29,7 +29,7 @@ public class MapService {
     }
 
     @Transactional
-    public Optional<LocationInfoResponseDto> locationInfo(PostMapLocationInfoDto postMapLocationInfoDto) {
+    public Optional<MapLocationInfoResponseDto> locationInfo(PostMapLocationInfoDto postMapLocationInfoDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Optional<ReturnPostMapLocationInfoDto> locationInfoOptional = mapRepository.locationInfo(postMapLocationInfoDto);
@@ -39,7 +39,7 @@ public class MapService {
         Optional<Boolean> isFavorite = mapRepository.getIsFavorite(locationInfoOptional.get().getLocation_id(), user_id);
 
         return locationInfoOptional.map(mapLocationInfo -> {
-            LocationInfoResponseDto response = new LocationInfoResponseDto(mapLocationInfo.getLocation_id(), mapLocationInfo.getAddress(), mapLocationInfo.getLocation_status(), isFavorite.get());
+            MapLocationInfoResponseDto response = new MapLocationInfoResponseDto(mapLocationInfo.getLocation_id(), mapLocationInfo.getAddress(), mapLocationInfo.getLocation_status(), isFavorite.get());
             String[] bikeId = mapLocationInfo.getBike_id().split(",");
             String[] bikeStatus = mapLocationInfo.getBike_status().split(",");
 
