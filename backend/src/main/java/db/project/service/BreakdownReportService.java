@@ -32,16 +32,23 @@ public class BreakdownReportService {
         return "고장신고가 접수되었습니다.";
     }
 
-    public BreakdownReportListResponseDto reportList(int page) {
-        page = (page - 1) * 10;
-        Optional<List<ReturnGetBreakdownReportListDto>> reportListOptional = breakdownReportRepository.reportList(page);
+    @Transactional
+    public BreakdownReportListResponseDto reportList(Optional<Integer> page) {
+        int reportPage;
+        if(page.isEmpty()) {
+            reportPage = 0;
+        } else {
+            reportPage = (page.get() - 1) * 10;
+        }
+
+        Optional<List<ReturnGetBreakdownReportListDto>> reportListOptional = breakdownReportRepository.reportList(reportPage);
         if(reportListOptional.isEmpty()) {
             throw new BreakdownReportException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
         int reportCount = breakdownReportRepository.getReportCount();
 
-        if(page != 0 && reportCount <= page) {
+        if(reportPage != 0 && reportCount <= reportPage) {
             throw new BreakdownReportException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
@@ -53,7 +60,7 @@ public class BreakdownReportService {
         return response;
     }
 
-    public void updateReportStatus(PostBreakdownReportRepairDto postBreakdownReportRepairDto) {
+    public void reportRepair(PostBreakdownReportRepairDto postBreakdownReportRepairDto) {
         breakdownReportRepository.updateReportStatus(postBreakdownReportRepairDto);
     }
 }

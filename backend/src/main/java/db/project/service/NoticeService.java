@@ -20,16 +20,22 @@ public class NoticeService {
     }
 
     @Transactional
-    public BoardAndNoticeListResponseDto noticeList(int page) {
-        page = (page - 1) * 10;
-        Optional<List<ReturnGetBoardAndNoticeListDto>> noticeListOptional = noticeRepository.noticeList(page);
+    public BoardAndNoticeListResponseDto noticeList(Optional<Integer> page) {
+        int noticePage;
+        if(page.isEmpty()) {
+            noticePage = 0;
+        } else {
+            noticePage = (page.get() - 1) * 10;
+        }
+
+        Optional<List<ReturnGetBoardAndNoticeListDto>> noticeListOptional = noticeRepository.noticeList(noticePage);
         if(noticeListOptional.isEmpty()) {
             throw new NoticeException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
         int noticeCount = noticeRepository.getNoticeCount();
 
-        if(page != 0 && noticeCount < page) {
+        if(noticePage != 0 && noticeCount < noticePage) {
             throw new NoticeException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 

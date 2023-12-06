@@ -20,16 +20,22 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardAndNoticeListResponseDto boardList(int page) {
-        page = (page - 1) * 10;
-        Optional<List<ReturnGetBoardAndNoticeListDto>> boardListOptional = boardRepository.boardList(page);
+    public BoardAndNoticeListResponseDto boardList(Optional<Integer> page) {
+        int boardPage;
+        if(page.isEmpty()) {
+            boardPage = 0;
+        } else {
+            boardPage = (page.get() - 1) * 10;
+        }
+
+        Optional<List<ReturnGetBoardAndNoticeListDto>> boardListOptional = boardRepository.boardList(boardPage);
         if(boardListOptional.isEmpty()) {
             throw new BoardException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
         int boardCount = boardRepository.getBoardCount();
 
-        if(page != 0 && boardCount <= page) {
+        if(boardPage != 0 && boardCount <= boardPage) {
             throw new BoardException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 

@@ -17,15 +17,21 @@ public class LocationService {
     private final LocationRepository locationRepository;
 
     @Transactional
-    public LocationListResponseDto locationList(int page) {
-        page = (page - 1) * 10;
-        Optional<List<ReturnGetLocationListDto>> locationListOptional = locationRepository.locationList(page);
+    public LocationListResponseDto locationList(Optional<Integer> page) {
+        int locationPage;
+        if(page.isEmpty()) {
+            locationPage = 0;
+        } else {
+            locationPage = (page.get() - 1) * 10;
+        }
+
+        Optional<List<ReturnGetLocationListDto>> locationListOptional = locationRepository.locationList(locationPage);
         if(locationListOptional.isEmpty()) {
             throw new LocationException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
         int locationCount = locationRepository.getLocationCount();
-        if(page != 0 && locationCount <= page) {
+        if(locationPage != 0 && locationCount <= locationPage) {
             throw new LocationException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 

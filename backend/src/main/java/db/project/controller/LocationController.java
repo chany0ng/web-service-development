@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/admin")
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 public class LocationController {  // 대여소 추가 및 삭제 Controller
     private final LocationService locationService;
 
-    @GetMapping("location/list/{page}")
+    @GetMapping({"location/list/{page}", "location/list"})
     @ResponseBody
     @Operation(
             summary = "대여소 리스트",
@@ -32,7 +34,7 @@ public class LocationController {  // 대여소 추가 및 삭제 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 대여소 List
-    public ResponseEntity<LocationListResponseDto> getLocationList(@PathVariable int page) {
+    public ResponseEntity<LocationListResponseDto> getLocationList(@PathVariable(required = false) Optional<Integer> page) {
         LocationListResponseDto locationListResponseDto = locationService.locationList(page);
 
         return ResponseEntity.ok(locationListResponseDto);

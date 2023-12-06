@@ -16,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
@@ -51,7 +53,7 @@ public class BreakdownReportController {  // 고장신고 Controller
     }
 
     @ResponseBody
-    @GetMapping("/admin/report/list/{page}")
+    @GetMapping({"/admin/report/list/{page}", "/admin/report/list"})
     @Operation(
             summary = "고장신고 리스트",
             description = "고장신고 관리 버튼을 클릭했을 때의 API"
@@ -62,7 +64,7 @@ public class BreakdownReportController {  // 고장신고 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 고장신고 List
-    public ResponseEntity<BreakdownReportListResponseDto> getReportList(@PathVariable int page) {
+    public ResponseEntity<BreakdownReportListResponseDto> getReportList(@PathVariable(required = false) Optional<Integer> page) {
         return ResponseEntity.ok(breakdownReportService.reportList(page));
     }
 
@@ -79,7 +81,7 @@ public class BreakdownReportController {  // 고장신고 Controller
             })
     })
     public ResponseEntity<String> postReportRepair(@RequestBody PostBreakdownReportRepairDto form) {
-        breakdownReportService.updateReportStatus(form);
+        breakdownReportService.reportRepair(form);
 
         return ResponseEntity.ok("{}");
     }

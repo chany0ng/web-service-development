@@ -17,15 +17,21 @@ public class BikeService {
     private final BikeRepository bikeRepository;
 
     @Transactional
-    public BikeListResponseDto bikeList(int page) {
-        page = (page - 1) * 10;
-        Optional<List<ReturnGetBikeListDto>> bikeListOptional = bikeRepository.bikeList(page);
+    public BikeListResponseDto bikeList(Optional<Integer> page) {
+        int bikePage;
+        if(page.isEmpty()) {
+            bikePage = 0;
+        } else {
+            bikePage = (page.get() - 1) * 10;
+        }
+
+        Optional<List<ReturnGetBikeListDto>> bikeListOptional = bikeRepository.bikeList(bikePage);
         if(bikeListOptional.isEmpty()) {
             throw new BikeException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
         int bikeCount = bikeRepository.getBikeCount();
-        if(page != 0 && bikeCount <= page) {
+        if(bikePage != 0 && bikeCount <= bikePage) {
             throw new BikeException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 

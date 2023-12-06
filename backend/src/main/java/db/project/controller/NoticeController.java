@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
@@ -22,7 +24,7 @@ public class NoticeController {  // 공지사항 Controller
         this.noticeService = noticeService;
     }
 
-    @GetMapping("notice/list/{page}")
+    @GetMapping({"notice/list/{page}", "notice/list"})
     @ResponseBody
     @Operation(
             summary = "공지사항 리스트",
@@ -34,7 +36,7 @@ public class NoticeController {  // 공지사항 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 공지사항 리스트
-    public ResponseEntity<BoardAndNoticeListResponseDto> getNoticeList(@PathVariable int page) {
+    public ResponseEntity<BoardAndNoticeListResponseDto> getNoticeList(@PathVariable(required = false) Optional<Integer> page) {
 
         return ResponseEntity.ok(noticeService.noticeList(page));
     }

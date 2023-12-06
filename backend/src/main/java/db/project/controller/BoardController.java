@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
@@ -25,7 +27,7 @@ public class BoardController {  // 게시판 Controller
         this.boardService = boardService;
     }
 
-    @GetMapping("board/list/{page}")
+    @GetMapping({"board/list/{page}", "board/list"})
     @ResponseBody
     @Operation(
             summary = "자유게시판 리스트",
@@ -37,7 +39,7 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 게시물 리스트
-    public ResponseEntity<BoardAndNoticeListResponseDto> getBoardList(@PathVariable int page) {
+    public ResponseEntity<BoardAndNoticeListResponseDto> getBoardList(@PathVariable(required = false) Optional<Integer> page) {
 
         return ResponseEntity.ok(boardService.boardList(page));
     }

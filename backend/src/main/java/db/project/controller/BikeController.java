@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/admin")
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class BikeController {  // 자전거 생성 및 수정 Controller
     private final BikeService bikeService;
 
-    @GetMapping("bike/list/{page}")
+    @GetMapping({"bike/list/{page}", "bike/list"})
     @ResponseBody
     @Operation(
             summary = "자전거 리스트",
@@ -34,7 +36,7 @@ public class BikeController {  // 자전거 생성 및 수정 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 자전거 List
-    public ResponseEntity<BikeListResponseDto> getBikeList(@PathVariable int page) {
+    public ResponseEntity<BikeListResponseDto> getBikeList(@PathVariable(required = false) Optional<Integer> page) {
         BikeListResponseDto bikeListResponseDto = bikeService.bikeList(page);
 
         return ResponseEntity.ok(bikeListResponseDto);
