@@ -1,8 +1,8 @@
 package db.project.repository;
 
-import db.project.dto.PostBoardCreateAndUpdateDto;
-import db.project.dto.ReturnGetBoardInfoDto;
-import db.project.dto.ReturnGetBoardListDto;
+import db.project.dto.PostBoardAndNoticeCreateAndUpdateDto;
+import db.project.dto.ReturnGetBoardAndNoticeInfoDto;
+import db.project.dto.ReturnGetBoardAndNoticeListDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -28,27 +28,27 @@ public class BoardRepository {
         return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
     }
 
-    public Optional<List<ReturnGetBoardListDto>> boardList(int page) {
+    public Optional<List<ReturnGetBoardAndNoticeListDto>> boardList(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
         String sql = "SELECT title, created_at as date FROM board LIMIT :page, 10";
 
         try {
-            List<ReturnGetBoardListDto> returnGetBoardListDtoList = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardListDto.class));
-            return Optional.of(returnGetBoardListDtoList);
+            List<ReturnGetBoardAndNoticeListDto> returnGetBoardListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardAndNoticeListDto.class));
+            return Optional.of(returnGetBoardListDto);
         } catch (BadSqlGrammarException e) {
             return Optional.empty();
         }
     }
 
-    public Optional<ReturnGetBoardInfoDto> boardInfo(int boardId) {
+    public Optional<ReturnGetBoardAndNoticeInfoDto> boardInfo(int boardId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("boardId", boardId);
         String sql = "SELECT user_id, title, content, created_at as date, views FROM board LIMIT :boardId, 1";
         try{
-            ReturnGetBoardInfoDto returnGetBoardInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardInfoDto.class));
+            ReturnGetBoardAndNoticeInfoDto returnGetBoardAndNoticeInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardAndNoticeInfoDto.class));
 
-            return Optional.of(returnGetBoardInfoDto);
+            return Optional.of(returnGetBoardAndNoticeInfoDto);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         } catch (BadSqlGrammarException e) {
@@ -56,10 +56,10 @@ public class BoardRepository {
         }
     }
 
-    public void boardCreate(PostBoardCreateAndUpdateDto postBoardCreateAndUpdateDto, String user_id) {
+    public void boardCreate(PostBoardAndNoticeCreateAndUpdateDto postBoardCreateDto, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("title", postBoardCreateAndUpdateDto.getTitle())
-                .addValue("content", postBoardCreateAndUpdateDto.getContent())
+                .addValue("title", postBoardCreateDto.getTitle())
+                .addValue("content", postBoardCreateDto.getContent())
                 .addValue("user_id", user_id);
         String sql = "INSERT INTO board(user_id, title, content) values(:user_id, :title, :content)";
         jdbcTemplate.update(sql, namedParameters);
@@ -79,10 +79,10 @@ public class BoardRepository {
         }
     }
 
-    public void boardUpdate(PostBoardCreateAndUpdateDto postBoardCreateAndUpdateDto, int boardId) {
+    public void boardUpdate(PostBoardAndNoticeCreateAndUpdateDto postBoardUpdateDto, int boardId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("title", postBoardCreateAndUpdateDto.getTitle())
-                .addValue("content", postBoardCreateAndUpdateDto.getContent())
+                .addValue("title", postBoardUpdateDto.getTitle())
+                .addValue("content", postBoardUpdateDto.getContent())
                 .addValue("boardId", boardId);
         String sql = "UPDATE board SET title =:title, content =:content WHERE board_id =:boardId";
 
@@ -103,6 +103,5 @@ public class BoardRepository {
         String sql = "SELECT user_id FROM board WHERE board_id =:boardId";
 
         return jdbcTemplate.queryForObject(sql, namedParameters, String.class);
-
     }
 }

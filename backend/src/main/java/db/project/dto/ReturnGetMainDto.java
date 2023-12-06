@@ -9,11 +9,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReturnGetBoardInfoDto {
+public class ReturnGetMainDto {
     private String user_id;
-    private String title;
-    private String content;
-    private String date;
-    private int views;
-    private boolean isAuthor;
+    private String email;
+    private String phone_number;
+    private int cash;
+    private int hour;
+    private boolean isRented;
+    private String bike_id;
 }
