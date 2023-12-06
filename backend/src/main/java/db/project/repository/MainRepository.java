@@ -1,6 +1,7 @@
 package db.project.repository;
 
-import db.project.dto.ReturnGetMainDto;
+import db.project.dto.ReturnGetAdminMainDto;
+import db.project.dto.ReturnGetUserMainDto;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,7 +15,7 @@ public class MainRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public ReturnGetMainDto findUserInfoNeedForMain(String user_id) {
+    public ReturnGetUserMainDto userMain(String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("user_id", user_id);
         String sql = "SELECT u.user_id, email, phone_number, cash, IF(u.ticket_id IS NULL, 0, hour) AS hour, " +
@@ -22,7 +23,16 @@ public class MainRepository {
                 "FROM user u LEFT JOIN ticket t ON u.ticket_id = t.ticket_id " +
                 "LEFT JOIN rental r ON u.user_id = r.user_id WHERE u.user_id =:user_id LIMIT 1";
 
-        ReturnGetMainDto returnGetMainDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetMainDto.class));
-        return returnGetMainDto;
+        ReturnGetUserMainDto returnGetUserMainDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetUserMainDto.class));
+        return returnGetUserMainDto;
+    }
+
+    public ReturnGetAdminMainDto adminMain(String user_id) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("user_id", user_id);
+        String sql = "SELECT :user_id AS user_id, COUNT(report_id) AS report FROM report WHERE status = 'received'";
+
+        ReturnGetAdminMainDto returnGetAdminMainDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetAdminMainDto.class));
+        return returnGetAdminMainDto;
     }
 }
