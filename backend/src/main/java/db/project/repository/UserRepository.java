@@ -53,24 +53,6 @@ public class UserRepository {
         }
 
     }
-
-    public Optional<String> findPWQuestionById(String id) {
-        try {
-            String sql = """
-                    SELECT content FROM USER AS A JOIN QUESTION AS B ON A.PW_QUESTION=B.QUESTION_ID
-                    WHERE USER_ID= :id
-                 """;
-            SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
-            RowMapper<String> questionMapper = (rs, rowNum) -> {
-                return rs.getString("content");
-            };
-            String question = namedParameterJdbcTemplate.queryForObject(sql, parameterSource, questionMapper);
-            return Optional.of(question);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
     public void updatePW(String id, String password) {
         String sql = "UPDATE USER SET password= :password WHERE user_id= :id";
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
@@ -79,11 +61,20 @@ public class UserRepository {
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
 
+    public void updateUser(String id, String email, String phone_number) {
+        String sql = "UPDATE USER SET email= :email, phone_number= :phone_number WHERE user_id= :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id)
+                .addValue("email", email)
+                .addValue("phone_number", phone_number);
+        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+    }
+
     private final RowMapper<User> userMapper = (rs, rowNum) -> {
         User user = User.builder()
                 .id(rs.getString("user_id"))
                 .password(rs.getString("password"))
                 .role(rs.getString("role"))
+                .pw_question(rs.getInt("pw_question"))
                 .pw_answer(rs.getString("pw_answer"))
                 .build();
         return user;

@@ -2,16 +2,17 @@ package db.project.controller;
 
 import db.project.config.jwt.TokenProvider;
 import db.project.dto.*;
+import db.project.exceptions.ErrorResponse;
 import db.project.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RequiredArgsConstructor
@@ -38,18 +39,12 @@ public class UserController {
         return ResponseEntity.ok("{}");
     }
 
-    @PostMapping("/auth/findPW-question")
-    public ResponseEntity<PWQuestionResponse> findPWQuestion(@RequestBody PWQuestionRequest pwQuestionRequest) {
-        return ResponseEntity.ok(userService.findPWQuestion(pwQuestionRequest));
-    }
-
-    @PostMapping("/auth/findPW-verification")
-    public ResponseEntity<String> checkPWAnswer(@RequestBody CheckAnswerRequest checkAnswerRequest) {
-        userService.checkPWAnswer(checkAnswerRequest);
+    @PostMapping("/auth/findPW")
+    public ResponseEntity<String> findPW(@RequestBody FindPWRequest findPWRequest) {
+        userService.findPW(findPWRequest);
         return ResponseEntity.ok("{}");
     }
-
-    @PostMapping("/auth/findPW-reset")
+    @PostMapping("/auth/findPW-update")
     public ResponseEntity<String> updatePW(@RequestBody UpdatePWRequest updatePWRequest) {
         try {
             userService.updatePW(updatePWRequest);
@@ -58,6 +53,16 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{ \"message\" : \"서버 오류\" }");
         }
     }
+    @PostMapping("/update/myInfo")
+    public ResponseEntity<String> updateMyInfo(@RequestBody UpdateMyInfoRequest updateMyInfoRequest) {
+        try{
+            userService.updateUser(updateMyInfoRequest);
+            return ResponseEntity.ok().body("{}");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{ \"message\" : \"서버 오류\" }");
+        }
+    }
+
 
 
     @GetMapping("/check")

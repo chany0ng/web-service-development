@@ -68,23 +68,24 @@ public class UserService {
         refreshTokenService.deleteById(id);
     }
 
-    public PWQuestionResponse findPWQuestion(PWQuestionRequest pwQuestionRequest) {
-        String question = userRepository.findPWQuestionById(pwQuestionRequest.getId())
+    public void findPW(FindPWRequest findPWRequest) {
+        User user = userRepository.findUserById(findPWRequest.getId())
                 .orElseThrow(() -> new IllegalArgumentException("가입하지 않은 id입니다."));
-        return PWQuestionResponse.builder()
-                .pw_question(question)
-                .build();
-    }
 
-    public void checkPWAnswer(CheckAnswerRequest checkAnswerRequest) {
-        User user = userRepository.findUserById(checkAnswerRequest.getId())
-                .orElseThrow(() -> new IllegalArgumentException("가입하지 않은 id입니다."));
-        if(!checkAnswerRequest.getPw_answer().equals(user.getPw_answer())) {
+        if(findPWRequest.getPw_question() != user.getPw_question()) {
+            throw new IllegalArgumentException("비밀번호 찾기 질문이 틀렸습니다.");
+        }
+        if(!findPWRequest.getPw_answer().equals(user.getPw_answer())) {
             throw new IllegalArgumentException("비밀번호 찾기 답변이 틀렸습니다.");
         }
     }
 
     public void updatePW(UpdatePWRequest updatePWRequest) {
         userRepository.updatePW(updatePWRequest.getId(), updatePWRequest.getNew_password());
+    }
+
+    public void updateUser(UpdateMyInfoRequest updateMyInfoRequest) {
+        String id = SecurityContextHolder.getContext().getAuthentication().getName();
+        userRepository.updateUser(id, updateMyInfoRequest.getEmail(), updateMyInfoRequest.getPhone_number());
     }
 }
