@@ -58,7 +58,7 @@ public class MapRepository {
             Boolean isFavorite = jdbcTemplate.queryForObject(sql, namedParameters, Boolean.class);
             return Optional.of(isFavorite);
         } catch(EmptyResultDataAccessException e) {
-            return Optional.empty();
+            return Optional.of(false);
         }
     }
 }
