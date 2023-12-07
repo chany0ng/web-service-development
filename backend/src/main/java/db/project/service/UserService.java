@@ -4,6 +4,7 @@ import db.project.config.jwt.TokenProvider;
 import db.project.dto.*;
 import db.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.BadCredentialsException;
 
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -87,11 +88,20 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void updateUser(UpdateMyInfoRequest updateMyInfoRequest) {
         String id = SecurityContextHolder.getContext().getAuthentication().getName();
-        int affectedRows = userRepository.updateUser(id, updateMyInfoRequest.getEmail(), updateMyInfoRequest.getPhone_number());
+        int affectedRows = 0;
+
+        if(updateMyInfoRequest.getPassword().isEmpty()) {
+            affectedRows = userRepository.updateUser(id, updateMyInfoRequest.getEmail(), updateMyInfoRequest.getPhone_number());
+        } else {
+            userRepository.updatePW(id, updateMyInfoRequest.getPassword());
+            affectedRows = userRepository.updateUser(id, updateMyInfoRequest.getEmail(), updateMyInfoRequest.getPhone_number());
+        }
+
         if(affectedRows == 0) {
-            throw new IllegalArgumentException("업데이트 오류");
+            throw new DataAccessException("업데이트 오류") {};
         }
     }
 }

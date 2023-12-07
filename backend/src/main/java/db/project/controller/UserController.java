@@ -55,12 +55,6 @@ public class UserController {
         return ResponseEntity.ok().body("{}");
     }
 
-    @PostMapping("/myInfo/updatePW")
-    public ResponseEntity<String> updateMyInfoPW(@RequestBody UpdatePWRequest updatePWRequest) {
-        userService.updatePW(updatePWRequest);
-        return ResponseEntity.ok("{}");
-    }
-
     @GetMapping("/check")
     public ResponseEntity<String> check() {
         return ResponseEntity.ok().build();
