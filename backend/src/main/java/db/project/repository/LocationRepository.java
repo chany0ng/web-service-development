@@ -41,8 +41,10 @@ public class LocationRepository {
     public Optional<String> locationCreate(PostLocationCreateDto postLocationCreateDto) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("location_id", postLocationCreateDto.getLocation_id())
-                .addValue("address", postLocationCreateDto.getAddress());
-        String sql = "INSERT INTO location(location_id, address) values(:location_id, :address)";
+                .addValue("address", postLocationCreateDto.getAddress())
+                .addValue("latitude", postLocationCreateDto.getLatitude())
+                .addValue("longitude", postLocationCreateDto.getLongitude());
+        String sql = "INSERT INTO location(location_id, address, latitude, longitude) values(:location_id, :address, :latitude, :longitude)";
 
         try{
             jdbcTemplate.update(sql, namedParameters);

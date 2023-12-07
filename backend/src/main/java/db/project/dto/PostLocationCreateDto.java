@@ -12,4 +12,6 @@ import lombok.Setter;
 public class PostLocationCreateDto {
     private String location_id;
     private String address;
+    private String latitude;
+    private String longitude;
 }

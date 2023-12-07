@@ -40,13 +40,15 @@ public class MapService {
 
         return locationInfoOptional.map(mapLocationInfo -> {
             MapLocationInfoResponseDto response = new MapLocationInfoResponseDto(mapLocationInfo.getLocation_id(), mapLocationInfo.getAddress(), mapLocationInfo.getLocation_status(), isFavorite.get());
-            String[] bikeId = mapLocationInfo.getBike_id().split(",");
-            String[] bikeStatus = mapLocationInfo.getBike_status().split(",");
 
-            for (int i = 0; i < bikeId.length; i++) {
-                response.getBike().add(new BikeInfo(bikeId[i], bikeStatus[i]));
+            if(mapLocationInfo.getBike_id() != null) {
+                String[] bikeId = mapLocationInfo.getBike_id().split(",");
+                String[] bikeStatus = mapLocationInfo.getBike_status().split(",");
+
+                for (int i = 0; i < bikeId.length; i++) {
+                    response.getBike().add(new BikeInfo(bikeId[i], bikeStatus[i]));
+                }
             }
-
             return response;
         });
     }
