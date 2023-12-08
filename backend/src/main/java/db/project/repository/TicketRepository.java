@@ -2,7 +2,6 @@ package db.project.repository;
 
 import db.project.dto.ReturnGetTicketInfoDto;
 import db.project.dto.TicketInfo;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;

@@ -1,11 +1,9 @@
 package db.project.repository;
 
 import db.project.dto.PostUserInfoListDto;
-import db.project.dto.ReturnGetBikeListDto;
 import db.project.dto.ReturnGetUserInfoListDto;
 import db.project.dto.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
