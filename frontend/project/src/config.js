@@ -92,7 +92,6 @@ const updateRefreshToken = async () => {
     } else if (response.status === 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
-      alert('로그인이 만료되었습니다!');
       return response;
     } else {
       throw new Error(`Failed to refresh login. Status: ${response.status}`);

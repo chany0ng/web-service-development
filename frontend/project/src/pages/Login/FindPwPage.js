@@ -38,8 +38,34 @@ const FindPwPage = () => {
     pw_answer: ''
   });
   const [isValid, setIsValid] = useState(true);
+  const [validQuestion, setValidQuestion] = useState(false);
+  const [newPw, setNewPw] = useState('');
+  const newPwHandler = (e) => {
+    setNewPw(e.target.value);
+  };
+  const onResetHandler = async (e) => {
+    try {
+      e.preventDefault();
+      console.log({
+        id: inputData.id,
+        new_password: newPw
+      });
+      const response = await postFetch('api/auth/findPW/update', {
+        id: inputData.id,
+        new_password: newPw
+      });
+      if (response.status === 200) {
+        alert('비밀번호가 재설정 되었습니다!');
+        navigate('/signin');
+      } else {
+        throw new Error('비밀번호 재설정 오류발생');
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
+  };
   const inputDataHandler = (e) => {
-    e.preventDefault();
     const key = e.target.id || 'pw_question';
     const value = e.target.value;
     setInputData((prevData) => ({ ...prevData, [key]: value }));
@@ -52,12 +78,11 @@ const FindPwPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const finalInputData = { ...inputData };
-        delete finalInputData.pw_question;
-        const response = await postFetch('api/findpw-verification', inputData);
+        const response = await postFetch('api/auth/findPW', inputData);
         if (response.status === 200) {
           // 변수 하나로 맞았는지 체크. 모달창에서 새로운 비밀번호 전송.
-          navigate('/signin');
+          setValidQuestion(true);
+          console.log(response.json());
         }
       }
     } catch (error) {
@@ -136,6 +161,22 @@ const FindPwPage = () => {
                   helperText="비밀번호 찾기 답변을 작성해주세요"
                 />
               </Grid>
+              {validQuestion && (
+                <Grid item xs={12}>
+                  <TextField
+                    value={newPw}
+                    onChange={newPwHandler}
+                    required
+                    fullWidth
+                    variant="standard"
+                    name="new_password"
+                    label="New Password"
+                    type="password"
+                    id="new_password"
+                    helperText="새로운 비밀번호를 입력해주세요"
+                  />
+                </Grid>
+              )}
               {!isValid && (
                 <Grid
                   item
@@ -152,15 +193,28 @@ const FindPwPage = () => {
                 </Grid>
               )}
             </Grid>
-            <Button
-              onClick={onSubmitHandler}
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Search
-            </Button>
+            {validQuestion ? (
+              <Button
+                onClick={onResetHandler}
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                비밀번호 재설정
+              </Button>
+            ) : (
+              <Button
+                onClick={onSubmitHandler}
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Search
+              </Button>
+            )}
+
             <Grid container justifyContent="center">
               <Grid item xs={4}>
                 <Link
