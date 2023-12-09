@@ -2,7 +2,6 @@ package db.project.repository;
 
 import db.project.dto.ReturnGetTicketInfoDto;
 import db.project.dto.TicketInfo;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -41,16 +40,13 @@ public class TicketRepository {
         });
     }
 
-    public Optional<TicketInfo> getTicketInfoByHour(int hour) {
+    public TicketInfo getTicketInfoByHour(int hour) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("hour", hour);
 
         String sql = "SELECT ticket_id, price FROM ticket WHERE hour = :hour";
-        try {
-            return Optional.of(jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(TicketInfo.class)));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+
+        return jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(TicketInfo.class));
     }
 
     public void updatePurchaseUserInfo(String userId, TicketInfo ticketInfo) {
@@ -63,11 +59,11 @@ public class TicketRepository {
         jdbcTemplate.update(sql, purchaseParams);
     }
 
-    public Optional<String> getTicketIdByPhoneNumber(String phone_number) {
+    public Optional<String> getTicketIdByUserId(String receivedUser_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("phone_number", phone_number);
+                .addValue("user_id", receivedUser_id);
 
-        String sql = "SELECT ticket_id FROM user WHERE phone_number = :phone_number";
+        String sql = "SELECT ticket_id FROM user WHERE user_id = :user_id";
         Integer existingTicketId = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
         if(existingTicketId != null){
             return Optional.empty();
@@ -93,12 +89,12 @@ public class TicketRepository {
         jdbcTemplate.update(sql, purchaseParams);
     }
 
-    public void updateGiftReceiverInfo(String phone_number, int ticket_id) {
+    public void updateGiftReceiverInfo(String user_id, int ticket_id) {
         final MapSqlParameterSource purchaseParams = new MapSqlParameterSource()
                 .addValue("ticket_id", ticket_id)
-                .addValue("phone_number", phone_number);
+                .addValue("user_id", user_id);
 
-        String sql = "UPDATE user SET ticket_id = :ticket_id WHERE phone_number = :phone_number";
+        String sql = "UPDATE user SET ticket_id = :ticket_id WHERE user_id = :user_id";
         jdbcTemplate.update(sql, purchaseParams);
     }
 }

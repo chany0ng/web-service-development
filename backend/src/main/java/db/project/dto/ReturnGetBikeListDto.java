@@ -9,9 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReturnGetNoticeInfoDto {
-    private String title;
-    private String content;
-    private String date;
-    private int views;
+public class ReturnGetBikeListDto {
+    private String bike_id;
+    private String address;
+    private String status;
 }

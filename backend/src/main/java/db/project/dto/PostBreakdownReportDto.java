@@ -7,5 +7,9 @@ import lombok.Setter;
 @Setter
 public class PostBreakdownReportDto {
     private String bike_id;
-    private String content;
+    private Boolean tire;
+    private Boolean chain;
+    private Boolean saddle;
+    private Boolean pedal;
+    private Boolean terminal;
 }

@@ -3,7 +3,7 @@ package db.project.dto;
 import lombok.Getter;
 
 @Getter
-public class PostBoardCreateAndUpdateDto {
+public class PostBoardAndNoticeCreateAndUpdateDto {
     private String title;
     private String content;
 }

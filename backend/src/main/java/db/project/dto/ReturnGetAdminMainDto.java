@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReturnGetNoticeListDto {
-    private String title;
-    private String date;
+public class ReturnGetAdminMainDto {
+    private String user_id;
+    private int report;
 }

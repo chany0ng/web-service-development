@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
-public class ReturnGetBoardListDto {
-    private String title;
-    private String date;
+@NoArgsConstructor
+public class ReturnGetLocationListDto {
+    private String location_id;
+    private String address;
+    private int bikeCount;
 }

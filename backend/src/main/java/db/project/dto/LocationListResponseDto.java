@@ -1,6 +1,7 @@
 package db.project.dto;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -8,14 +9,13 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class LocationListResponseDto {
-    List<ReturnGetMapLocationDto> locations;
+    private int locationCount;
+    List<ReturnGetLocationListDto> locationList;
 
-    public LocationListResponseDto() {
-        this.locations = new ArrayList<>();
-    }
-
-    public LocationListResponseDto(List<ReturnGetMapLocationDto> locations) {
-        this.locations = locations;
+    public LocationListResponseDto(int locationCount) {
+        this.locationCount = locationCount;
+        this.locationList = new ArrayList<>();
     }
 }
