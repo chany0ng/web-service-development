@@ -19,9 +19,14 @@ public class BreakdownReportRepository {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("user_id", user_id)
                 .addValue("bike_id", postBreakdownReportDto.getBike_id())
-                .addValue("content", postBreakdownReportDto.getContent());
+                .addValue("tire", postBreakdownReportDto.getTire())
+                .addValue("chain", postBreakdownReportDto.getChain())
+                .addValue("saddle", postBreakdownReportDto.getSaddle())
+                .addValue("pedal", postBreakdownReportDto.getPedal())
+                .addValue("terminal", postBreakdownReportDto.getTerminal());
 
-        String insertReportSql = "INSERT INTO report(user_id, bike_id, content) values(:user_id, :bike_id, :content)";
+        String insertReportSql = "INSERT INTO report(user_id, bike_id, tire, chain, saddle, pedal, terminal) " +
+                "values(:user_id, :bike_id, :tire, :chain, :saddle, :pedal, :terminal)";
         int rowsUpdated = jdbcTemplate.update(insertReportSql, namedParameters);
 
         return (rowsUpdated > 0) ? Optional.of("고장신고가 접수되었습니다.") : Optional.empty();
