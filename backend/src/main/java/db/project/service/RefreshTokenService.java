@@ -20,6 +20,7 @@ public class RefreshTokenService {
     @Transactional
     public String createNewAccessToken(String refreshToken, HttpServletRequest request) {
         if(!tokenProvider.validToken(refreshToken, request)) {
+            refreshTokenRepository.deleteByRefreshToken(refreshToken);
             throw new IllegalArgumentException("재발급 오류");
         }
         RefreshToken token = refreshTokenRepository.findByRefreshToken(refreshToken)
