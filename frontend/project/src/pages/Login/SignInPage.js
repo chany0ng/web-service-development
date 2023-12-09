@@ -51,11 +51,12 @@ const SignInPage = () => {
         const data = await response.json();
         if (response.status === 401) {
           idPwCheck(data);
-        }
-        if (response.status === 200) {
+        } else if (response.status === 200) {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
           navigate('/user/main');
+        } else {
+          throw new Error('로그인 에러');
         }
       }
     } catch (error) {

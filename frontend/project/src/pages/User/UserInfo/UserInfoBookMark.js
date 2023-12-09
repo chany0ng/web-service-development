@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import CustomTable from '../../../components/Table/CustomTable';
 import { mainPageAuthCheck } from '../../../AuthCheck';
 import { useNavigate } from 'react-router-dom';
+import { getFetch, postFetch } from '../../../config';
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['개인정보 수정', '대여소 즐겨찾기'];
 const outerTab = 'info';
@@ -28,10 +29,7 @@ const body = [
     fat: 9.0,
     carbs: 37,
     protein: '이용 가능'
-  },
-  { name: '3', calories: 262, fat: 16.0, carbs: 24, protein: '이용 가능' },
-  { name: '4', calories: 305, fat: 3.7, carbs: 67, protein: '이용 가능' },
-  { name: '5', calories: 356, fat: 16.0, carbs: 49, protein: '폐쇄' }
+  }
 ];
 
 const UserInfoBookMark = () => {
@@ -40,17 +38,47 @@ const UserInfoBookMark = () => {
     mainPageAuthCheck(navigate);
   }, []);
   const [station, setStation] = useState('');
+  const [favorites, SetFavorites] = useState({});
   const inputStationHandler = (e) => {
     e.preventDefault();
     const newStation = e.target.value;
     setStation(newStation);
   };
-  const addStationHandler = (e) => {
-    e.preventDefault();
-    // api요청하기
-    // 1. 정상: 받아온 데이터로 즐겨찾기에 추가
-    // 2. 비정상: alert처리
+  const addStationHandler = async (e) => {
+    try {
+      e.preventDefault();
+      console.log(station);
+      const response = await postFetch('api/favorites/list', {
+        location: station
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log(data);
+      } else {
+        throw new Error('즐겨찾기 대여소 조회 에러');
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
   };
+  useEffect(() => {
+    const getFavoritesList = async () => {
+      try {
+        const response = await getFetch('api/favorites/list');
+        if (response.status === 200) {
+          const data = await response.json();
+          console.log(data);
+        } else {
+          throw new Error('즐겨찾기 대여소 리스트 조회 오류');
+        }
+      } catch (error) {
+        console.error(error);
+        alert(error);
+      }
+    };
+    getFavoritesList();
+  }, []);
   return (
     <Layout>
       <TabBar title={outerTitle} select={outerTab} />
@@ -74,7 +102,7 @@ const UserInfoBookMark = () => {
                 id="location_id"
                 value={station}
                 onChange={inputStationHandler}
-                placeholder="대여소 고유번호"
+                placeholder="대여소 이름"
               />
               <Button
                 variant="contained"
@@ -82,7 +110,7 @@ const UserInfoBookMark = () => {
                 sx={{ fontSize: '1rem' }}
                 onClick={addStationHandler}
               >
-                추가하기 +
+                검색하기
               </Button>
             </div>
           </Card>
