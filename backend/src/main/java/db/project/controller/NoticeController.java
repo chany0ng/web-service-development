@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
@@ -22,7 +24,7 @@ public class NoticeController {  // 공지사항 Controller
         this.noticeService = noticeService;
     }
 
-    @GetMapping("notice/list/{page}")
+    @GetMapping({"notice/list/{page}", "notice/list"})
     @ResponseBody
     @Operation(
             summary = "공지사항 리스트",
@@ -34,7 +36,7 @@ public class NoticeController {  // 공지사항 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 공지사항 리스트
-    public ResponseEntity<BoardAndNoticeListResponseDto> getNoticeList(@PathVariable int page) {
+    public ResponseEntity<BoardAndNoticeListResponseDto> getNoticeList(@PathVariable(required = false) Optional<Integer> page) {
 
         return ResponseEntity.ok(noticeService.noticeList(page));
     }
@@ -97,7 +99,7 @@ public class NoticeController {  // 공지사항 Controller
         return ResponseEntity.ok("{}");
     }
 
-    @GetMapping("admin/notice/delete/{noticeId}")
+    @PostMapping("admin/notice/delete")
     @ResponseBody
     @Operation(
             summary = "공지사항 삭제",
@@ -113,8 +115,8 @@ public class NoticeController {  // 공지사항 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 공지사항 삭제
-    public ResponseEntity<String> getNoticeDelete(@PathVariable int noticeId) {
-        noticeService.noticeDelete(noticeId);
+    public ResponseEntity<String> getNoticeDelete(@RequestBody PostBoardAndNoticeDeleteDto form) {
+        noticeService.noticeDelete(form);
 
         return ResponseEntity.ok("{}");
     }
