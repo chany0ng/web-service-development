@@ -19,7 +19,7 @@ const UserMainPage = () => {
       const response = await getFetch('api/user/main');
       if (response.status === 200) {
         const data = await response.json();
-        setUser(data);
+        setUser((prevData) => ({ ...prevData, ...data }));
       } else {
         throw new Error('Get User Data error');
       }

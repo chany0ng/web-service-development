@@ -46,10 +46,6 @@ const FindPwPage = () => {
   const onResetHandler = async (e) => {
     try {
       e.preventDefault();
-      console.log({
-        id: inputData.id,
-        new_password: newPw
-      });
       const response = await postFetch('api/auth/findPW/update', {
         id: inputData.id,
         new_password: newPw
@@ -82,7 +78,9 @@ const FindPwPage = () => {
         if (response.status === 200) {
           // 변수 하나로 맞았는지 체크. 모달창에서 새로운 비밀번호 전송.
           setValidQuestion(true);
-          console.log(response.json());
+        } else {
+          const data = await response.json();
+          throw new Error(data.message);
         }
       }
     } catch (error) {
