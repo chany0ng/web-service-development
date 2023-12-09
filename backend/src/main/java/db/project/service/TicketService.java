@@ -57,9 +57,9 @@ public class TicketService {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
         int hour = postTicketGiftDto.getHour();
-        String phone_number = postTicketGiftDto.getPhone_number();
+        String receivedUser_id = postTicketGiftDto.getUser_id();
 
-        Optional<String> existingTicketId = ticketRepository.getTicketIdByPhoneNumber(phone_number);
+        Optional<String> existingTicketId = ticketRepository.getTicketIdByUserId(receivedUser_id);
         if(existingTicketId.isPresent()) {
             TicketInfo ticketInfo = ticketRepository.getTicketInfoByHour(hour);
 
@@ -68,9 +68,10 @@ public class TicketService {
             if (ticketInfo.getPrice() > cash) {
                 throw new TicketException("NOT ENOUGH MONEY", ErrorCode.NOT_ENOUGH_MONEY);
             }
+
             ticketRepository.updateGiftGiverInfo(user_id, ticketInfo.getPrice());
 
-            ticketRepository.updateGiftReceiverInfo(phone_number, ticketInfo.getTicketId());
+            ticketRepository.updateGiftReceiverInfo(receivedUser_id, ticketInfo.getTicketId());
         } else{
             throw new TicketException("ALREADY HAVE TICKET", ErrorCode.TICKET_DUPLICATION);
         }

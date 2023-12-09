@@ -1,9 +1,6 @@
 package db.project.service;
 
-import db.project.dto.BoardAndNoticeListResponseDto;
-import db.project.dto.PostBoardAndNoticeCreateAndUpdateDto;
-import db.project.dto.ReturnGetBoardAndNoticeInfoDto;
-import db.project.dto.ReturnGetBoardAndNoticeListDto;
+import db.project.dto.*;
 import db.project.exceptions.BoardException;
 import db.project.exceptions.ErrorCode;
 import db.project.repository.BoardRepository;
@@ -23,16 +20,22 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardAndNoticeListResponseDto boardList(int page) {
-        page = (page - 1) * 10;
-        Optional<List<ReturnGetBoardAndNoticeListDto>> boardListOptional = boardRepository.boardList(page);
+    public BoardAndNoticeListResponseDto boardList(Optional<Integer> page) {
+        int boardPage;
+        if(page.isEmpty()) {
+            boardPage = 0;
+        } else {
+            boardPage = (page.get() - 1) * 10;
+        }
+
+        Optional<List<ReturnGetBoardAndNoticeListDto>> boardListOptional = boardRepository.boardList(boardPage);
         if(boardListOptional.isEmpty()) {
             throw new BoardException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
         int boardCount = boardRepository.getBoardCount();
 
-        if(page != 0 && boardCount <= page) {
+        if(boardPage != 0 && boardCount <= boardPage) {
             throw new BoardException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
@@ -81,9 +84,9 @@ public class BoardService {
     }
 
     @Transactional
-    public void boardDelete(int board_id) {
+    public void boardDelete(PostBoardAndNoticeDeleteDto postBoardDeleteDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Integer> boardId = boardRepository.getBoardId(board_id - 1);
+        Optional<Integer> boardId = boardRepository.getBoardId(postBoardDeleteDto.getId() - 1);
         if(boardId.isEmpty()) {
             throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
         }

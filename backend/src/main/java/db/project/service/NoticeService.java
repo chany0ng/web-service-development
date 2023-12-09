@@ -20,16 +20,22 @@ public class NoticeService {
     }
 
     @Transactional
-    public BoardAndNoticeListResponseDto noticeList(int page) {
-        page = (page - 1) * 10;
-        Optional<List<ReturnGetBoardAndNoticeListDto>> noticeListOptional = noticeRepository.noticeList(page);
+    public BoardAndNoticeListResponseDto noticeList(Optional<Integer> page) {
+        int noticePage;
+        if(page.isEmpty()) {
+            noticePage = 0;
+        } else {
+            noticePage = (page.get() - 1) * 10;
+        }
+
+        Optional<List<ReturnGetBoardAndNoticeListDto>> noticeListOptional = noticeRepository.noticeList(noticePage);
         if(noticeListOptional.isEmpty()) {
             throw new NoticeException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
         int noticeCount = noticeRepository.getNoticeCount();
 
-        if(page != 0 && noticeCount < page) {
+        if(noticePage != 0 && noticeCount < noticePage) {
             throw new NoticeException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
@@ -78,9 +84,9 @@ public class NoticeService {
     }
 
     @Transactional
-    public void noticeDelete(int notice_id) {
+    public void noticeDelete(PostBoardAndNoticeDeleteDto postBoardAndNoticeDeleteDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Integer> noticeId = noticeRepository.getNoticeId(notice_id - 1);
+        Optional<Integer> noticeId = noticeRepository.getNoticeId(postBoardAndNoticeDeleteDto.getId() - 1);
         if(noticeId.isEmpty()) {
             throw new NoticeException("page not post", ErrorCode.NOT_FOUND_POST);
         }

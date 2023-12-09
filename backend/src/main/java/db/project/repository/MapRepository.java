@@ -21,8 +21,9 @@ public class MapRepository {
     }
 
     public List<ReturnGetMapLocationDto> locationList(){
-        String sql = "SELECT COUNT(bike_id) AS bikeCount, l.latitude, l.longitude FROM location l LEFT JOIN BIKE b ON l.location_id = b.location_id " +
-                "GROUP BY l.location_id";
+        String sql = "SELECT COUNT(bike_id) AS bikeCount, l.latitude, l.longitude " +
+                "FROM location l LEFT JOIN bike b ON l.location_id = b.location_id AND b.status IN ('available', 'rented', 'closed') " +
+                "WHERE l.status = 'available' GROUP BY l.location_id";
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 
         return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetMapLocationDto.class));
@@ -30,7 +31,7 @@ public class MapRepository {
 
     public Optional<ReturnPostMapLocationInfoDto> locationInfo(PostMapLocationInfoDto postMapLocationInfoDto) {
         String sql = "SELECT distinct l.location_id, l.address, l.status location_status, GROUP_CONCAT(b.bike_id) bike_id, GROUP_CONCAT(b.status) bike_status " +
-                "FROM location l LEFT JOIN BIKE b ON l.location_id = b.location_id " +
+                "FROM location l LEFT JOIN bike b ON l.location_id = b.location_id AND b.status IN ('available', 'rented', 'closed') " +
                 "WHERE l.latitude = :latitude AND l.longitude = :longitude " +
                 "GROUP BY l.location_id, l.address, l.status";
 
@@ -57,21 +58,7 @@ public class MapRepository {
             Boolean isFavorite = jdbcTemplate.queryForObject(sql, namedParameters, Boolean.class);
             return Optional.of(isFavorite);
         } catch(EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    public Optional<Boolean> getIsRented(String user_id) {
-        String sql = "SELECT IF(user_id =:user_id and end_location is null, 1, 0) AS isRented FROM rental ORDER BY start_time DESC LIMIT 1";
-
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", user_id);
-
-        try{
-            Boolean isRented = jdbcTemplate.queryForObject(sql, namedParameters, Boolean.class);
-            return Optional.of(isRented);
-        } catch(EmptyResultDataAccessException e) {
-            return Optional.empty();
+            return Optional.of(false);
         }
     }
 }

@@ -9,12 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReturnGetMainDto {
+public class ReturnGetAdminMainDto {
     private String user_id;
-    private String email;
-    private String phone_number;
-    private int cash;
-    private int hour;
-    private boolean isRented;
-    private String bike_id;
+    private int report;
 }

@@ -3,7 +3,6 @@ package db.project.dto;
 import lombok.Getter;
 
 @Getter
-public class PostTicketGiftDto {
-    private int hour;
+public class PostUserInfoListDto {
     private String user_id;
 }

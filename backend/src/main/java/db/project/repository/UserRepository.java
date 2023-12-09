@@ -1,10 +1,13 @@
 package db.project.repository;
 
+import db.project.dto.PostUserInfoListDto;
+import db.project.dto.ReturnGetUserInfoListDto;
 import db.project.dto.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.BadSqlGrammarException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
@@ -77,6 +81,48 @@ public class UserRepository {
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id)
                 .addValue("password", bCryptPasswordEncoder.encode(password));
         namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+    }
+
+    public int getUserCount() {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        String sql = "SELECT COUNT(user_id) userCount FROM user WHERE role = 'user'";
+
+        return namedParameterJdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+    }
+
+    public Optional<List<ReturnGetUserInfoListDto>> findUserInfoList(int page) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("page", page);
+        String sql = "SELECT user_id, phone_number, email FROM user WHERE role = 'user' LIMIT :page, 10";
+
+        try {
+            List<ReturnGetUserInfoListDto> userInfoListDto = namedParameterJdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetUserInfoListDto.class));
+            return Optional.of(userInfoListDto);
+        } catch (BadSqlGrammarException e) {
+            return Optional.empty();
+        }
+    }
+
+    public int getUserCountById(PostUserInfoListDto postUserInfoListDto) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("user_id", "%" + postUserInfoListDto.getUser_id() + "%");
+        String sql = "SELECT COUNT(user_id) userCount FROM user WHERE user_id LIKE :user_id AND role = 'user'";
+
+        return namedParameterJdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+    }
+
+    public Optional<List<ReturnGetUserInfoListDto>> findUserInfoListById(int page, PostUserInfoListDto postUserInfoListDto) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("page", page)
+                .addValue("user_id", "%" + postUserInfoListDto.getUser_id() + "%");
+        String sql = "SELECT user_id, phone_number, email FROM user WHERE user_id LIKE :user_id AND role = 'user' LIMIT :page, 10";
+
+        try {
+            List<ReturnGetUserInfoListDto> userInfoListDto = namedParameterJdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetUserInfoListDto.class));
+            return Optional.of(userInfoListDto);
+        } catch (BadSqlGrammarException e) {
+            return Optional.empty();
+        }
     }
 
     private final RowMapper<User> userMapper = (rs, rowNum) -> {

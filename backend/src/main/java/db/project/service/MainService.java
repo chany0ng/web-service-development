@@ -1,6 +1,7 @@
 package db.project.service;
 
-import db.project.dto.ReturnGetMainDto;
+import db.project.dto.ReturnGetAdminMainDto;
+import db.project.dto.ReturnGetUserMainDto;
 import db.project.repository.MainRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,17 @@ public class MainService {
         this.mainRepository = mainRepository;
     }
 
-    public ReturnGetMainDto findUserInfoNeedForMain() {
+    public ReturnGetUserMainDto userMain() {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        ReturnGetMainDto returnGetMainDto = mainRepository.findUserInfoNeedForMain(user_id);
+        ReturnGetUserMainDto returnGetUserMainDto = mainRepository.userMain(user_id);
 
-        return returnGetMainDto;
+        return returnGetUserMainDto;
+    }
+
+    public ReturnGetAdminMainDto adminMain() {
+        String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
+        ReturnGetAdminMainDto returnGetAdminMainDto = mainRepository.adminMain(user_id);
+
+        return returnGetAdminMainDto;
     }
 }
