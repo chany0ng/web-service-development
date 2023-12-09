@@ -1,7 +1,10 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 
-const { persistAtom } = recoilPersist();
+const { persistAtom } = recoilPersist({
+  key: 'sessionStorage', // 고유한 key 값
+  storage: sessionStorage
+});
 export const userInfo = atom({
   key: 'userInfo',
   default: {

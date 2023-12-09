@@ -2,7 +2,7 @@
 
 const BASE_URL = 'http://localhost:8080/';
 const ACCESS_URL = 'http://localhost:8080/api/check';
-const REFRESH_URL = 'http://localhost:8080/api/token';
+const REFRESH_URL = 'http://localhost:8080/api/auth/token';
 export const getFetch = async (url) => {
   try {
     const accessToken = localStorage.getItem('accessToken');
@@ -82,7 +82,7 @@ const updateRefreshToken = async () => {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(refreshToken)
+      body: JSON.stringify({ refreshToken: refreshToken })
     });
     if (response.status === 200) {
       const data = await response.json();
