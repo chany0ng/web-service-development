@@ -9,7 +9,8 @@ import CheckOutlinedIcon from '@mui/icons-material/CheckOutlined';
 import Article from '../../../layouts/Article';
 import { useNavigate } from 'react-router-dom';
 import { mainPageAuthCheck } from '../../../AuthCheck';
-
+import { useRecoilState } from 'recoil';
+import { userInfo } from '../../../recoil';
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['개인정보 수정', '대여소 즐겨찾기'];
 const outerTab = 'info';
@@ -21,12 +22,12 @@ const UserInfoEdit = () => {
   useEffect(() => {
     mainPageAuthCheck(navigate);
   }, []);
+  const [info, SetInfo] = useRecoilState(userInfo);
   const [inputData, setInputData] = useState({
-    email: 'sibal@naver.com',
-    user_id: 'abc123',
+    email: info.email,
     password: '',
     passwordCheck: '',
-    phone_number: '01033289942'
+    phone_number: info.phone_number
   });
   const [isValid, setIsValid] = useState(true);
   const inputDataHandler = (e) => {
@@ -39,9 +40,7 @@ const UserInfoEdit = () => {
   const onSubmitHandler = async (e) => {
     try {
       e.preventDefault();
-      console.log(inputData.password.trim());
       if (
-        inputData.password.trim() === '' ||
         inputData.passwordCheck.trim() !== inputData.password.trim() ||
         inputData.phone_number.trim() === '' ||
         !inputData.email.includes('@')
@@ -49,14 +48,21 @@ const UserInfoEdit = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status } = await postFetch('url', inputData);
-        if (status) {
+        const { passwordCheck, ...finalInputData } = inputData;
+        const response = await postFetch('api/myInfo/update', finalInputData);
+        if (response.status === 200) {
+          const toRecoilData = { ...finalInputData };
+          delete toRecoilData.password;
+          SetInfo((prevData) => ({ ...prevData, toRecoilData }));
           alert('개인정보 수정 완료!');
-          // navigate('/user/info/edit');
+          navigate('/user/main');
+        } else {
+          throw new Error('개인정보 수정 에러');
         }
       }
     } catch (error) {
-      console.error('개인정보 수정 에러', error);
+      alert(error);
+      console.error(error);
     }
   };
   return (
@@ -73,7 +79,7 @@ const UserInfoEdit = () => {
             <tbody>
               <tr>
                 <td className={styles.col1}>아이디</td>
-                <td className={styles.cell}>{inputData.user_id}</td>
+                <td className={styles.cell}>{info.user_id}</td>
               </tr>
               <tr>
                 <td className={styles.col1}>비밀번호</td>
@@ -94,7 +100,7 @@ const UserInfoEdit = () => {
                         paddingTop: '4px'
                       }}
                     />
-                    20자 이하여야 합니다
+                    비밀번호를 변경할 때만 입력하세요
                   </span>
                 </td>
               </tr>
@@ -145,6 +151,16 @@ const UserInfoEdit = () => {
                     value={inputData.phone_number}
                     onChange={inputDataHandler}
                   />
+                  <span style={{ marginLeft: '10px', fontSize: '1rem' }}>
+                    <CheckOutlinedIcon
+                      sx={{
+                        color: 'secondary.light',
+                        fontSize: '15px',
+                        paddingTop: '4px'
+                      }}
+                    />
+                    - 없이 숫자만 입력하세요
+                  </span>
                 </td>
               </tr>
             </tbody>
