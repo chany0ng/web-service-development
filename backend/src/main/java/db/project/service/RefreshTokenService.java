@@ -20,13 +20,14 @@ public class RefreshTokenService {
     @Transactional
     public String createNewAccessToken(String refreshToken, HttpServletRequest request) {
         if(!tokenProvider.validToken(refreshToken, request)) {
+            refreshTokenRepository.deleteByRefreshToken(refreshToken);
             throw new IllegalArgumentException("재발급 오류");
         }
         RefreshToken token = refreshTokenRepository.findByRefreshToken(refreshToken)
                 .orElseThrow(() -> new IllegalArgumentException("리프레시 토큰 없음"));
 
         String id = token.getId();
-        return tokenProvider.createToken(id, 30 * 60 * 1000L);
+        return tokenProvider.createToken(id, 60 * 60 * 1000L);
     }
 
     public void deleteById(String id) {
