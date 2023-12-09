@@ -27,7 +27,7 @@ public class RefreshTokenService {
                 .orElseThrow(() -> new IllegalArgumentException("리프레시 토큰 없음"));
 
         String id = token.getId();
-        return tokenProvider.createToken(id, 30 * 60 * 1000L);
+        return tokenProvider.createToken(id, 60 * 60 * 1000L);
     }
 
     public void deleteById(String id) {
