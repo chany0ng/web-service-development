@@ -7,15 +7,33 @@ import styles from './UserMainPage.module.scss';
 import { useRecoilState } from 'recoil';
 import { userInfo } from '../../recoil';
 import { mainPageAuthCheck } from '../../AuthCheck';
+import { getFetch } from '../../config';
 const UserMainPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     mainPageAuthCheck(navigate);
   }, []);
   const [user, setUser] = useRecoilState(userInfo);
+  const getUserInfo = async () => {
+    try {
+      const response = await getFetch('api/user/main');
+      if (response.status === 200) {
+        const data = await response.json();
+        setUser(data);
+      } else {
+        throw new Error('Get User Data error');
+      }
+    } catch (error) {
+      alert(error);
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getUserInfo();
+  }, []);
   return (
     <Layout>
-      <CustomCard />
+      <CustomCard info={user} />
       <article className={styles.article}></article>
     </Layout>
   );

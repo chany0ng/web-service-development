@@ -2,14 +2,8 @@ import styles from './CustomCard.module.scss';
 import { Container, Card, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const CustomCard = (props) => {
+const CustomCard = ({ info }) => {
   const navigate = useNavigate();
-  const info = {
-    name: '박찬용',
-    moeny: 15000,
-    bicycleNumber: 123456,
-    leftTime: 52
-  };
 
   return (
     <Container maxWidth="xs">
@@ -24,7 +18,7 @@ const CustomCard = (props) => {
       >
         <div className={styles.cardHeader}>
           <span>
-            <h1>{info.name}</h1> 회원님
+            <h1>{info.user_id}</h1> 회원님
           </span>
           <Button
             onClick={() => {
@@ -39,9 +33,8 @@ const CustomCard = (props) => {
         </div>
         <div className={styles.cardBody}>
           <div className={styles.cardMoney}>
-            <div>
-              현재 보유중인 금액 <h3>{info.moeny}원</h3>
-            </div>
+            <div>현재 보유중인 금액</div>
+            <h3>{info.cash}원</h3>
             <Button
               onClick={() => {
                 navigate('/user/payment/charge');
@@ -53,7 +46,20 @@ const CustomCard = (props) => {
               충전하기 {`>`}
             </Button>
           </div>
-          <div className={styles.cardInfo}>현재 대여중인 따릉이 정보</div>
+          <div className={styles.cardMoney}>
+            <div>현재 대여중인 따릉이</div>
+            {info.rented ? <h3>bike id: {info.bike_id}</h3> : <h3>없음</h3>}
+            <Button
+              onClick={() => {
+                navigate('/user/tickets/purchase');
+              }}
+              variant="contained"
+              color="primary"
+              sx={{ fontSize: '1rem' }}
+            >
+              이용권 구매 {`>`}
+            </Button>
+          </div>
         </div>
       </Card>
     </Container>
