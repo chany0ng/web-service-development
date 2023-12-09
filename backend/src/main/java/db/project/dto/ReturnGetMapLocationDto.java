@@ -3,19 +3,17 @@ package db.project.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigDecimal;
-
 @Getter
 @Setter
 public class ReturnGetMapLocationDto {
     private int bikeCount;
-    private BigDecimal latitude;
-    private BigDecimal longitude;
+    private String latitude;
+    private String longitude;
 
     public ReturnGetMapLocationDto() {
     }
 
-    public ReturnGetMapLocationDto(BigDecimal latitude, BigDecimal longitude, int bikeCount) {
+    public ReturnGetMapLocationDto(String latitude, String longitude, int bikeCount) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.bikeCount = bikeCount;

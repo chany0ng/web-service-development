@@ -2,6 +2,8 @@ package db.project.service;
 
 import db.project.config.jwt.TokenProvider;
 import db.project.dto.*;
+import db.project.exceptions.ErrorCode;
+import db.project.exceptions.UserException;
 import db.project.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -12,6 +14,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -103,5 +108,61 @@ public class UserService {
         if(affectedRows == 0) {
             throw new DataAccessException("업데이트 오류") {};
         }
+    }
+
+    @Transactional
+    public UserInfoListResponseDto selectUserInfoList(Optional<Integer> page) {
+        int userInfoPage;
+        if(page.isEmpty()) {
+            userInfoPage = 0;
+        } else {
+            userInfoPage = (page.get() - 1) * 10;
+        }
+
+        Optional<List<ReturnGetUserInfoListDto>> userListOptional = userRepository.findUserInfoList(userInfoPage);
+        if(userListOptional.isEmpty()) {
+            throw new UserException("page not found", ErrorCode.NOT_FOUND_PAGE);
+        }
+
+        int userCount = userRepository.getUserCount();
+        if(userInfoPage != 0 && userCount <= userInfoPage) {
+            throw new UserException("page not found", ErrorCode.NOT_FOUND_PAGE);
+        }
+
+        List<ReturnGetUserInfoListDto> userInfoList = userListOptional.get();
+        UserInfoListResponseDto response = new UserInfoListResponseDto(userCount);
+        for (ReturnGetUserInfoListDto userInfo : userInfoList) {
+            response.getUserInfoList().add(userInfo);
+        }
+
+        return response;
+    }
+
+    @Transactional
+    public UserInfoListResponseDto selectUserInfoListById(Optional<Integer> page, PostUserInfoListDto postUserInfoListDto) {
+        int userInfoPage;
+        if(page.isEmpty()) {
+            userInfoPage = 0;
+        } else {
+            userInfoPage = (page.get() - 1) * 10;
+        }
+
+        Optional<List<ReturnGetUserInfoListDto>> userListOptional = userRepository.findUserInfoListById(userInfoPage, postUserInfoListDto);
+        if(userListOptional.isEmpty()) {
+            throw new UserException("page not found", ErrorCode.NOT_FOUND_PAGE);
+        }
+
+        int userCount = userRepository.getUserCountById(postUserInfoListDto);
+        if(userInfoPage != 0 && userCount <= userInfoPage) {
+            throw new UserException("page not found", ErrorCode.NOT_FOUND_PAGE);
+        }
+
+        List<ReturnGetUserInfoListDto> userInfoList = userListOptional.get();
+        UserInfoListResponseDto response = new UserInfoListResponseDto(userCount);
+        for (ReturnGetUserInfoListDto userInfo : userInfoList) {
+            response.getUserInfoList().add(userInfo);
+        }
+
+        return response;
     }
 }

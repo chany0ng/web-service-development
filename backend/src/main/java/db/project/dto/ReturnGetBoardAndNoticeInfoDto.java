@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ReturnGetBoardInfoDto {
+public class ReturnGetBoardAndNoticeInfoDto {
     private String user_id;
     private String title;
     private String content;

@@ -1,7 +1,7 @@
 package db.project.controller;
 
-import db.project.dto.LocationInfoResponseDto;
-import db.project.dto.LocationListResponseDto;
+import db.project.dto.MapLocationInfoResponseDto;
+import db.project.dto.MapLocationListResponseDto;
 import db.project.dto.PostMapLocationInfoDto;
 import db.project.exceptions.ErrorResponse;
 import db.project.service.MapService;
@@ -35,10 +35,10 @@ public class MapController {  // 지도 Controller
             @ApiResponse(responseCode = "200", description = "대여소 조회 성공")
     })
     // 대여소 위치와 각 대여소의 자전거 개수 List
-    public ResponseEntity<LocationListResponseDto> getLocationList(){
-        LocationListResponseDto locationListResponseDto = mapService.locationList();
+    public ResponseEntity<MapLocationListResponseDto> getLocationList(){
+        MapLocationListResponseDto mapLocationListResponseDto = mapService.locationList();
 
-        return ResponseEntity.ok(locationListResponseDto);
+        return ResponseEntity.ok(mapLocationListResponseDto);
     }
 
     @PostMapping("/map/info")
@@ -53,8 +53,8 @@ public class MapController {  // 지도 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 대여소 상세 정보
-    public ResponseEntity<LocationInfoResponseDto> postLocationInfo(@RequestBody PostMapLocationInfoDto form) {
-        Optional<LocationInfoResponseDto> locationInfoResponseDtoOptional = mapService.locationInfo(form);
+    public ResponseEntity<MapLocationInfoResponseDto> postLocationInfo(@RequestBody PostMapLocationInfoDto form) {
+        Optional<MapLocationInfoResponseDto> locationInfoResponseDtoOptional = mapService.locationInfo(form);
 
         return ResponseEntity.ok(locationInfoResponseDtoOptional.get());
     }

@@ -1,8 +1,9 @@
 package db.project.controller;
 
-import db.project.dto.BoardListResponseDto;
-import db.project.dto.PostBoardCreateAndUpdateDto;
-import db.project.dto.ReturnGetBoardInfoDto;
+import db.project.dto.BoardAndNoticeListResponseDto;
+import db.project.dto.PostBoardAndNoticeCreateAndUpdateDto;
+import db.project.dto.PostBoardAndNoticeDeleteDto;
+import db.project.dto.ReturnGetBoardAndNoticeInfoDto;
 import db.project.exceptions.ErrorResponse;
 import db.project.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,6 +15,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
@@ -24,7 +27,7 @@ public class BoardController {  // 게시판 Controller
         this.boardService = boardService;
     }
 
-    @GetMapping("board/list/{page}")
+    @GetMapping({"board/list/{page}", "board/list"})
     @ResponseBody
     @Operation(
             summary = "자유게시판 리스트",
@@ -36,7 +39,7 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 게시물 리스트
-    public ResponseEntity<BoardListResponseDto> getBoardList(@PathVariable int page) {
+    public ResponseEntity<BoardAndNoticeListResponseDto> getBoardList(@PathVariable(required = false) Optional<Integer> page) {
 
         return ResponseEntity.ok(boardService.boardList(page));
     }
@@ -53,7 +56,7 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 게시물 상세정보
-    public ResponseEntity<ReturnGetBoardInfoDto> getBoardInfo(@PathVariable int boardId) {
+    public ResponseEntity<ReturnGetBoardAndNoticeInfoDto> getBoardInfo(@PathVariable int boardId) {
 
         return ResponseEntity.ok(boardService.boardInfo(boardId));
     }
@@ -65,10 +68,13 @@ public class BoardController {  // 게시판 Controller
             description = "게시물 제목과 본문을 입력하고 생성 버튼을 클릭했을 때의 API"
     )
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "게시물 생성 성공")
+            @ApiResponse(responseCode = "200", description = "게시물 생성 성공", content = {
+                    @Content(examples = {
+                            @ExampleObject(value = "{}")})
+            })
     })
     // 게시물 생성
-    public ResponseEntity<String> postBoardCreate(@RequestBody PostBoardCreateAndUpdateDto form) {
+    public ResponseEntity<String> postBoardCreate(@RequestBody PostBoardAndNoticeCreateAndUpdateDto form) {
         boardService.boardCreate(form);
 
         return ResponseEntity.ok("{}");
@@ -90,14 +96,14 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 게시물 수정
-    public ResponseEntity<String> postBoardUpdate(@PathVariable int boardId, @RequestBody PostBoardCreateAndUpdateDto form) {
+    public ResponseEntity<String> postBoardUpdate(@PathVariable int boardId, @RequestBody PostBoardAndNoticeCreateAndUpdateDto form) {
         boardService.boardUpdate(form, boardId);
 
         return ResponseEntity.ok("{}");
 
     }
 
-    @PostMapping("board/delete/{boardId}")
+    @PostMapping("board/delete")
     @ResponseBody
     @Operation(
             summary = "게시물 삭제",
@@ -113,8 +119,8 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 게시물 삭제
-    public ResponseEntity<String> postBoardDelete(@PathVariable int boardId) {
-        boardService.boardDelete(boardId);
+    public ResponseEntity<String> getBoardDelete(@RequestBody PostBoardAndNoticeDeleteDto form) {
+        boardService.boardDelete(form);
 
         return ResponseEntity.ok("{}");
 

@@ -1,6 +1,5 @@
 package db.project.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,12 +10,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BoardListResponseDto {
+public class BoardAndNoticeListResponseDto {
     private int boardCount;
-    private List<ReturnGetBoardListDto> boardList;
+    private List<ReturnGetBoardAndNoticeListDto> boardAndNoticeList;
 
-    public BoardListResponseDto(int boardCount) {
+    public BoardAndNoticeListResponseDto(int boardCount) {
         this.boardCount = boardCount;
-        this.boardList = new ArrayList<>();
+        this.boardAndNoticeList = new ArrayList<>();
     }
 }
