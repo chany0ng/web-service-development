@@ -14,6 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { TextField } from '@mui/material';
 import { mainPageAuthCheck } from '../../../AuthCheck';
+import { postFetch } from '../../../config';
 const innerTitle = ['일일권 구매', '일일권 선물'];
 const innerTab = 'gift';
 const url = {
@@ -30,17 +31,19 @@ const UserTicketGift = () => {
   const [checked, setChecked] = useState(false);
   const [isLackOfMoney, setIsLackOfMoney] = useState(false);
   // 이용권 radio state
-  const [value, setValue] = useState('1');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const phoneNumberHandler = (e) => {
-    setPhoneNumber(e.target.value);
+  const [value, setValue] = useState({
+    hour: 1
+  });
+  const [ticketPrice, setTicketPrice] = useState(1000);
+  const [userId, setUserId] = useState('');
+  const userIdHandler = (e) => {
+    setUserId(e.target.value);
   };
   const onChangeHandler = (event) => {
-    setValue(event.target.value);
+    setValue({ hour: event.target.value });
+    setTicketPrice(event.target.value * 1000);
   };
-  const existMoney = 0;
-  const ticketPrice = 1000;
-  const afterMoney = existMoney - ticketPrice;
+  const afterMoney = user.cash - ticketPrice;
   const lackNotice = (
     <h1 className={styles.moneyLack}>보유 금액이 부족합니다!</h1>
   );
@@ -52,16 +55,34 @@ const UserTicketGift = () => {
   };
 
   useEffect(() => {
-    if (ticketPrice > existMoney) {
+    if (ticketPrice > user.cash) {
       setIsLackOfMoney(true);
     } else {
       setIsLackOfMoney(false);
     }
-  }, [existMoney, ticketPrice]);
+  }, [user.cash, ticketPrice]);
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    //todo 보유금액에서 미납금액만큼 차감 후, post요청
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await postFetch('api/ticket/gift', {
+        ...value,
+        user_id: userId
+      });
+      if (response.status === 200) {
+        setUser((prev) => ({ ...prev, cash: prev.cash - ticketPrice }));
+        alert(`${userId}님께 ${value.hour}시간 이용권을 선물했습니다!`);
+        setUserId('');
+        setChecked(false);
+      } else if (response.status === 409) {
+        alert('이미 이용권을 보유하고 있는 사용자입니다');
+      } else {
+        throw new Error('이용권 선물 에러');
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
   };
   return (
     <Layout>
@@ -92,22 +113,24 @@ const UserTicketGift = () => {
             <div className={styles.favorite}>
               <div className={styles.money}>
                 <span>현재 보유 금액:</span>
-                <span>{existMoney.toLocaleString()}원</span>
+                <span>{user.cash.toLocaleString()}원</span>
                 <br />
                 <span>결제 후 보유 금액:</span>
-                <span>{afterMoney.toLocaleString()}원</span>
+                <span>
+                  {afterMoney <= 0 ? '-' : `${afterMoney.toLocaleString()}원`}
+                </span>
               </div>
               <h3
                 style={{ margin: '5px', padding: '10px', fontSize: '1.7rem' }}
               >
-                선물 받을 사용자의 번호 입력
+                선물 받을 사용자의 ID입력
               </h3>
               <TextField
                 required
-                value={phoneNumber}
-                onChange={phoneNumberHandler}
+                value={userId}
+                onChange={userIdHandler}
                 id="outlined-required"
-                placeholder="번호만 입력(- 제외)"
+                placeholder="Enter user ID"
                 variant="standard"
                 margin="normal"
                 sx={{
@@ -126,11 +149,11 @@ const UserTicketGift = () => {
                   <RadioGroup
                     aria-labelledby="demo-controlled-radio-buttons-group"
                     name="controlled-radio-buttons-group"
-                    value={value}
+                    value={value.hour}
                     onChange={onChangeHandler}
                   >
                     <FormControlLabel
-                      value="1"
+                      value={1}
                       control={
                         <Radio
                           sx={{
@@ -148,7 +171,7 @@ const UserTicketGift = () => {
                       }}
                     />
                     <FormControlLabel
-                      value="2"
+                      value={2}
                       control={
                         <Radio
                           sx={{
@@ -166,7 +189,7 @@ const UserTicketGift = () => {
                       }}
                     />
                     <FormControlLabel
-                      value="24"
+                      value={24}
                       control={
                         <Radio
                           sx={{
