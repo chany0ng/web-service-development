@@ -18,12 +18,11 @@ public class TokenController {
     private final RefreshTokenService refreshTokenService;
     private final TokenProvider tokenProvider;
 
-    @PostMapping("/token")
+    @PostMapping("/auth/token")
     public ResponseEntity<CreateTokenResponse> createAccessToken(HttpServletRequest request, @RequestBody CreateTokenRequest createTokenRequest) {
         String accessToken = refreshTokenService.createNewAccessToken(createTokenRequest.getRefreshToken(), request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(CreateTokenResponse.builder()
-                        .accessToken(accessToken)
-                        .build());
+        return ResponseEntity.ok(CreateTokenResponse.builder()
+                .accessToken(accessToken)
+                .build());
     }
 }
