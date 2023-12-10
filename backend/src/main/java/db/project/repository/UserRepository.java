@@ -57,30 +57,20 @@ public class UserRepository {
         }
 
     }
-
-    public Optional<String> findPWQuestionById(String id) {
-        try {
-            String sql = """
-                    SELECT content FROM USER AS A JOIN QUESTION AS B ON A.PW_QUESTION=B.QUESTION_ID
-                    WHERE USER_ID= :id
-                 """;
-            SqlParameterSource parameterSource = new MapSqlParameterSource("id", id);
-            RowMapper<String> questionMapper = (rs, rowNum) -> {
-                return rs.getString("content");
-            };
-            String question = namedParameterJdbcTemplate.queryForObject(sql, parameterSource, questionMapper);
-            return Optional.of(question);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    public void updatePW(String id, String password) {
+    public int updatePW(String id, String password) {
         String sql = "UPDATE USER SET password= :password WHERE user_id= :id";
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id)
                 .addValue("password", bCryptPasswordEncoder.encode(password));
-        namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+        return namedParameterJdbcTemplate.update(sql, sqlParameterSource);
+    }
+
+    public int updateUser(String id, String email, String phone_number) {
+        String sql = "UPDATE USER SET email= :email, phone_number= :phone_number WHERE user_id= :id";
+        SqlParameterSource sqlParameterSource = new MapSqlParameterSource("id", id)
+                .addValue("email", email)
+                .addValue("phone_number", phone_number);
+        return namedParameterJdbcTemplate.update(sql, sqlParameterSource);
     }
 
     public int getUserCount() {
@@ -130,6 +120,7 @@ public class UserRepository {
                 .id(rs.getString("user_id"))
                 .password(rs.getString("password"))
                 .role(rs.getString("role"))
+                .pw_question(rs.getInt("pw_question"))
                 .pw_answer(rs.getString("pw_answer"))
                 .build();
         return user;

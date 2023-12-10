@@ -12,8 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,25 +43,20 @@ public class UserController {
         return ResponseEntity.ok("{}");
     }
 
-    @PostMapping("/auth/findPW-question")
-    public ResponseEntity<PWQuestionResponse> findPWQuestion(@RequestBody PWQuestionRequest pwQuestionRequest) {
-        return ResponseEntity.ok(userService.findPWQuestion(pwQuestionRequest));
-    }
-
-    @PostMapping("/auth/findPW-verification")
-    public ResponseEntity<String> checkPWAnswer(@RequestBody CheckAnswerRequest checkAnswerRequest) {
-        userService.checkPWAnswer(checkAnswerRequest);
+    @PostMapping("/auth/findPW")
+    public ResponseEntity<String> findPW(@RequestBody FindPWRequest findPWRequest) {
+        userService.findPW(findPWRequest);
         return ResponseEntity.ok("{}");
     }
-
-    @PostMapping("/auth/findPW-reset")
+    @PostMapping("/auth/findPW/update")
     public ResponseEntity<String> updatePW(@RequestBody UpdatePWRequest updatePWRequest) {
-        try {
-            userService.updatePW(updatePWRequest);
-            return ResponseEntity.ok("{}");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{ \"message\" : \"서버 오류\" }");
-        }
+        userService.updatePW(updatePWRequest);
+        return ResponseEntity.ok("{}");
+    }
+    @PostMapping("/myInfo/update")
+    public ResponseEntity<String> updateMyInfo(@RequestBody UpdateMyInfoRequest updateMyInfoRequest) {
+        userService.updateUser(updateMyInfoRequest);
+        return ResponseEntity.ok().body("{}");
     }
 
     @GetMapping({"admin/user/info/list/{page}", "admin/user/info/list"})
