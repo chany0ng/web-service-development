@@ -9,6 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import { userInfo } from '../../../recoil';
 import { mainPageAuthCheck } from '../../../AuthCheck';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import { postFetch } from '../../../config';
 const innerTitle = ['일일권 구매', '일일권 선물'];
 const innerTab = 'buy';
 const url = {
@@ -22,10 +26,16 @@ const UserTicketBuy = () => {
   }, []);
   const [user, setUser] = useRecoilState(userInfo);
   const [checked, setChecked] = useState(false);
+  const [ticketPrice, setTicketPrice] = useState(1000);
+  const [value, setValue] = useState({
+    hour: 1
+  });
+  const optionHandler = (event) => {
+    setValue({ hour: event.target.value });
+    setTicketPrice(event.target.value * 1000);
+  };
   const [isLackOfMoney, setIsLackOfMoney] = useState(false);
-  const existMoney = 0;
-  const ticketPrice = 1000;
-  const afterMoney = existMoney - ticketPrice;
+  const afterMoney = user.cash - ticketPrice;
   const lackNotice = (
     <h1 className={styles.moneyLack}>보유 금액이 부족합니다!</h1>
   );
@@ -37,16 +47,32 @@ const UserTicketBuy = () => {
   };
 
   useEffect(() => {
-    if (ticketPrice > existMoney) {
+    if (ticketPrice > user.cash) {
       setIsLackOfMoney(true);
     } else {
       setIsLackOfMoney(false);
     }
-  }, [existMoney, ticketPrice]);
+  }, [user.cash, ticketPrice]);
 
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    //todo 보유금액에서 미납금액만큼 차감 후, post요청
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await postFetch('api/ticket', value);
+      if (response.status === 200) {
+        setUser((prev) => ({ ...prev, cash: prev.cash - ticketPrice }));
+        setUser((prev) => ({ ...prev, ticket: value.hour }));
+        alert(`${value.hour}시간 이용권을 구매했습니다!`);
+        setChecked(false);
+        setValue({ hour: 1 });
+      } else if (response.status === 409) {
+        alert('이미 이용권을 보유중입니다!');
+      } else {
+        throw new Error('이용권 구매 에러');
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
   };
 
   return (
@@ -78,13 +104,81 @@ const UserTicketBuy = () => {
             <div className={styles.favorite}>
               <div className={styles.money}>
                 <span>현재 보유 금액:</span>
-                <span>{existMoney.toLocaleString()}원</span>
+                <span>{user.cash.toLocaleString()}원</span>
                 <br />
                 <span>결제 후 보유 금액:</span>
-                <span>{afterMoney.toLocaleString()}원</span>
+                <span>
+                  {afterMoney <= 0 ? '-' : `${afterMoney.toLocaleString()}원`}
+                </span>
               </div>
               <div>
-                <h3 style={{ marginTop: '20px' }}>일일 1시간 이용권</h3>
+                <h3 style={{ marginTop: '20px', marginBottom: '10px' }}>
+                  이용권 선택
+                </h3>
+                <RadioGroup
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={value.hour}
+                  onChange={optionHandler}
+                >
+                  <FormControlLabel
+                    value={1}
+                    control={
+                      <Radio
+                        sx={{
+                          '& .MuiSvgIcon-root': {
+                            fontSize: 20
+                          }
+                        }}
+                      />
+                    }
+                    label="1시간 권 (1,000원)"
+                    sx={{
+                      '& span': {
+                        fontSize: 15
+                      },
+                      justifyContent: 'center'
+                    }}
+                  />
+                  <FormControlLabel
+                    value={2}
+                    control={
+                      <Radio
+                        sx={{
+                          '& .MuiSvgIcon-root': {
+                            fontSize: 20
+                          }
+                        }}
+                      />
+                    }
+                    label="2시간 권 (2,000원)"
+                    sx={{
+                      '& span': {
+                        fontSize: 15
+                      },
+                      justifyContent: 'center'
+                    }}
+                  />
+                  <FormControlLabel
+                    value={24}
+                    control={
+                      <Radio
+                        sx={{
+                          '& .MuiSvgIcon-root': {
+                            fontSize: 20
+                          }
+                        }}
+                      />
+                    }
+                    label="24시간 권 (24,000원)"
+                    sx={{
+                      '& span': {
+                        fontSize: 15
+                      },
+                      justifyContent: 'center'
+                    }}
+                  />
+                </RadioGroup>
                 <div style={{ display: 'flex', alignItems: 'baseline' }}>
                   <p> 결제금액: </p>
                   <span className={styles.number}>
@@ -103,6 +197,7 @@ const UserTicketBuy = () => {
                 추가요금자동결제, 환불규정, 이용약관에 동의하며 결제를
                 진행합니다.
               </div>
+              {user.ticket && <div>이용권을 이미 보유중입니다</div>}
               {isLackOfMoney && (
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   {lackNotice}
