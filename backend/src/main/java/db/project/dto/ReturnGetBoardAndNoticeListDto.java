@@ -12,4 +12,5 @@ import lombok.Setter;
 public class ReturnGetBoardAndNoticeListDto {
     private String title;
     private String date;
+    private int views;
 }

@@ -31,7 +31,7 @@ public class BoardRepository {
     public Optional<List<ReturnGetBoardAndNoticeListDto>> boardList(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
-        String sql = "SELECT title, created_at as date FROM board LIMIT :page, 10";
+        String sql = "SELECT title, created_at as date, views FROM board LIMIT :page, 10";
 
         try {
             List<ReturnGetBoardAndNoticeListDto> returnGetBoardListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardAndNoticeListDto.class));
