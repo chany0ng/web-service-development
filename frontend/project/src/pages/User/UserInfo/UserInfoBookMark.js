@@ -9,28 +9,13 @@ import CustomTable from '../../../components/Table/CustomTable';
 import { mainPageAuthCheck } from '../../../AuthCheck';
 import { useNavigate } from 'react-router-dom';
 import { getFetch, postFetch } from '../../../config';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['개인정보 수정', '대여소 즐겨찾기'];
 const outerTab = 'info';
 const innerTab = 'bookmark';
 const url = { edit: '/user/info/edit', bookmark: '/user/info/bookmark' }; // 테이블에 넘길 값
-const head = [
-  '대여소 고유번호',
-  '대여소 주소',
-  '대여소 위도 정보',
-  '대여소 경도 정보',
-  '대여소 상태'
-];
-const body = [
-  { name: '1', calories: 159, fat: 6.0, carbs: 24, protein: '이용 가능' },
-  {
-    name: '2',
-    calories: 237,
-    fat: 9.0,
-    carbs: 37,
-    protein: '이용 가능'
-  }
-];
+const head = ['대여소 주소', '즐겨찾기 해제'];
 
 const UserInfoBookMark = () => {
   const navigate = useNavigate();
@@ -38,24 +23,78 @@ const UserInfoBookMark = () => {
     mainPageAuthCheck(navigate);
   }, []);
   const [station, setStation] = useState('');
-  const [favorites, SetFavorites] = useState({});
+  const [searchedStation, setSearchedStation] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const inputStationHandler = (e) => {
     e.preventDefault();
     const newStation = e.target.value;
     setStation(newStation);
   };
+  const addFavoriteHandler = async (address) => {
+    try {
+      const response = await postFetch('api/favorites/change', {
+        location: address,
+        favorite: true
+      });
+      if (response.status === 200) {
+        setFavorites((prev) => [
+          ...prev,
+          {
+            location: address,
+            favorite: (
+              <DeleteForeverIcon
+                onClick={() => deleteFavoriteHandler(address)}
+                sx={{ fontSize: '3rem' }}
+              />
+            )
+          }
+        ]);
+        alert('즐겨찾기가 추가되었습니다!');
+        window.location.reload();
+      } else if (response.status === 409) {
+        alert('즐겨찾기가 중복됩니다!');
+      } else {
+        throw new Error('즐겨찾기 변경 에러');
+      }
+    } catch (error) {
+      alert(error);
+      console.error(error);
+    }
+  };
+  const deleteFavoriteHandler = async (address) => {
+    try {
+      const response = await postFetch('api/favorites/change', {
+        location: address,
+        favorite: false
+      });
+      if (response.status === 200) {
+        setFavorites((prevFavorites) => {
+          const updatedFavorites = prevFavorites.filter(
+            (item) => item.address !== address
+          );
+          return updatedFavorites;
+        });
+      } else if (response.status === 409) {
+        alert('즐겨찾기가 중복됩니다!');
+      } else {
+        throw new Error('즐겨찾기 변경 에러');
+      }
+    } catch (error) {
+      alert(error);
+      console.error(error);
+    }
+  };
   const addStationHandler = async (e) => {
     try {
       e.preventDefault();
-      console.log(station);
       const response = await postFetch('api/favorites/list', {
         location: station
       });
       if (response.status === 200) {
         const data = await response.json();
-        console.log(data);
+        setSearchedStation(data.locations);
       } else {
-        throw new Error('즐겨찾기 대여소 조회 에러');
+        throw new Error('대여소 검색 에러');
       }
     } catch (error) {
       console.error(error);
@@ -68,7 +107,18 @@ const UserInfoBookMark = () => {
         const response = await getFetch('api/favorites/list');
         if (response.status === 200) {
           const data = await response.json();
-          console.log(data);
+          const formattedData = data.locations.map((location) => {
+            return {
+              ...location,
+              favorite: (
+                <DeleteForeverIcon
+                  onClick={() => deleteFavoriteHandler(location.address)}
+                  sx={{ fontSize: '3rem' }}
+                />
+              )
+            };
+          });
+          setFavorites(formattedData);
         } else {
           throw new Error('즐겨찾기 대여소 리스트 조회 오류');
         }
@@ -113,12 +163,27 @@ const UserInfoBookMark = () => {
                 검색하기
               </Button>
             </div>
+            {station && (
+              <div className={styles.search}>
+                {searchedStation.map((station, index) => (
+                  <div
+                    key={index}
+                    className={styles.each}
+                    onClick={() => addFavoriteHandler(station.address)}
+                  >
+                    {station.address}
+                  </div>
+                ))}
+              </div>
+            )}
           </Card>
         </Container>
-        <h2 style={{ textAlign: 'center', marginTop: '50px' }}>
+        <h2
+          style={{ textAlign: 'center', marginTop: '70px', fontSize: '2rem' }}
+        >
           즐겨찾는 대여소 목록
         </h2>
-        <CustomTable headData={head} bodyData={body} />
+        <CustomTable headData={head} bodyData={favorites} />
       </Article>
     </Layout>
   );
