@@ -16,6 +16,7 @@ import UserTicketGift from './pages/User/UserTicket/UserTicketGift';
 import UserNoticeList from './pages/User/UserNotice/UserNoticeList';
 import UserNoticeView from './pages/User/UserNotice/UserNoticeView';
 import UserReportWrite from './pages/User/UserReport/UserReportWrite';
+import UserMap from './pages/User/UserMap/UserMap';
 const Router = () => {
   return (
     <Routes>
@@ -54,6 +55,7 @@ const Router = () => {
         element={<UserReportWrite />}
       />
       <Route path="/login/oauth2/code/google" element={<GoogleLogin />} />
+      <Route path="/user/map" element={<UserMap />} />
     </Routes>
   );
 };
