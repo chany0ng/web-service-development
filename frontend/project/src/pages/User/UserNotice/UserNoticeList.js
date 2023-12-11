@@ -14,21 +14,7 @@ const url = {
   notice: '/user/notice/noticeList/1',
   report: '/user/report/reportBoardEdit'
 };
-const headData = ['글 번호', '제목', '작성 시각', '조회수'];
-const posts = [
-  {
-    board_id: 1,
-    title: '제목1',
-    created_at: '2023-12-02T12:34:56Z',
-    view: 0
-  },
-  {
-    board_id: 2,
-    title: '제목2',
-    created_at: '2023-12-02T12:34:56Z',
-    view: 0
-  }
-];
+const headData = ['제목', '작성 시각', '글 번호'];
 export const MyContext = createContext();
 
 const UserNoticeList = () => {
@@ -37,7 +23,7 @@ const UserNoticeList = () => {
     mainPageAuthCheck(navigate);
   }, []);
   const { pageNumber } = useParams();
-  // const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([]);
   const [currentPage, setCurrentPage] = useState(
     pageNumber ? parseInt(pageNumber, 10) : 1
   );
@@ -56,13 +42,17 @@ const UserNoticeList = () => {
     // page가 바뀌면, 실행되는 함수
     const fetchPosts = async (pageNumber) => {
       try {
-        // const response = await getFetch(`api/notice/list/${pageNumber}`);
-        const response = 100;
+        const response = await getFetch(`api/notice/list/${pageNumber}`);
         if (response.status === 200) {
-          // setPosts(data);
-          setTotalPages(75);
+          const data = await response.json();
+          console.log(data.boardAndNoticeList);
+          //todo! 날짜 변환 dayjs(data.boardAndNoticeList.date).format('YYYY-MM-DD');
+          setPosts(data.boardAndNoticeList);
+          setTotalPages(data.boardCount);
         } else if (response.status === 401) {
           navigate('/');
+        } else {
+          throw new Error('게시글 로딩 에러');
         }
       } catch (error) {
         console.error(error);

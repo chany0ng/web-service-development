@@ -6,7 +6,7 @@ const CustomCard = ({ info }) => {
   const navigate = useNavigate();
 
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="sm">
       <Card
         variant="outlined"
         sx={{
@@ -26,7 +26,7 @@ const CustomCard = ({ info }) => {
             }}
             variant="contained"
             color="primary"
-            sx={{ fontSize: '1rem' }}
+            sx={{ fontSize: '1rem', width: '8vw' }}
           >
             내 정보 관리 {`>`}
           </Button>
@@ -41,9 +41,23 @@ const CustomCard = ({ info }) => {
               }}
               variant="contained"
               color="primary"
-              sx={{ fontSize: '1rem', marginLeft: '2rem' }}
+              sx={{ fontSize: '1rem', width: '8vw' }}
             >
               충전하기 {`>`}
+            </Button>
+          </div>
+          <div className={styles.cardMoney}>
+            <div>현재 보유중인 이용권</div>
+            <h3>{info.hour === 0 ? '없음' : `${info.hour}시간`}</h3>
+            <Button
+              onClick={() => {
+                navigate('/user/map');
+              }}
+              variant="contained"
+              color="primary"
+              sx={{ fontSize: '1rem', width: '8vw' }}
+            >
+              대여하기 {`>`}
             </Button>
           </div>
           <div className={styles.cardMoney}>
@@ -55,7 +69,7 @@ const CustomCard = ({ info }) => {
               }}
               variant="contained"
               color="primary"
-              sx={{ fontSize: '1rem' }}
+              sx={{ fontSize: '1rem', width: '8vw' }}
             >
               이용권 구매 {`>`}
             </Button>

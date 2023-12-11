@@ -15,7 +15,7 @@ const innerTitle = ['개인정보 수정', '대여소 즐겨찾기'];
 const outerTab = 'info';
 const innerTab = 'bookmark';
 const url = { edit: '/user/info/edit', bookmark: '/user/info/bookmark' }; // 테이블에 넘길 값
-const head = ['대여소 주소', '즐겨찾기 해제'];
+const head = ['대여소 번호', '대여소 주소', '즐겨찾기 해제'];
 
 const UserInfoBookMark = () => {
   const navigate = useNavigate();
