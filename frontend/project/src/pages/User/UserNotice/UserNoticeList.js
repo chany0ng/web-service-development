@@ -14,7 +14,7 @@ const url = {
   notice: '/user/notice/noticeList/1',
   report: '/user/report/reportBoardEdit'
 };
-const headData = ['제목', '작성 시각', '글 번호'];
+const headData = ['제목', '작성 시각', '조회수'];
 export const MyContext = createContext();
 
 const UserNoticeList = () => {
@@ -46,8 +46,11 @@ const UserNoticeList = () => {
         if (response.status === 200) {
           const data = await response.json();
           console.log(data.boardAndNoticeList);
-          //todo! 날짜 변환 dayjs(data.boardAndNoticeList.date).format('YYYY-MM-DD');
-          setPosts(data.boardAndNoticeList);
+          //todo 날짜 변환 dayjs(data.boardAndNoticeList.date).format('YYYY-MM-DD');
+          const formattedData = data.boardAndNoticeList.map((post) => {
+            return { ...post, date: new Date(post.date).toLocaleDateString() };
+          });
+          setPosts(formattedData);
           setTotalPages(data.boardCount);
         } else if (response.status === 401) {
           navigate('/');
