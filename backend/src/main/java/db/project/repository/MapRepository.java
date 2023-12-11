@@ -21,7 +21,7 @@ public class MapRepository {
     }
 
     public List<ReturnGetMapLocationDto> locationList(){
-        String sql = "SELECT COUNT(bike_id) AS bikeCount, l.latitude, l.longitude " +
+        String sql = "SELECT COUNT(bike_id) AS bikeCount, l.latitude, l.longitude, l.address " +
                 "FROM location l LEFT JOIN bike b ON l.location_id = b.location_id AND b.status IN ('available', 'rented', 'closed') " +
                 "WHERE l.status = 'available' GROUP BY l.location_id";
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
