@@ -1,6 +1,7 @@
 package db.project.repository;
 
 import db.project.dto.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -26,30 +27,28 @@ public class NoticeRepository {
         return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
     }
 
-    public Optional<List<ReturnGetBoardAndNoticeListDto>> noticeList(int page) {
+    public Optional<List<ReturnGetNoticeListDto>> noticeList(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
-        String sql = "SELECT title, created_at as date, views FROM notice LIMIT :page, 10";
+        String sql = "SELECT notice_id, title, created_at as date, views FROM notice ORDER BY notice_id LIMIT :page, 10";
 
         try {
-            List<ReturnGetBoardAndNoticeListDto> returnGetNoticeListDtoList = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardAndNoticeListDto.class));
+            List<ReturnGetNoticeListDto> returnGetNoticeListDtoList = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetNoticeListDto.class));
             return Optional.of(returnGetNoticeListDtoList);
         } catch (BadSqlGrammarException e) {
             return Optional.empty();
         }
     }
 
-    public Optional<ReturnGetBoardAndNoticeInfoDto> noticeInfo(int noticeId) {
+    public Optional<ReturnGetNoticeInfoDto> noticeInfo(int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("noticeId", noticeId);
-        String sql = "SELECT admin_id AS user_id, title, content, created_at as date, views FROM notice LIMIT :noticeId, 1";
+        String sql = "SELECT notice_id, admin_id AS user_id, title, content, created_at as date, views FROM notice WHERE notice_id =:noticeId";
         try{
-            ReturnGetBoardAndNoticeInfoDto returnGetNoticeInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardAndNoticeInfoDto.class));
+            ReturnGetNoticeInfoDto returnGetNoticeInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetNoticeInfoDto.class));
 
             return Optional.of(returnGetNoticeInfoDto);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        } catch (BadSqlGrammarException e) {
             return Optional.empty();
         }
     }
@@ -63,26 +62,17 @@ public class NoticeRepository {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    public Optional<Integer> getNoticeId(int notice_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("notice_id", notice_id);
-        String sql = "SELECT notice_id AS noticeId FROM notice limit :notice_id, 1";
-        try{
-            int noticeId = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
-            return Optional.of(noticeId);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        } catch (BadSqlGrammarException e) {
-            return Optional.empty();
-        }
-    }
-
-    public String isAuthor(int noticeId) {
+    public Optional<String> isAuthor(int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("noticeId", noticeId);
         String sql = "SELECT admin_id AS user_id FROM notice WHERE notice_id =:noticeId";
 
-        return jdbcTemplate.queryForObject(sql, namedParameters, String.class);
+        try {
+            String user_id = jdbcTemplate.queryForObject(sql, namedParameters, String.class);
+            return Optional.of(user_id);
+        } catch(EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     public void noticeUpdate(PostBoardAndNoticeCreateAndUpdateDto postNoticeUpdateDto, int noticeId) {
@@ -101,5 +91,45 @@ public class NoticeRepository {
         String sql = "DELETE FROM notice WHERE notice_id =:noticeId";
 
         int rowsUpdated = jdbcTemplate.update(sql, namedParameters);
+    }
+
+    public Optional<Integer> getAdminIdAndNoticeId(int noticeId, String user_id) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("noticeId", noticeId)
+                .addValue("user_id", user_id);
+
+        String sql = "SELECT view_id FROM notice_views WHERE notice_id =:noticeId AND admin_id =:user_id";
+
+        try {
+            int view_id = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
+            return Optional.of(view_id);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<Integer> insertNoticeViews(int noticeId, String user_id) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("noticeId", noticeId)
+                .addValue("user_id", user_id);
+
+        String sql = "INSERT INTO notice_views(notice_id, admin_id) VALUES(:noticeId, :user_id)";
+
+        try{
+            int check = jdbcTemplate.update(sql, namedParameters);
+            return Optional.of(check);
+        } catch (DataIntegrityViolationException e) {
+            return Optional.empty();
+        }
+
+    }
+
+    public void updateNoticeView(int noticeId) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("noticeId", noticeId);
+
+        String sql = "UPDATE notice SET views = views + 1 WHERE notice_id =:noticeId";
+
+        jdbcTemplate.update(sql, namedParameters);
     }
 }

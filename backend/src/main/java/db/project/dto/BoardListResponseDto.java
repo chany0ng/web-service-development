@@ -10,12 +10,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class BoardAndNoticeListResponseDto {
+public class BoardListResponseDto {
     private int boardCount;
-    private List<ReturnGetBoardAndNoticeListDto> boardAndNoticeList;
+    private List<ReturnGetBoardListDto> boardList;
 
-    public BoardAndNoticeListResponseDto(int boardCount) {
+    public BoardListResponseDto(int boardCount) {
         this.boardCount = boardCount;
-        this.boardAndNoticeList = new ArrayList<>();
+        this.boardList = new ArrayList<>();
     }
 }

@@ -58,7 +58,7 @@ public class BreakdownReportRepository {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
         String sql = "SELECT user_id, tire, chain, saddle, pedal, terminal, created_at, bike_id, status FROM report " +
-                "WHERE status = 'received' LIMIT :page, 10";
+                "WHERE status = 'received' ORDER BY report_id LIMIT :page, 10";
 
         try {
             List<ReturnGetBreakdownReportListDto> returnGetBreakdownReportListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBreakdownReportListDto.class));

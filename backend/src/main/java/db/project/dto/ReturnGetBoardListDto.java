@@ -5,15 +5,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
-public class ReturnGetBoardAndNoticeInfoDto {
-    private String user_id;
+@AllArgsConstructor
+public class ReturnGetBoardListDto {
+    private int board_id;
     private String title;
-    private String content;
     private String date;
     private int views;
-    private boolean isAuthor;
 }
