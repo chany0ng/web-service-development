@@ -27,36 +27,36 @@ public class NoticeRepository {
         return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
     }
 
-    public Optional<List<ReturnGetNoticeListDto>> noticeList(int page) {
+    public Optional<List<NoticeDto.NoticeList>> noticeList(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
         String sql = "SELECT notice_id, title, created_at as date, views FROM notice ORDER BY notice_id LIMIT :page, 10";
 
         try {
-            List<ReturnGetNoticeListDto> returnGetNoticeListDtoList = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetNoticeListDto.class));
-            return Optional.of(returnGetNoticeListDtoList);
+            List<NoticeDto.NoticeList> noticeListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(NoticeDto.NoticeList.class));
+            return Optional.of(noticeListDto);
         } catch (BadSqlGrammarException e) {
             return Optional.empty();
         }
     }
 
-    public Optional<ReturnGetNoticeInfoDto> noticeInfo(int noticeId) {
+    public Optional<NoticeDto.NoticeInfo> noticeInfo(int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("noticeId", noticeId);
         String sql = "SELECT notice_id, admin_id AS user_id, title, content, created_at as date, views FROM notice WHERE notice_id =:noticeId";
         try{
-            ReturnGetNoticeInfoDto returnGetNoticeInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetNoticeInfoDto.class));
+            NoticeDto.NoticeInfo noticeInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(NoticeDto.NoticeInfo.class));
 
-            return Optional.of(returnGetNoticeInfoDto);
+            return Optional.of(noticeInfoDto);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public void noticeCreate(PostBoardAndNoticeCreateAndUpdateDto NoticeCreateDto, String user_id) {
+    public void noticeCreate(NoticeDto.NoticeCreateAndUpdate noticeCreateDto, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("title", NoticeCreateDto.getTitle())
-                .addValue("content", NoticeCreateDto.getContent())
+                .addValue("title", noticeCreateDto.getTitle())
+                .addValue("content", noticeCreateDto.getContent())
                 .addValue("user_id", user_id);
         String sql = "INSERT INTO notice(admin_id, title, content) values(:user_id, :title, :content)";
         jdbcTemplate.update(sql, namedParameters);
@@ -75,10 +75,10 @@ public class NoticeRepository {
         }
     }
 
-    public void noticeUpdate(PostBoardAndNoticeCreateAndUpdateDto postNoticeUpdateDto, int noticeId) {
+    public void noticeUpdate(NoticeDto.NoticeCreateAndUpdate noticeUpdateDto, int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("title", postNoticeUpdateDto.getTitle())
-                .addValue("content", postNoticeUpdateDto.getContent())
+                .addValue("title", noticeUpdateDto.getTitle())
+                .addValue("content", noticeUpdateDto.getContent())
                 .addValue("noticeId", noticeId);
         String sql = "UPDATE notice SET title =:title, content =:content WHERE notice_id =:noticeId";
 

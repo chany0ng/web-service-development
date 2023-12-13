@@ -1,7 +1,6 @@
 package db.project.repository;
 
-import db.project.dto.GetBoardCommentDto;
-import db.project.dto.PostBoardCommentCreateAndUpdateDto;
+import db.project.dto.BoardCommentDto;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,9 +18,9 @@ public class BoardCommentRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void createComment(PostBoardCommentCreateAndUpdateDto postBoardCommentCreateAndUpdateDto, String user_id, int board_id) {
+    public void createComment(BoardCommentDto.BoardCommentCreateAndUpdate boardCommentCreateDto, String user_id, int board_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("content", postBoardCommentCreateAndUpdateDto.getContent())
+                .addValue("content", boardCommentCreateDto.getContent())
                 .addValue("user_id", user_id)
                 .addValue("board_id", board_id);
 
@@ -38,9 +37,9 @@ public class BoardCommentRepository {
         int rowsUpdated = jdbcTemplate.update(sql, namedParameters);
     }
 
-    public void updateComment(PostBoardCommentCreateAndUpdateDto postBoardCommentCreateAndUpdateDto, int comment_id) {
+    public void updateComment(BoardCommentDto.BoardCommentCreateAndUpdate boardCommentUpdateDto, int comment_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("content", postBoardCommentCreateAndUpdateDto.getContent())
+                .addValue("content", boardCommentUpdateDto.getContent())
                 .addValue("comment_id", comment_id);
 
         String sql = "UPDATE board_comments SET content =:content WHERE comment_id =:comment_id";
@@ -48,13 +47,13 @@ public class BoardCommentRepository {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    public List<GetBoardCommentDto> getCommentList(int board_id) {
+    public List<BoardCommentDto.BoardComment> getCommentList(int board_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("board_id", board_id);
 
         String sql = "SELECT comment_id, content, created_at AS date, user_id FROM board_comments WHERE board_id =:board_id";
 
-        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(GetBoardCommentDto.class));
+        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(BoardCommentDto.BoardComment.class));
     }
 
     public Optional<String> isAuthor(int comment_id) {

@@ -20,20 +20,20 @@ public class BreakdownReportService {
     }
 
     @Transactional
-    public String report(PostBreakdownReportDto postBreakdownReportDto){
+    public String report(BreakdownReportDto.Report breakdownReportDto){
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        breakdownReportRepository.insertReport(postBreakdownReportDto, user_id)
+        breakdownReportRepository.insertReport(breakdownReportDto, user_id)
                 .orElseThrow(() -> new BreakdownReportException("FAILURE TO RECEIVE FAULT REPORT", ErrorCode.FAIL_REPORT));
 
-        breakdownReportRepository.updateBikeStatus(postBreakdownReportDto.getBike_id())
+        breakdownReportRepository.updateBikeStatus(breakdownReportDto.getBike_id())
                 .orElseThrow(() -> new BreakdownReportException("BIKE STATUS UPDATE FAILED", ErrorCode.FAIL_REPORT));
 
         return "고장신고가 접수되었습니다.";
     }
 
     @Transactional
-    public BreakdownReportListResponseDto reportList(Optional<Integer> page) {
+    public BreakdownReportDto.BreakdownReportListResponse reportList(Optional<Integer> page) {
         int reportPage;
         if(page.isEmpty()) {
             reportPage = 0;
@@ -41,8 +41,8 @@ public class BreakdownReportService {
             reportPage = (page.get() - 1) * 10;
         }
 
-        Optional<List<ReturnGetBreakdownReportListDto>> reportListOptional = breakdownReportRepository.reportList(reportPage);
-        if(reportListOptional.isEmpty()) {
+        Optional<List<BreakdownReportDto.BreakdownReportList>> reportListDtoOptional = breakdownReportRepository.reportList(reportPage);
+        if(reportListDtoOptional.isEmpty()) {
             throw new BreakdownReportException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
@@ -52,15 +52,15 @@ public class BreakdownReportService {
             throw new BreakdownReportException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
-        List<ReturnGetBreakdownReportListDto> reportList = reportListOptional.get();
-        BreakdownReportListResponseDto response = new BreakdownReportListResponseDto(reportCount);
-        for (ReturnGetBreakdownReportListDto report : reportList) {
+        List<BreakdownReportDto.BreakdownReportList> reportListDto = reportListDtoOptional.get();
+        BreakdownReportDto.BreakdownReportListResponse response = new BreakdownReportDto.BreakdownReportListResponse(reportCount);
+        for (BreakdownReportDto.BreakdownReportList report : reportListDto) {
             response.getReportList().add(report);
         }
         return response;
     }
 
-    public void reportRepair(PostBreakdownReportRepairDto postBreakdownReportRepairDto) {
-        breakdownReportRepository.updateReportStatus(postBreakdownReportRepairDto);
+    public void reportRepair(BreakdownReportDto.BreakdownReportRepair breakdownReportRepairDto) {
+        breakdownReportRepository.updateReportStatus(breakdownReportRepairDto);
     }
 }

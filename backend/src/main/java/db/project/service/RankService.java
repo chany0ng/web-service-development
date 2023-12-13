@@ -1,9 +1,6 @@
 package db.project.service;
 
-import db.project.dto.RankCountResponseDto;
-import db.project.dto.RankTimeResponseDto;
-import db.project.dto.ReturnGetRankCountDto;
-import db.project.dto.ReturnGetRankTimeDto;
+import db.project.dto.*;
 import db.project.repository.RankRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -21,23 +18,23 @@ public class RankService {
     }
 
     @Transactional
-    public RankTimeResponseDto timeRank() {
+    public RankDto.RankTimeResponse timeRank() {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        List<ReturnGetRankTimeDto> allUserTimeRank = rankRepository.allUserTimeRank();
-        Optional<ReturnGetRankTimeDto> userTimeRank = rankRepository.userTimeRank(user_id);
+        List<RankDto.RankTime> allUserTimeRank = rankRepository.allUserTimeRank();
+        Optional<RankDto.RankTime> userTimeRank = rankRepository.userTimeRank(user_id);
 
         if(userTimeRank.isPresent()) {
-            RankTimeResponseDto response = new RankTimeResponseDto(userTimeRank.get().getRanking(), userTimeRank.get().getUser_id(), userTimeRank.get().getDuration_time());
-            for(ReturnGetRankTimeDto returnGetRankTimeDto : allUserTimeRank) {
-                response.getRank().add(returnGetRankTimeDto);
+            RankDto.RankTimeResponse response = new RankDto.RankTimeResponse(userTimeRank.get().getRanking(), userTimeRank.get().getUser_id(), userTimeRank.get().getDuration_time());
+            for(RankDto.RankTime rankTimeDto : allUserTimeRank) {
+                response.getRank().add(rankTimeDto);
             }
 
             return response;
         } else{
-            RankTimeResponseDto response = new RankTimeResponseDto();
-            for(ReturnGetRankTimeDto returnGetRankTimeDto : allUserTimeRank) {
-                response.getRank().add(returnGetRankTimeDto);
+            RankDto.RankTimeResponse response = new RankDto.RankTimeResponse();
+            for(RankDto.RankTime rankTimeDto : allUserTimeRank) {
+                response.getRank().add(rankTimeDto);
             }
 
             return response;
@@ -45,23 +42,23 @@ public class RankService {
     }
 
     @Transactional
-    public RankCountResponseDto countRank() {
+    public RankDto.RankCountResponse countRank() {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        List<ReturnGetRankCountDto> allUsingCountRank = rankRepository.allUsingCountRank();
-        Optional<ReturnGetRankCountDto> userUsingCountRank = rankRepository.userUsingCountRank(user_id);
+        List<RankDto.RankCount> allUsingCountRank = rankRepository.allUsingCountRank();
+        Optional<RankDto.RankCount> userUsingCountRank = rankRepository.userUsingCountRank(user_id);
 
         if(userUsingCountRank.isPresent()) {
-            RankCountResponseDto response = new RankCountResponseDto(userUsingCountRank.get().getRanking(), userUsingCountRank.get().getUser_id(), userUsingCountRank.get().getUsing_count());
-            for(ReturnGetRankCountDto returnGetRankCountDto : allUsingCountRank) {
-                response.getRank().add(returnGetRankCountDto);
+            RankDto.RankCountResponse response = new RankDto.RankCountResponse(userUsingCountRank.get().getRanking(), userUsingCountRank.get().getUser_id(), userUsingCountRank.get().getUsing_count());
+            for(RankDto.RankCount rankCountDto : allUsingCountRank) {
+                response.getRank().add(rankCountDto);
             }
 
             return response;
         } else{
-            RankCountResponseDto response = new RankCountResponseDto();
-            for(ReturnGetRankCountDto returnGetRankCountDto : allUsingCountRank) {
-                response.getRank().add(returnGetRankCountDto);
+            RankDto.RankCountResponse response = new RankDto.RankCountResponse();
+            for(RankDto.RankCount rankCountDto : allUsingCountRank) {
+                response.getRank().add(rankCountDto);
             }
 
             return response;

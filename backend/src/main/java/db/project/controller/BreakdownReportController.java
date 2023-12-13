@@ -1,8 +1,6 @@
 package db.project.controller;
 
-import db.project.dto.PostBreakdownReportDto;
-import db.project.dto.BreakdownReportListResponseDto;
-import db.project.dto.PostBreakdownReportRepairDto;
+import db.project.dto.BreakdownReportDto;
 import db.project.exceptions.BreakdownReportException;
 import db.project.exceptions.ErrorResponse;
 import db.project.service.BreakdownReportService;
@@ -43,7 +41,7 @@ public class BreakdownReportController {  // 고장신고 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 고장신고
-    public ResponseEntity<String> postReport(@RequestBody PostBreakdownReportDto form){
+    public ResponseEntity<String> postReport(@RequestBody BreakdownReportDto.Report form){
         try{
             String result = breakdownReportService.report(form);
             return ResponseEntity.ok("{}");
@@ -64,7 +62,7 @@ public class BreakdownReportController {  // 고장신고 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 고장신고 List
-    public ResponseEntity<BreakdownReportListResponseDto> getReportList(@PathVariable(required = false) Optional<Integer> page) {
+    public ResponseEntity<BreakdownReportDto.BreakdownReportListResponse> getReportList(@PathVariable(required = false) Optional<Integer> page) {
         return ResponseEntity.ok(breakdownReportService.reportList(page));
     }
 
@@ -80,7 +78,7 @@ public class BreakdownReportController {  // 고장신고 Controller
                             @ExampleObject(value = "{}")})
             })
     })
-    public ResponseEntity<String> postReportRepair(@RequestBody PostBreakdownReportRepairDto form) {
+    public ResponseEntity<String> postReportRepair(@RequestBody BreakdownReportDto.BreakdownReportRepair form) {
         breakdownReportService.reportRepair(form);
 
         return ResponseEntity.ok("{}");
