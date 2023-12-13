@@ -19,9 +19,9 @@ public class MainRepository {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("user_id", user_id);
         String sql = "SELECT u.user_id, email, phone_number, cash, overfee, IF(u.ticket_id IS NULL, 0, hour) AS hour, " +
-                "IF(r.user_id IS NOT NULL AND end_location IS NULL, TRUE, FALSE) AS isRented, IF(r.user_id IS NOT NULL AND end_location IS NULL, bike_id, NULL) AS bike_id " +
+                "IF(end_location IS NULL, 1, 0) AS isRented, IF(end_location IS NULL, bike_id, NULL) AS bike_id " +
                 "FROM user u LEFT JOIN ticket t ON u.ticket_id = t.ticket_id " +
-                "LEFT JOIN rental r ON u.user_id = r.user_id WHERE u.user_id =:user_id LIMIT 1";
+                "LEFT JOIN rental r ON u.user_id = r.user_id WHERE u.user_id =:user_id ORDER BY start_time DESC LIMIT 1";
 
         ReturnGetUserMainDto returnGetUserMainDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetUserMainDto.class));
         return returnGetUserMainDto;

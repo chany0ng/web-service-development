@@ -16,6 +16,6 @@ public class ReturnGetUserMainDto {
     private int cash;
     private int overfee;
     private int hour;
-    private boolean isRented;
+    private int isRented;
     private String bike_id;
 }
