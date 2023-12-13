@@ -20,6 +20,7 @@ export const getFetch = async (url) => {
       if (response.status === 401) {
         response = await updateRefreshToken();
         // 401만 반환 -> '/' 리다이렉트
+        if (response) return response;
       }
       return response;
     } else {
@@ -88,6 +89,7 @@ const updateRefreshToken = async () => {
       const data = await response.json();
       localStorage.setItem('accessToken', data.accessToken);
       alert('로그인이 갱신되었습니다!');
+      return response;
     } else if (response.status === 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');

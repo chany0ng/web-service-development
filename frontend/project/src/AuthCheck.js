@@ -43,6 +43,6 @@ export const mainPageAuthCheck = async (navigation) => {
     }
   } catch (error) {
     console.error(error);
-    alert(error);
+    // alert(error);
   }
 };
