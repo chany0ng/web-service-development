@@ -54,7 +54,7 @@ export const postFetch = async (url, body) => {
       if (response.status === 401) {
         response = await updateRefreshToken();
         // 401만 반환 -> '/' 리다이렉트
-        return response;
+        if (response) return response;
       }
       return response;
     }

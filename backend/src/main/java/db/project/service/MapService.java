@@ -4,6 +4,7 @@ import db.project.dto.*;
 import db.project.exceptions.ErrorCode;
 import db.project.exceptions.MapException;
 import db.project.repository.MapRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class MapService {
     private final MapRepository mapRepository;
 
@@ -29,6 +31,7 @@ public class MapService {
     }
 
     @Transactional
+
     public Optional<MapLocationInfoResponseDto> locationInfo(PostMapLocationInfoDto postMapLocationInfoDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -36,6 +39,7 @@ public class MapService {
         if(locationInfoOptional.isEmpty()) {
             throw new MapException("FAILURE VIEW INFO", ErrorCode.FAIL_MAP_INFO);
         }
+        log.info("info : " + locationInfoOptional.get().getLocation_id());
         Optional<Boolean> isFavorite = mapRepository.getIsFavorite(locationInfoOptional.get().getLocation_id(), user_id);
 
         return locationInfoOptional.map(mapLocationInfo -> {

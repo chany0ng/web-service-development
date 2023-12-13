@@ -48,7 +48,7 @@ public class MapRepository {
     }
 
     public Optional<Boolean> getIsFavorite(String location_id, String user_id) {
-        String sql = "SELECT IF(location_id = :location_id and user_id =:user_id, 1, 0) AS favorite FROM favorites";
+        String sql = "SELECT IF(location_id = :location_id and user_id =:user_id, 1, 0) AS favorite FROM favorites where location_id = :location_id and user_id =:user_id";
 
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("location_id", location_id)
