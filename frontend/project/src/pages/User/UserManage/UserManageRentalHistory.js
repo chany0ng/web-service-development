@@ -35,29 +35,7 @@ const UserManageRentalHistory = () => {
   }, []);
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
-  const [body, setBody] = useState([
-    {
-      bike_id: 'string',
-      start_time: 'string',
-      start_location: 'string',
-      end_time: 'string',
-      end_location: 'string'
-    },
-    {
-      bike_id: 'string',
-      start_time: 'string',
-      start_location: 'string',
-      end_time: 'string',
-      end_location: 'string'
-    },
-    {
-      bike_id: 'string',
-      start_time: 'string',
-      start_location: 'string',
-      end_time: 'string',
-      end_location: 'string'
-    }
-  ]);
+  const [body, setBody] = useState([]);
   const handleStartDateChange = (date) => {
     setStartDate(date);
   };
@@ -70,7 +48,6 @@ const UserManageRentalHistory = () => {
       e.preventDefault();
       const formattedStartDate = dayjs(startDate).format('YYYY-MM-DD');
       const formattedEndDate = dayjs(endDate).format('YYYY-MM-DD');
-      console.log(formattedStartDate, formattedEndDate);
       const response = await postFetch('api/rentalHistory', {
         start_date: formattedStartDate,
         end_date: formattedEndDate
