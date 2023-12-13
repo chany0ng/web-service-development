@@ -36,7 +36,7 @@ public class NoticeController {  // 공지사항 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 공지사항 리스트
-    public ResponseEntity<BoardAndNoticeListResponseDto> getNoticeList(@PathVariable(required = false) Optional<Integer> page) {
+    public ResponseEntity<NoticeListResponseDto> getNoticeList(@PathVariable(required = false) Optional<Integer> page) {
 
         return ResponseEntity.ok(noticeService.noticeList(page));
     }
@@ -53,7 +53,7 @@ public class NoticeController {  // 공지사항 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 공지사항 상세정보
-    public ResponseEntity<ReturnGetBoardAndNoticeInfoDto> getNoticeInfo(@PathVariable int noticeId) {
+    public ResponseEntity<ReturnGetNoticeInfoDto> getNoticeInfo(@PathVariable int noticeId) {
 
         return ResponseEntity.ok(noticeService.noticeInfo(noticeId));
     }

@@ -9,7 +9,8 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReturnGetBoardAndNoticeListDto {
+public class ReturnGetNoticeListDto {
+    private int notice_id;
     private String title;
     private String date;
     private int views;

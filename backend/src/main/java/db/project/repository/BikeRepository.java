@@ -32,7 +32,7 @@ public class BikeRepository {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
         String sql = "SELECT bike_id, address, b.status FROM bike b JOIN location l ON b.location_id = l.location_id " +
-                "WHERE b.status IN ('available', 'closed') LIMIT :page, 10";
+                "WHERE b.status IN ('available', 'closed') ORDER BY bike_id LIMIT :page, 10";
 
         try {
             List<ReturnGetBikeListDto> returnGetBikeListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBikeListDto.class));
