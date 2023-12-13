@@ -1,8 +1,6 @@
 package db.project.controller;
 
-import db.project.dto.FavoritesResponseDto;
-import db.project.dto.PostFavoritesChangeDto;
-import db.project.dto.PostFavoritesSearchDto;
+import db.project.dto.FavoritesDto;
 import db.project.exceptions.ErrorResponse;
 import db.project.service.FavoritesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,8 +32,8 @@ public class FavoritesController {  // 즐겨찾기 controller
             @ApiResponse(responseCode = "200", description = "검색 지역과 일치하는 대여소 검색 성공")
     })
     // 검색 지역과 일치하는 대여소
-    public ResponseEntity<FavoritesResponseDto> postFavoriteList(@RequestBody PostFavoritesSearchDto form) {
-        FavoritesResponseDto favoritesResponseDto = favoritesService.locationList(form);
+    public ResponseEntity<FavoritesDto.FavoritesResponse> postFavoriteList(@RequestBody FavoritesDto.FavoritesSearch form) {
+        FavoritesDto.FavoritesResponse favoritesResponseDto = favoritesService.locationList(form);
 
         return ResponseEntity.ok(favoritesResponseDto);
     }
@@ -56,7 +54,7 @@ public class FavoritesController {  // 즐겨찾기 controller
 
     })
     // 즐겨찾기 추가 또는 삭제
-    public ResponseEntity<String> postFavoritesChange(@RequestBody PostFavoritesChangeDto form) {
+    public ResponseEntity<String> postFavoritesChange(@RequestBody FavoritesDto.FavoritesChange form) {
         favoritesService.locationChange(form);
         return ResponseEntity.ok("{}");
     }
@@ -71,8 +69,8 @@ public class FavoritesController {  // 즐겨찾기 controller
             @ApiResponse(responseCode = "200", description = "즐겨찾기된 대여소 검색 성공")
     })
     // 즐겨찾기한 대여소
-    public ResponseEntity<FavoritesResponseDto> getFavoritesList() {
-        FavoritesResponseDto favoritesResponseDto = favoritesService.locationList();
+    public ResponseEntity<FavoritesDto.FavoritesResponse> getFavoritesList() {
+        FavoritesDto.FavoritesResponse favoritesResponseDto = favoritesService.locationList();
 
         return ResponseEntity.ok(favoritesResponseDto);
     }

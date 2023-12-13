@@ -1,9 +1,6 @@
 package db.project.repository;
 
-import db.project.dto.PostBoardAndNoticeCreateAndUpdateDto;
-import db.project.dto.PostBoardAndNoticeDeleteDto;
-import db.project.dto.ReturnGetBoardInfoDto;
-import db.project.dto.ReturnGetBoardListDto;
+import db.project.dto.*;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
@@ -30,54 +27,54 @@ public class BoardRepository {
         return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
     }
 
-    public Optional<List<ReturnGetBoardListDto>> boardList(int page) {
+    public Optional<List<BoardDto.BoardList>> boardList(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
         String sql = "SELECT board_id, title, created_at as date, views FROM board ORDER BY board_id LIMIT :page, 10";
 
         try {
-            List<ReturnGetBoardListDto> returnGetBoardListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardListDto.class));
-            return Optional.of(returnGetBoardListDto);
+            List<BoardDto.BoardList> boardListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(BoardDto.BoardList.class));
+            return Optional.of(boardListDto);
         } catch (BadSqlGrammarException e) {
             return Optional.empty();
         }
     }
 
-    public Optional<ReturnGetBoardInfoDto> boardInfo(int board_id) {
+    public Optional<BoardDto.BoardInfo> boardInfo(int board_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("board_id", board_id);
         String sql = "SELECT board_id, user_id, title, content, created_at as date, views FROM board WHERE board_id =:board_id";
         try{
-            ReturnGetBoardInfoDto returnGetBoardInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardInfoDto.class));
+            BoardDto.BoardInfo boardInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(BoardDto.BoardInfo.class));
 
-            return Optional.of(returnGetBoardInfoDto);
+            return Optional.of(boardInfoDto);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
         }
     }
 
-    public void boardCreate(PostBoardAndNoticeCreateAndUpdateDto postBoardCreateDto, String user_id) {
+    public void boardCreate(BoardDto.BoardCreateAndUpdate boardCreateDto, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("title", postBoardCreateDto.getTitle())
-                .addValue("content", postBoardCreateDto.getContent())
+                .addValue("title", boardCreateDto.getTitle())
+                .addValue("content", boardCreateDto.getContent())
                 .addValue("user_id", user_id);
         String sql = "INSERT INTO board(user_id, title, content) values(:user_id, :title, :content)";
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    public void boardUpdate(PostBoardAndNoticeCreateAndUpdateDto postBoardUpdateDto, int boardId) {
+    public void boardUpdate(BoardDto.BoardCreateAndUpdate boardUpdateDto, int boardId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("title", postBoardUpdateDto.getTitle())
-                .addValue("content", postBoardUpdateDto.getContent())
+                .addValue("title", boardUpdateDto.getTitle())
+                .addValue("content", boardUpdateDto.getContent())
                 .addValue("boardId", boardId);
         String sql = "UPDATE board SET title =:title, content =:content WHERE board_id =:boardId";
 
         int rowsUpdated = jdbcTemplate.update(sql, namedParameters);
     }
 
-    public void boardDelete(PostBoardAndNoticeDeleteDto postBoardAndNoticeDeleteDto) {
+    public void boardDelete(BoardDto.BoardDelete boardDeleteDto) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("boardId", postBoardAndNoticeDeleteDto.getId());
+                .addValue("boardId", boardDeleteDto.getBoard_id());
         String sql = "DELETE FROM board WHERE board_id =:boardId";
 
         int rowsUpdated = jdbcTemplate.update(sql, namedParameters);

@@ -1,7 +1,6 @@
 package db.project.controller;
 
-import db.project.dto.PostBoardCommentCreateAndUpdateDto;
-import db.project.dto.PostBoardCommentDeleteDto;
+import db.project.dto.BoardCommentDto;
 import db.project.exceptions.ErrorResponse;
 import db.project.service.BoardCommentService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,7 +34,7 @@ public class BoardCommentController {  // 게시판 댓글 Controller
                             @ExampleObject(value = "{}")})
             })
     })
-    public ResponseEntity<String> postCreateComment(@PathVariable int boardId, @RequestBody PostBoardCommentCreateAndUpdateDto form) {
+    public ResponseEntity<String> postCreateComment(@PathVariable int boardId, @RequestBody BoardCommentDto.BoardCommentCreateAndUpdate form) {
         boardCommentService.createComment(form, boardId);
 
         return ResponseEntity.ok("{}");
@@ -56,7 +55,7 @@ public class BoardCommentController {  // 게시판 댓글 Controller
             @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<String> postDeleteComment(@RequestBody PostBoardCommentDeleteDto form) {
+    public ResponseEntity<String> postDeleteComment(@RequestBody BoardCommentDto.BoardCommentDelete form) {
         boardCommentService.deleteComment(form);
 
         return ResponseEntity.ok("{}");
@@ -77,7 +76,7 @@ public class BoardCommentController {  // 게시판 댓글 Controller
             @ApiResponse(responseCode = "404", description = "댓글을 찾을 수 없음", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
-    public ResponseEntity<String> postUpdateComment(@PathVariable int commentId, @RequestBody PostBoardCommentCreateAndUpdateDto form) {
+    public ResponseEntity<String> postUpdateComment(@PathVariable int commentId, @RequestBody BoardCommentDto.BoardCommentCreateAndUpdate form) {
         boardCommentService.updateComment(form, commentId);
 
         return ResponseEntity.ok("{}");

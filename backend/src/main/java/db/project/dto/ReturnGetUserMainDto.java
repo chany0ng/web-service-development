@@ -14,6 +14,7 @@ public class ReturnGetUserMainDto {
     private String email;
     private String phone_number;
     private int cash;
+    private int overfee;
     private int hour;
     private boolean isRented;
     private String bike_id;
