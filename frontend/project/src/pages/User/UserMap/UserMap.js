@@ -50,7 +50,7 @@ const UserMap = () => {
         if (data.overfee > 0) {
           setUser((prev) => ({
             ...prev,
-            rented: false,
+            isRented: 0,
             bike_id: null,
             cash: 0,
             overfee: data.overfee
@@ -62,7 +62,7 @@ const UserMap = () => {
         } else {
           setUser((prev) => ({
             ...prev,
-            rented: false,
+            isRented: 0,
             bike_id: null,
             cash: prev.cash - data.withdraw
           }));
@@ -85,7 +85,7 @@ const UserMap = () => {
       if (response.status === 200) {
         setUser((prev) => ({
           ...prev,
-          rented: true,
+          isRented: 1,
           bike_id: bikeNumber,
           hour: 0
         }));
@@ -125,7 +125,7 @@ const UserMap = () => {
       >
         즐겨찾기
       </p>
-      {user.rented && (
+      {user.isRented && (
         <Button
           variant="contained"
           color="primary"
@@ -252,7 +252,7 @@ const UserMap = () => {
             {locationInfo?.bike?.map((item, index) => (
               <div className={styles.row} key={index}>
                 일반 따릉이 {item.bike_id}
-                {!user.rented && (
+                {!user.isRented && (
                   <Button
                     variant="contained"
                     color="primary"

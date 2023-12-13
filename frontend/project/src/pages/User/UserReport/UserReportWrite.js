@@ -36,11 +36,11 @@ const UserReportWrite = () => {
     mainPageAuthCheck(navigate);
   }, []);
   const [checked, setChecked] = useState({
-    타이어: false,
-    체인: false,
-    안장: false,
-    페달: false,
-    단말기: false
+    tire: false,
+    chain: false,
+    saddle: false,
+    pedal: false,
+    terminal: false
   });
   const handleChange = (event) => {
     const key = event.target.id;
@@ -70,7 +70,9 @@ const UserReportWrite = () => {
   const fetchPost = async () => {
     try {
       const finalData = { ...reportData, ...checked };
+      console.log(finalData);
       const response = await postFetch('api/report', finalData);
+      console.log(response.status);
       if (response.status === 200) {
         setOpen(true);
       } else if (response.status === 401) {
@@ -135,8 +137,8 @@ const UserReportWrite = () => {
             control={
               <Checkbox
                 inputProps={{ 'aria-label': 'controlled' }}
-                id="타이어"
-                checked={checked.타이어}
+                id="tire"
+                checked={checked.tire}
                 onChange={handleChange}
                 sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }}
               />
@@ -151,8 +153,8 @@ const UserReportWrite = () => {
             control={
               <Checkbox
                 inputProps={{ 'aria-label': 'controlled' }}
-                id="체인"
-                checked={checked.체인}
+                id="chain"
+                checked={checked.chain}
                 onChange={handleChange}
                 sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }}
               />
@@ -167,8 +169,8 @@ const UserReportWrite = () => {
             control={
               <Checkbox
                 inputProps={{ 'aria-label': 'controlled' }}
-                id="안장"
-                checked={checked.안장}
+                id="saddle"
+                checked={checked.saddle}
                 onChange={handleChange}
                 sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }}
               />
@@ -183,8 +185,8 @@ const UserReportWrite = () => {
             control={
               <Checkbox
                 inputProps={{ 'aria-label': 'controlled' }}
-                id="페달"
-                checked={checked.페달}
+                id="pedal"
+                checked={checked.pedal}
                 onChange={handleChange}
                 sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }}
               />
@@ -199,8 +201,8 @@ const UserReportWrite = () => {
             control={
               <Checkbox
                 inputProps={{ 'aria-label': 'controlled' }}
-                id="단말기"
-                checked={checked.단말기}
+                id="terminal"
+                checked={checked.terminal}
                 onChange={handleChange}
                 sx={{ '& .MuiSvgIcon-root': { fontSize: 25 } }}
               />

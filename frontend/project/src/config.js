@@ -89,6 +89,7 @@ const updateRefreshToken = async () => {
       const data = await response.json();
       localStorage.setItem('accessToken', data.accessToken);
       alert('로그인이 갱신되었습니다!');
+      window.location.reload();
       return response;
     } else if (response.status === 401) {
       localStorage.removeItem('accessToken');

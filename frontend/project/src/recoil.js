@@ -15,7 +15,7 @@ export const userInfo = atom({
     overfee: 0,
     email: null,
     phone_number: null,
-    rented: false
+    isRented: 0
     // 등등 디폴트 값을 추가할 수 있음
   },
   effects_UNSTABLE: [persistAtom]

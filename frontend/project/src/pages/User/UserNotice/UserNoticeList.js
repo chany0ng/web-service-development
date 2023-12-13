@@ -66,7 +66,6 @@ const UserNoticeList = () => {
   }, [currentPage]);
 
   const onClickPostHandler = (row) => {
-    // 게시물 번호에 대한 정보를 요청하고,
     navigate(`/user/notice/noticeView/${row.board_id}`, {
       state: { postNumber: row.board_id }
     });
