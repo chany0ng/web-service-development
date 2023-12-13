@@ -8,6 +8,7 @@ import StarIcon from '@mui/icons-material/Star';
 import { Button } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { userInfo } from './../../../recoil';
+import { useNavigate } from 'react-router-dom';
 const UserMap = () => {
   const [user, setUser] = useRecoilState(userInfo);
   const [data, setData] = useState([]);
@@ -16,6 +17,7 @@ const UserMap = () => {
   const [locationInfo, setLocationInfo] = useState({});
   const [isClicked, setIsClicked] = useState(false);
   const { naver } = window;
+  const navigate = useNavigate();
   const setFavorite = async () => {
     if (locationInfo.favorite) {
       const response = await postFetch('api/favorites/change', {
@@ -36,18 +38,64 @@ const UserMap = () => {
       } else throw new Error('즐겨찾기 변경 에러');
     }
   };
-  const returnBikeHandler = async () => {
+  const returnBikeHandler = async (e) => {
     try {
+      e.preventDefault();
       const response = await postFetch('api/return', {
         bike_id: user.bike_id,
-        end_location: locationInfo.address
+        end_location: locationInfo.location_id
       });
       if (response.status === 200) {
         const data = await response.json();
-        setUser((prev) => ({ ...prev, rented: false, bike_id: null }));
-        alert(`반납완료. 추가요금은 ${data.overfee}원 입니다.`);
+        if (data.overfee > 0) {
+          setUser((prev) => ({
+            ...prev,
+            rented: false,
+            bike_id: null,
+            cash: 0,
+            overfee: data.overfee
+          }));
+          alert(
+            `따릉이 반납 완료. 추가 요금 ${data.overfee}를 결제해야 합니다!`
+          );
+          navigate('user/payment/extra-chrage');
+        } else {
+          setUser((prev) => ({
+            ...prev,
+            rented: false,
+            bike_id: null,
+            cash: prev.cash - data.withdraw
+          }));
+          alert('따릉이 반납 완료');
+        }
       } else {
         throw new Error('따릉이 반납 실패!');
+      }
+    } catch (error) {
+      alert(error);
+      console.error(error);
+    }
+  };
+  const rentBikeHandler = async (bikeNumber) => {
+    try {
+      const response = await postFetch('api/rent', {
+        bike_id: bikeNumber,
+        start_location: locationInfo.location_id
+      });
+      if (response.status === 200) {
+        setUser((prev) => ({
+          ...prev,
+          rented: true,
+          bike_id: bikeNumber,
+          hour: 0
+        }));
+        alert(`${bikeNumber} 따릉이를 대여했습니다`);
+      } else if (response.status === 400) {
+        alert('이용권을 먼저 구매해주세요');
+      } else if (response.status === 402) {
+        alert(`미납 추가요금을 먼저 결제해주세요`);
+      } else {
+        throw new Error('따릉이 대여 실패!');
       }
     } catch (error) {
       alert(error);
@@ -151,7 +199,6 @@ const UserMap = () => {
           const response = await postFetch('api/map/info', data);
           if (response.status === 200) {
             const data = await response.json();
-            console.log(data, data.bike);
             setLocationInfo((prev) => ({ ...prev, ...data }));
           } else {
             throw new Error('조회소 상세 로딩 에러');
@@ -205,6 +252,18 @@ const UserMap = () => {
             {locationInfo?.bike?.map((item, index) => (
               <div className={styles.row} key={index}>
                 일반 따릉이 {item.bike_id}
+                {!user.rented && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      rentBikeHandler(item.bike_id);
+                    }}
+                    sx={{ fontSize: '1rem', marginLeft: '20%' }}
+                  >
+                    대여하기
+                  </Button>
+                )}
               </div>
             ))}
           </div>

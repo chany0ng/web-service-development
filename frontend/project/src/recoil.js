@@ -12,6 +12,7 @@ export const userInfo = atom({
     bike_id: null,
     cash: 0,
     hour: 0,
+    overfee: 0,
     email: null,
     phone_number: null,
     rented: false
