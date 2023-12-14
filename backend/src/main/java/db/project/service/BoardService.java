@@ -5,6 +5,7 @@ import db.project.exceptions.BoardException;
 import db.project.exceptions.ErrorCode;
 import db.project.repository.BoardCommentRepository;
 import db.project.repository.BoardRepository;
+import db.project.repository.BoardViewsRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +17,12 @@ import java.util.Optional;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardCommentRepository boardCommentRepository;
+    private final BoardViewsRepository boardViewsRepository;
 
-    public BoardService(BoardRepository boardRepository, BoardCommentRepository boardCommentRepository) {
+    public BoardService(BoardRepository boardRepository, BoardCommentRepository boardCommentRepository, BoardViewsRepository boardViewsRepository) {
         this.boardRepository = boardRepository;
         this.boardCommentRepository = boardCommentRepository;
+        this.boardViewsRepository = boardViewsRepository;
     }
 
     @Transactional
@@ -54,9 +57,9 @@ public class BoardService {
     public BoardDto.BoardInfo boardInfo(int boardId) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<Integer> view_id = boardRepository.getUserIdAndBoardId(boardId, user_id);
+        Optional<Integer> view_id = boardViewsRepository.getUserIdAndBoardId(boardId, user_id);
         if(view_id.isEmpty()) {
-            Optional<Integer> checkPage = boardRepository.insertBoardViews(boardId, user_id);
+            Optional<Integer> checkPage = boardViewsRepository.insertBoardViews(boardId, user_id);
             if(checkPage.isEmpty()) {
                 throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
             }
