@@ -14,9 +14,12 @@ const Header = ({ sections, title }) => {
       if (response.status === 200) {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
+        sessionStorage.removeItem('userInfo');
+        sessionStorage.removeItem('adminInfo');
+        sessionStorage.clear();
         navigate('/');
-      } else if (response.status === 401) {
-        navigate('/');
+        // } else if (response.status === 401) {
+        //   navigate('/');
       } else {
         throw new Error('토큰이 정상적으로 삭제되지 않았습니다!');
       }
@@ -33,7 +36,7 @@ const Header = ({ sections, title }) => {
       >
         <div
           onClick={() => {
-            navigate('/user/main');
+            navigate(`${sections[0].url}`);
           }}
           className={styles.logo}
         ></div>

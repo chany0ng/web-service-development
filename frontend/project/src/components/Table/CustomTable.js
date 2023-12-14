@@ -31,7 +31,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const CustomTable = ({ headData, bodyData }) => {
-  // 현재 예시 데이터 사용중
   const onClickPageHandler = useContext(MyContext);
   return (
     <TableContainer component={Paper} sx={{ marginTop: '30px' }}>
