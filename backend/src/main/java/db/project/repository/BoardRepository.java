@@ -92,37 +92,7 @@ public class BoardRepository {
             return Optional.empty();
         }
     }
-
-    public Optional<Integer> getUserIdAndBoardId(int boardId, String user_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("boardId", boardId)
-                .addValue("user_id", user_id);
-
-        String sql = "SELECT view_id FROM board_views WHERE board_id =:boardId AND user_id = user_id";
-
-        try {
-            int view_id = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
-            return Optional.of(view_id);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    public Optional<Integer> insertBoardViews(int boardId, String user_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("boardId", boardId)
-                .addValue("user_id", user_id);
-
-        String sql = "INSERT INTO board_views(board_id, user_id) VALUES(:boardId, :user_id)";
-
-        try{
-            int check = jdbcTemplate.update(sql, namedParameters);
-            return Optional.of(check);
-        } catch (DataIntegrityViolationException e) {
-            return Optional.empty();
-        }
-    }
-
+    
     public void updateBoardView(int boardId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("boardId", boardId);
