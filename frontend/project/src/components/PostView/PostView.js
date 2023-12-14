@@ -3,7 +3,7 @@ import CustomButton from '../Button/CustomButton';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { postFetch } from '../../config';
-const PostView = ({ data, moveToList }) => {
+const PostView = ({ data, moveToList, author }) => {
   const navigate = useNavigate();
   const deleteHandler = async () => {
     try {
