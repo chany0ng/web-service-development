@@ -20,14 +20,14 @@ public class NoticeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int getNoticeCount() {
+    public int findNoticeCount() {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         String sql = "SELECT count(notice_id) noticeCount FROM Notice";
 
         return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
     }
 
-    public Optional<List<NoticeDto.NoticeList>> noticeList(int page) {
+    public Optional<List<NoticeDto.NoticeList>> findNotice(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
         String sql = "SELECT notice_id, title, created_at as date, views FROM notice ORDER BY notice_id LIMIT :page, 10";
@@ -40,7 +40,7 @@ public class NoticeRepository {
         }
     }
 
-    public Optional<NoticeDto.NoticeInfo> noticeInfo(int noticeId) {
+    public Optional<NoticeDto.NoticeInfo> findNoticeById(int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("noticeId", noticeId);
         String sql = "SELECT notice_id, admin_id AS user_id, title, content, created_at as date, views FROM notice WHERE notice_id =:noticeId";
@@ -53,16 +53,7 @@ public class NoticeRepository {
         }
     }
 
-    public void noticeCreate(NoticeDto.NoticeCreateAndUpdate noticeCreateDto, String user_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("title", noticeCreateDto.getTitle())
-                .addValue("content", noticeCreateDto.getContent())
-                .addValue("user_id", user_id);
-        String sql = "INSERT INTO notice(admin_id, title, content) values(:user_id, :title, :content)";
-        jdbcTemplate.update(sql, namedParameters);
-    }
-
-    public Optional<String> isAuthor(int noticeId) {
+    public Optional<String> findUserIdById(int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("noticeId", noticeId);
         String sql = "SELECT admin_id AS user_id FROM notice WHERE notice_id =:noticeId";
@@ -75,7 +66,16 @@ public class NoticeRepository {
         }
     }
 
-    public void noticeUpdate(NoticeDto.NoticeCreateAndUpdate noticeUpdateDto, int noticeId) {
+    public void createNotice(NoticeDto.NoticeCreateAndUpdate noticeCreateDto, String user_id) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("title", noticeCreateDto.getTitle())
+                .addValue("content", noticeCreateDto.getContent())
+                .addValue("user_id", user_id);
+        String sql = "INSERT INTO notice(admin_id, title, content) values(:user_id, :title, :content)";
+        jdbcTemplate.update(sql, namedParameters);
+    }
+
+    public void updateNoticeById(NoticeDto.NoticeCreateAndUpdate noticeUpdateDto, int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("title", noticeUpdateDto.getTitle())
                 .addValue("content", noticeUpdateDto.getContent())
@@ -85,51 +85,20 @@ public class NoticeRepository {
         int rowsUpdated = jdbcTemplate.update(sql, namedParameters);
     }
 
-    public void noticeDelete(int noticeId) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("noticeId", noticeId);
-        String sql = "DELETE FROM notice WHERE notice_id =:noticeId";
-
-        int rowsUpdated = jdbcTemplate.update(sql, namedParameters);
-    }
-
-    public Optional<Integer> getAdminIdAndNoticeId(int noticeId, String user_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("noticeId", noticeId)
-                .addValue("user_id", user_id);
-
-        String sql = "SELECT view_id FROM notice_views WHERE notice_id =:noticeId AND admin_id =:user_id";
-
-        try {
-            int view_id = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
-            return Optional.of(view_id);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
-    }
-
-    public Optional<Integer> insertNoticeViews(int noticeId, String user_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("noticeId", noticeId)
-                .addValue("user_id", user_id);
-
-        String sql = "INSERT INTO notice_views(notice_id, admin_id) VALUES(:noticeId, :user_id)";
-
-        try{
-            int check = jdbcTemplate.update(sql, namedParameters);
-            return Optional.of(check);
-        } catch (DataIntegrityViolationException e) {
-            return Optional.empty();
-        }
-
-    }
-
-    public void updateNoticeView(int noticeId) {
+    public void updateViewsById(int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("noticeId", noticeId);
 
         String sql = "UPDATE notice SET views = views + 1 WHERE notice_id =:noticeId";
 
         jdbcTemplate.update(sql, namedParameters);
+    }
+
+    public void deleteNoticeById(int noticeId) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("noticeId", noticeId);
+        String sql = "DELETE FROM notice WHERE notice_id =:noticeId";
+
+        int rowsUpdated = jdbcTemplate.update(sql, namedParameters);
     }
 }

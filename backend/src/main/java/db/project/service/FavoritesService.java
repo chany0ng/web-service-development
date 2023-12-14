@@ -20,7 +20,7 @@ public class FavoritesService {
     public FavoritesDto.FavoritesResponse locationList(FavoritesDto.FavoritesSearch favoritesSearchDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        List<FavoritesDto.Favorites> favoritesSearchList = favoritesRepository.locationList(favoritesSearchDto, user_id);
+        List<FavoritesDto.Favorites> favoritesSearchList = favoritesRepository.findFavoritesAndLocation(favoritesSearchDto, user_id);
 
         FavoritesDto.FavoritesResponse response = new FavoritesDto.FavoritesResponse();
         for(FavoritesDto.Favorites favoritesSearch : favoritesSearchList) {
@@ -32,17 +32,17 @@ public class FavoritesService {
     public void locationChange(FavoritesDto.FavoritesChange favoritesChangeDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
         if(favoritesChangeDto.isFavorite()) {
-            favoritesRepository.locationAdd(favoritesChangeDto.getLocation(), user_id)
+            favoritesRepository.createFavorites(favoritesChangeDto.getLocation(), user_id)
                     .orElseThrow(() -> new FavoritesException("ALREADY ADD FAVORITE", ErrorCode.FAVORITE_DUPLICATION));
         } else {
-            favoritesRepository.locationDelete(favoritesChangeDto.getLocation(), user_id);
+            favoritesRepository.deleteFavoritesById(favoritesChangeDto.getLocation(), user_id);
         }
     }
 
     public FavoritesDto.FavoritesResponse locationList() {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        List<FavoritesDto.Favorites> favoritesList = favoritesRepository.locationList(user_id);
+        List<FavoritesDto.Favorites> favoritesList = favoritesRepository.findFavoritesByUserId(user_id);
 
         FavoritesDto.FavoritesResponse response = new FavoritesDto.FavoritesResponse();
         for(FavoritesDto.Favorites favorite : favoritesList) {

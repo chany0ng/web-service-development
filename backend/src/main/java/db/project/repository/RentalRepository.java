@@ -1,13 +1,15 @@
 package db.project.repository;
 
-import db.project.dto.PostRentalRentDto;
-import db.project.dto.PostRentalReturnDto;
+import db.project.dto.*;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,45 +21,18 @@ public class RentalRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<String> checkOverfee(String userId) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", userId);
-
-        String checkOverfeeSql = "SELECT overfee FROM user WHERE user_id = :user_id";
-        try {
-            Integer overfee = jdbcTemplate.queryForObject(checkOverfeeSql, namedParameters, Integer.class);
-            if(overfee != 0) {
-                return Optional.empty();
-            } else{
-                return Optional.of("미납금 없음");
-            }
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.of("잘못된 사용자 ID가 전달되었습니다.");
-        }
-    }
-
-    public Optional<String> insertRental(PostRentalRentDto rentalRentDto, String user_id) {
+    public void createRental(PostRentalRentDto rentalRentDto, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("bike_id", rentalRentDto.getBike_id())
                 .addValue("start_location", rentalRentDto.getStart_location())
                 .addValue("user_id", user_id);
-
         String insertRentalSql = "INSERT INTO rental(bike_id, start_location, user_id) " +
-                "(SELECT :bike_id, :start_location, :user_id FROM user WHERE ticket_id IS NOT NULL AND user_id = :user_id)";
-        int checkInsert = jdbcTemplate.update(insertRentalSql, namedParameters);
-        return (checkInsert > 0) ? Optional.of("rental 성공") : Optional.empty();
+                "values(:bike_id, :start_location, :user_id)";
+
+        jdbcTemplate.update(insertRentalSql, namedParameters);
     }
 
-    public void updateBikeStatus(String bikeId) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("bike_id", bikeId);
-
-        String updateBikeSql = "UPDATE bike SET status = 'rented' WHERE  bike_id = :bike_id";
-
-        int rowsUpdated = jdbcTemplate.update(updateBikeSql, namedParameters);
-    }
-
-    public int updateRental(PostRentalReturnDto postRentalReturnDto, String user_id) {
+    public int updateRentalByUserAndBike(PostRentalReturnDto postRentalReturnDto, String user_id) {
         String rentalUpdateSql = "UPDATE rental r JOIN bike b ON r.bike_id = b.bike_id SET end_location = :end_location, " +
                 "rental_duration = CEIL(TIMESTAMPDIFF(SECOND, start_time, now())/60), " +
                 "fee = CEIL(CEIL(TIMESTAMPDIFF(SECOND, start_time, now())/60) / 15) * 250, " +
@@ -70,7 +45,7 @@ public class RentalRepository {
         return jdbcTemplate.update(rentalUpdateSql, namedParameters);
     }
 
-    public Map<String, Object> getRentalValues(String bike_id, String user_id) {
+    public Map<String, Object> findRentalByUserAndBike(String bike_id, String user_id) {
         String valueSelectSql = "SELECT fee, price, cash FROM rental r JOIN user u ON r.user_id = u.user_id " +
                 "JOIN ticket t ON t.ticket_id = u.ticket_id " +
                 "WHERE u.user_id = :user_id AND bike_id = :bike_id ORDER BY start_time DESC LIMIT 1";
@@ -86,13 +61,65 @@ public class RentalRepository {
         });
     }
 
-    public int updateUserData(String userId, int overfee, int remainCash) {
-        String userUpdateSql = "UPDATE user SET ticket_id = null, cash =:remainCash, " +
-                "overfee =:overfee WHERE user_id =:userId";
-        MapSqlParameterSource overfeeParameter = new MapSqlParameterSource()
-                .addValue("overfee", overfee)
-                .addValue("userId", userId)
-                .addValue("remainCash", remainCash);
-        return jdbcTemplate.update(userUpdateSql, overfeeParameter);
+    public List<ReturnPostRentalHistoryDto> findRentalHistory(PostRentalHistoryDto postRentalHistoryDto, String user_id) {
+
+        String endDate = LocalDate.parse(postRentalHistoryDto.getEnd_date()).plusDays(1).toString();
+
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("start_date", postRentalHistoryDto.getStart_date())
+                .addValue("end_date", endDate)
+                .addValue("user_id", user_id);
+
+        String sql = "SELECT bike_id, start_time, start_location, end_time, end_location FROM rental " +
+                "WHERE user_id =:user_id AND start_time BETWEEN DATE(:start_date) AND DATE(:end_date) " +
+                "AND end_location IS NOT NULL ORDER BY start_time";
+
+        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnPostRentalHistoryDto.class));
+    }
+
+    public List<RankDto.RankTime> findAllUserTimeRank() {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        String sql = "SELECT ROW_NUMBER() OVER (ORDER BY SUM(rental_duration) DESC) AS ranking, user_id, " +
+                "SUM(rental_duration) AS duration_time FROM rental WHERE end_location IS NOT NULL GROUP BY user_id";
+
+        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(RankDto.RankTime.class));
+    }
+
+    public Optional<RankDto.RankTime> findUserTimeRank(String user_id) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("user_id", user_id);
+        String sql = "SELECT ranking, user_id, duration_time FROM" +
+                "(SELECT ROW_NUMBER() OVER (ORDER BY SUM(rental_duration) DESC) AS ranking, user_id, SUM(rental_duration) AS duration_time " +
+                "FROM rental WHERE end_location IS NOT NULL GROUP BY user_id) AS t WHERE user_id =:user_id";
+
+        try{
+            RankDto.RankTime rankTimeDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(RankDto.RankTime.class));
+            return Optional.of(rankTimeDto);
+        } catch(EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public List<RankDto.RankCount> findAllUserCountRank() {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        String sql = "SELECT ROW_NUMBER() OVER (ORDER BY COUNT(user_id) DESC) AS ranking, user_id, " +
+                "COUNT(user_id) AS using_count FROM rental WHERE end_location IS NOT NULL GROUP BY user_id";
+
+        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(RankDto.RankCount.class));
+    }
+
+    public Optional<RankDto.RankCount> findUserCountRank(String user_id) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("user_id", user_id);
+        String sql = "SELECT ranking, user_id, using_count FROM" +
+                "(SELECT ROW_NUMBER() OVER (ORDER BY COUNT(user_id) DESC) AS ranking, user_id, COUNT(user_id) AS using_count " +
+                "FROM rental WHERE end_location IS NOT NULL GROUP BY user_id) AS t WHERE user_id =:user_id";
+
+        try{
+            RankDto.RankCount rankCountDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(RankDto.RankCount.class));
+            return Optional.of(rankCountDto);
+        } catch(EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 }

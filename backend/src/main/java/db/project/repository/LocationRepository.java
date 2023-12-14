@@ -3,6 +3,7 @@ package db.project.repository;
 import db.project.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -17,17 +18,18 @@ import java.util.Optional;
 public class LocationRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public int getLocationCount() {
+    public int findLocationCountByStatus() {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         String sql = "SELECT COUNT(location_id) locationCount FROM location WHERE status = 'available'";
 
         return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
     }
 
-    public Optional<List<ReturnGetLocationListDto>> locationList(int page) {
+    public Optional<List<ReturnGetLocationListDto>> findLocationByStatus(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
-        String sql = "SELECT l.location_id, address, COUNT(bike_id) AS bikeCount FROM location l LEFT JOIN bike b ON l.location_id = b.location_id " +
+        String sql = "SELECT l.location_id, address, COUNT(bike_id) AS bikeCount FROM location l " +
+                "LEFT JOIN bike b ON l.location_id = b.location_id AND b.status IN ('available', 'rented', 'closed') " +
                 "WHERE l.status = 'available' GROUP BY l.location_id ORDER BY l.location_id LIMIT :page, 10";
 
         try {
@@ -38,7 +40,34 @@ public class LocationRepository {
         }
     }
 
-    public Optional<String> locationCreate(PostLocationCreateDto postLocationCreateDto) {
+    public List<ReturnGetMapLocationDto> findMapLocationByStatus(){
+        String sql = "SELECT COUNT(bike_id) AS bikeCount, l.latitude, l.longitude, l.address " +
+                "FROM location l LEFT JOIN bike b ON l.location_id = b.location_id AND b.status IN ('available', 'rented', 'closed') " +
+                "WHERE l.status = 'available' GROUP BY l.location_id ORDER BY l.location_id";
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+
+        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetMapLocationDto.class));
+    }
+
+    public Optional<ReturnPostMapLocationInfoDto> findMapLocationByLatitudeAndLongitude(PostMapLocationInfoDto postMapLocationInfoDto) {
+        String sql = "SELECT distinct l.location_id, l.address, l.status location_status, GROUP_CONCAT(b.bike_id) bike_id, GROUP_CONCAT(b.status) bike_status " +
+                "FROM location l LEFT JOIN bike b ON l.location_id = b.location_id AND b.status IN ('available', 'rented', 'closed') " +
+                "WHERE l.latitude = :latitude AND l.longitude = :longitude " +
+                "GROUP BY l.location_id, l.address, l.status";
+
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("latitude", postMapLocationInfoDto.getLatitude())
+                .addValue("longitude", postMapLocationInfoDto.getLongitude());
+
+        try{
+            ReturnPostMapLocationInfoDto locationInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnPostMapLocationInfoDto.class));
+            return Optional.of(locationInfoDto);
+        } catch(EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public Optional<String> createLocation(PostLocationCreateDto postLocationCreateDto) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("location_id", postLocationCreateDto.getLocation_id())
                 .addValue("address", postLocationCreateDto.getAddress())
@@ -54,7 +83,7 @@ public class LocationRepository {
         }
     }
 
-    public int locationDelete(PostLocationDeleteDto postLocationDeleteDto) {
+    public int deleteLocation(PostLocationDeleteDto postLocationDeleteDto) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("location_id", postLocationDeleteDto.getLocation_id());
 
