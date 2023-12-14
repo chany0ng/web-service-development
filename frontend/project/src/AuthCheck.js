@@ -34,7 +34,7 @@ export const mainPageAuthCheck = async (navigation) => {
         navigation('/user/main');
       } else if (response.status !== 200) {
         throw new Error(`메인 페이지 토큰 인증 에러: ${response.status}`);
-      } else if (response.status === undefined) {
+      } else if (response == undefined) {
         return;
       }
     } else {

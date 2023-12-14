@@ -26,6 +26,8 @@ const UserMap = () => {
       });
       if (response.status === 200) {
         alert('즐겨찾기가 해제되었습니다');
+      } else if (response.status === 401) {
+        navigate('/');
       } else throw new Error('즐겨찾기 변경 에러');
     }
     if (!locationInfo.favorite) {
@@ -35,6 +37,8 @@ const UserMap = () => {
       });
       if (response.status === 200) {
         alert('즐겨찾기가 추가되었습니다');
+      } else if (response.status === 401) {
+        navigate('/');
       } else throw new Error('즐겨찾기 변경 에러');
     }
   };
@@ -68,6 +72,8 @@ const UserMap = () => {
           }));
           alert('따릉이 반납 완료');
         }
+      } else if (response.status === 401) {
+        navigate('/');
       } else {
         throw new Error('따릉이 반납 실패!');
       }
@@ -92,6 +98,8 @@ const UserMap = () => {
         alert(`${bikeNumber} 따릉이를 대여했습니다`);
       } else if (response.status === 400) {
         alert('이용권을 먼저 구매해주세요');
+      } else if (response.status === 401) {
+        navigate('/');
       } else if (response.status === 402) {
         alert(`미납 추가요금을 먼저 결제해주세요`);
       } else {

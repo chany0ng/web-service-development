@@ -56,6 +56,8 @@ const UserInfoEdit = () => {
           SetInfo((prevData) => ({ ...prevData, toRecoilData }));
           alert('개인정보 수정 완료!');
           navigate('/user/main');
+        } else if (response.status === 401) {
+          navigate('/');
         } else {
           throw new Error('개인정보 수정 에러');
         }

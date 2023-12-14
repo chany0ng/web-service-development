@@ -64,6 +64,8 @@ const UserTicketBuy = () => {
         alert(`${value.hour}시간 이용권을 구매했습니다!`);
         setChecked(false);
         setValue({ hour: 1 });
+      } else if (response.status === 401) {
+        navigate('/');
       } else if (response.status === 409) {
         alert('이미 이용권을 보유중입니다!');
       } else {

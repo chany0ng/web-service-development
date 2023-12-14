@@ -56,6 +56,8 @@ const UserManageRentalHistory = () => {
         const data = await response.json();
         console.log(data.rentalInfo);
         setBody([...data.rentalInfo]);
+      } else if (response.status === 401) {
+        navigate('/');
       } else {
         throw new Error('대여기록 조회 에러');
       }

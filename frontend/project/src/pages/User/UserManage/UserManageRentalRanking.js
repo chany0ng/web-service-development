@@ -40,6 +40,8 @@ const UserManageRentalRanking = () => {
           const datas = data.rank.map((data) => data.duration_time);
           setTimeRankId(ids);
           setTimeRankData(datas);
+        } else if (response.status === 401) {
+          navigate('/');
         } else {
           throw new Error('대여시간 랭킹 로딩 에러');
         }
@@ -62,6 +64,8 @@ const UserManageRentalRanking = () => {
           });
           setCountRankId(ids);
           setCountRankData(datas);
+        } else if (response.status === 401) {
+          navigate('/');
         } else {
           throw new Error('대여횟수 랭킹 로딩 에러');
         }

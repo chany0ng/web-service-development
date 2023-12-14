@@ -72,6 +72,8 @@ const UserPayExtraCharge = () => {
       if (response.status === 200) {
         setInfo((prev) => ({ ...prev, cash: prev.cash - overFee }));
         setOverFee(0);
+      } else if (response.status === 401) {
+        navigate('/');
       } else {
         throw new Error('추가요금 결제 에러');
       }

@@ -19,8 +19,9 @@ export const getFetch = async (url) => {
 
       if (response.status === 401) {
         response = await updateRefreshToken();
+        alert('로그인 만료입니다!');
+
         // 401만 반환 -> '/' 리다이렉트
-        if (response) return response;
       }
       return response;
     } else {
@@ -54,8 +55,8 @@ export const postFetch = async (url, body) => {
       // const data = await response.json();
       if (response.status === 401) {
         response = await updateRefreshToken();
+        alert('로그인 만료입니다!');
         // 401만 반환 -> '/' 리다이렉트
-        if (response) return response;
       }
       return response;
     }
@@ -88,9 +89,7 @@ const updateRefreshToken = async () => {
     if (response.status === 200) {
       const data = await response.json();
       localStorage.setItem('accessToken', data.accessToken);
-      alert('로그인이 갱신되었습니다!');
       window.location.reload();
-      return response;
     } else if (response.status === 401) {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');

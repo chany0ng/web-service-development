@@ -17,6 +17,12 @@ import UserNoticeList from './pages/User/UserNotice/UserNoticeList';
 import UserNoticeView from './pages/User/UserNotice/UserNoticeView';
 import UserReportWrite from './pages/User/UserReport/UserReportWrite';
 import UserMap from './pages/User/UserMap/UserMap';
+import AdminMainPage from './pages/Admin/AdminMainPage';
+import AdminInfoList from './pages/Admin/UserList/AdminInfoList';
+import AdminManageBike from './pages/Admin/Manage/AdminManageBike';
+import AdminManageLocation from './pages/Admin/Manage/AdminManageLocation';
+import AdminNoticeList from './pages/Admin/Notice/AdminNoticeList';
+import AdminNoticeCreate from './pages/Admin/Notice/AdminNoticeCreate';
 const Router = () => {
   return (
     <Routes>
@@ -56,6 +62,22 @@ const Router = () => {
       />
       <Route path="/login/oauth2/code/google" element={<GoogleLogin />} />
       <Route path="/user/map" element={<UserMap />} />
+      <Route path="/admin/main" element={<AdminMainPage />} />
+      <Route path="/admin/info/list/:pageNumber" element={<AdminInfoList />} />
+      <Route
+        path="/admin/manage/bike/:pageNumber"
+        element={<AdminManageBike />}
+      />
+      <Route
+        path="/admin/manage/location/:pageNumber"
+        element={<AdminManageLocation />}
+      />
+      <Route
+        path="/admin/notice/list/:pageNumber"
+        element={<AdminNoticeList />}
+      />
+      <Route path="/admin/notice/create" element={<AdminNoticeCreate />} />
+      {/* <Route path="/admin/report/list/:pageNumber" element={<AdminInfoList />} /> */}
     </Routes>
   );
 };

@@ -74,6 +74,8 @@ const UserTicketGift = () => {
         alert(`${userId}님께 ${value.hour}시간 이용권을 선물했습니다!`);
         setUserId('');
         setChecked(false);
+      } else if (response.status === 401) {
+        navigate('/');
       } else if (response.status === 409) {
         alert('이미 이용권을 보유하고 있는 사용자입니다');
       } else {

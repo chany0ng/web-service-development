@@ -14,7 +14,7 @@ const sections2 = [
   { title: '메인 화면', url: '/admin/main' },
   { title: '회원 관리', url: '/admin/info/list/1' },
   { title: '따릉이 관리', url: '/admin/manage/bike/1' },
-  { title: '공지/신고 관리', url: '/admin/report/list/1' }
+  { title: '공지/신고 관리', url: '/admin/notice/list/1' }
 ];
 
 const Layout = ({ children, admin }) => {

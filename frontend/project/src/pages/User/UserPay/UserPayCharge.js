@@ -41,6 +41,8 @@ const UserPayCharge = () => {
       if (response.status === 200) {
         setInfo((prev) => ({ ...prev, cash: prev.cash + numCash }));
         setCash({ cash: '' });
+      } else if (response.status === 401) {
+        navigate('/');
       } else {
         throw new Error('금액 충전 에러');
       }

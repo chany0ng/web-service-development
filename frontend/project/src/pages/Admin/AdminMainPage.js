@@ -19,6 +19,8 @@ const AdminMainPage = () => {
       if (response.status === 200) {
         const data = await response.json();
         setAdmin((prevData) => ({ ...prevData, ...data }));
+      } else if (response.status === 401) {
+        navigate('/');
       } else {
         throw new Error('Get Admin Data error');
       }
