@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useContext } from 'react';
 import { MyContext } from './../../pages/User/UserNotice/UserNoticeList';
+import { MyContext2 } from '../../pages/Admin/Notice/AdminNoticeList';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -31,7 +32,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const CustomTable = ({ headData, bodyData }) => {
-  const onClickPageHandler = useContext(MyContext);
+  const onClickPostHandler = useContext(MyContext);
+  const onClickPostHandler2 = useContext(MyContext2);
+
+  const clickHandler = (row) => {
+    if (onClickPostHandler) {
+      onClickPostHandler(row);
+    } else if (onClickPostHandler2) {
+      onClickPostHandler2(row);
+    }
+  };
   return (
     <TableContainer component={Paper} sx={{ marginTop: '30px' }}>
       <Table sx={{ minWidth: '50vw' }} aria-label="customized table">
@@ -50,15 +60,17 @@ const CustomTable = ({ headData, bodyData }) => {
               <StyledTableRow
                 key={index}
                 sx={{ cursor: 'pointer' }}
-                onClick={
-                  onClickPageHandler ? () => onClickPageHandler(row) : null
-                }
+                onClick={() => {
+                  clickHandler(row);
+                }}
               >
-                {Object.values(row).map((cellValue, cellIndex) => (
-                  <StyledTableCell key={cellIndex} align="center">
-                    {cellValue}
-                  </StyledTableCell>
-                ))}
+                {Object.keys(row)
+                  .filter((key) => key !== 'notice_id') // notice_id를 제외한 키만 필터링
+                  .map((key, cellIndex) => (
+                    <StyledTableCell key={cellIndex} align="center">
+                      {row[key]}
+                    </StyledTableCell>
+                  ))}
               </StyledTableRow>
             ))}
           </TableBody>
