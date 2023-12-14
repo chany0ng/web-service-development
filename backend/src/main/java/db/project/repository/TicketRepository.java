@@ -20,81 +20,19 @@ public class TicketRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReturnGetTicketInfoDto> ticketList(){
+    public List<ReturnGetTicketInfoDto> findHourAndPrice(){
         String sql = "SELECT hour, price FROM ticket";
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 
         return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetTicketInfoDto.class));
     }
 
-    public Map<String, Object> getCashAndTicketIdByUserId(String userId) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", userId);
-
-        String sql = "SELECT cash, ticket_id FROM user WHERE user_id = :user_id";
-        return jdbcTemplate.queryForObject(sql, namedParameters, (resultSet, i) -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("cash", resultSet.getInt("cash"));
-            map.put("ticket_id", resultSet.getInt("ticket_id"));
-            return map;
-        });
-    }
-
-    public TicketInfo getTicketInfoByHour(int hour) {
+    public TicketInfo findIdAndPriceByHour(int hour) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("hour", hour);
 
         String sql = "SELECT ticket_id, price FROM ticket WHERE hour = :hour";
 
         return jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(TicketInfo.class));
-    }
-
-    public void updatePurchaseUserInfo(String userId, TicketInfo ticketInfo) {
-        final MapSqlParameterSource purchaseParams = new MapSqlParameterSource()
-                .addValue("ticket_id", ticketInfo.getTicketId())
-                .addValue("price", ticketInfo.getPrice())
-                .addValue("user_id", userId);
-
-        String sql = "UPDATE user SET ticket_id = :ticket_id, cash = cash - :price WHERE user_id = :user_id";
-        jdbcTemplate.update(sql, purchaseParams);
-    }
-
-    public Optional<String> getTicketIdByUserId(String receivedUser_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", receivedUser_id);
-
-        String sql = "SELECT ticket_id FROM user WHERE user_id = :user_id";
-        Integer existingTicketId = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
-        if(existingTicketId != null){
-            return Optional.empty();
-        } else{
-            return Optional.of("보유중인 이용권이 없습니다.");
-        }
-    }
-
-    public int getCashByUserId(String userId) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", userId);
-
-        String sql = "SELECT cash FROM user WHERE user_id = :user_id";
-        return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
-    }
-
-    public void updateGiftGiverInfo(String user_id, int price) {
-        final MapSqlParameterSource purchaseParams = new MapSqlParameterSource()
-                .addValue("price", price)
-                .addValue("user_id", user_id);
-
-        String sql = "UPDATE user SET cash = cash - :price WHERE user_id = :user_id";
-        jdbcTemplate.update(sql, purchaseParams);
-    }
-
-    public void updateGiftReceiverInfo(String user_id, int ticket_id) {
-        final MapSqlParameterSource purchaseParams = new MapSqlParameterSource()
-                .addValue("ticket_id", ticket_id)
-                .addValue("user_id", user_id);
-
-        String sql = "UPDATE user SET ticket_id = :ticket_id WHERE user_id = :user_id";
-        jdbcTemplate.update(sql, purchaseParams);
     }
 }

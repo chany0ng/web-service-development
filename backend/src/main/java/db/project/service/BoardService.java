@@ -34,12 +34,12 @@ public class BoardService {
             boardPage = (page.get() - 1) * 10;
         }
 
-        Optional<List<BoardDto.BoardList>> boardListDtoOptional = boardRepository.boardList(boardPage);
+        Optional<List<BoardDto.BoardList>> boardListDtoOptional = boardRepository.findBoard(boardPage);
         if(boardListDtoOptional.isEmpty()) {
             throw new BoardException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
-        int boardCount = boardRepository.getBoardCount();
+        int boardCount = boardRepository.findBoardCount();
 
         if(boardPage != 0 && boardCount <= boardPage) {
             throw new BoardException("page not found", ErrorCode.NOT_FOUND_PAGE);
@@ -57,16 +57,16 @@ public class BoardService {
     public BoardDto.BoardInfo boardInfo(int boardId) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<Integer> view_id = boardViewsRepository.getUserIdAndBoardId(boardId, user_id);
+        Optional<Integer> view_id = boardViewsRepository.findIdByBoardAndUser(boardId, user_id);
         if(view_id.isEmpty()) {
-            Optional<Integer> checkPage = boardViewsRepository.insertBoardViews(boardId, user_id);
+            Optional<Integer> checkPage = boardViewsRepository.createBoardViews(boardId, user_id);
             if(checkPage.isEmpty()) {
                 throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
             }
-            boardRepository.updateBoardView(boardId);
+            boardRepository.updateViewsById(boardId);
         }
 
-        Optional<BoardDto.BoardInfo> boardInfoDtoOptional = boardRepository.boardInfo(boardId);
+        Optional<BoardDto.BoardInfo> boardInfoDtoOptional = boardRepository.findBoardById(boardId);
         if(boardInfoDtoOptional.isEmpty()) {
             throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
         }
@@ -78,7 +78,7 @@ public class BoardService {
             boardInfoDto.setAuthor(false);
         }
 
-        List<BoardCommentDto.BoardComment> boardCommentListDto = boardCommentRepository.getCommentList(boardId);
+        List<BoardCommentDto.BoardComment> boardCommentListDto = boardCommentRepository.findCommentById(boardId);
         if(boardCommentListDto.isEmpty()) {
             boardInfoDto.setComments(null);
         } else {
@@ -90,20 +90,20 @@ public class BoardService {
 
     public void boardCreate(BoardDto.BoardCreateAndUpdate boardCreateDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        boardRepository.boardCreate(boardCreateDto, user_id);
+        boardRepository.createBoard(boardCreateDto, user_id);
     }
 
     @Transactional
     public void boardUpdate(BoardDto.BoardCreateAndUpdate boardUpdateDto, int board_id) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<String> userId = boardRepository.isAuthor(board_id);
+        Optional<String> userId = boardRepository.findUserIdById(board_id);
         if(userId.isEmpty()) {
             throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
         }
 
         if(user_id.equals(userId.get())) {
-            boardRepository.boardUpdate(boardUpdateDto, board_id);
+            boardRepository.updateBoardById(boardUpdateDto, board_id);
         } else {
             throw new BoardException("not author of the post", ErrorCode.NOT_AUTHOR);
         }
@@ -114,13 +114,13 @@ public class BoardService {
     public void boardDelete(BoardDto.BoardDelete boardDeleteDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<String> userId = boardRepository.isAuthor(boardDeleteDto.getBoard_id());
+        Optional<String> userId = boardRepository.findUserIdById(boardDeleteDto.getBoard_id());
         if(userId.isEmpty()) {
             throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
         }
 
         if(user_id.equals(userId.get())) {
-            boardRepository.boardDelete(boardDeleteDto);
+            boardRepository.deleteBoardById(boardDeleteDto);
         } else {
             throw new BoardException("not author of the post", ErrorCode.NOT_AUTHOR);
         }

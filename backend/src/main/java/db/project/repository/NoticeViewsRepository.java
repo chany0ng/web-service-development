@@ -9,19 +9,19 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public class BoardViewsRepository {
+public class NoticeViewsRepository {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public BoardViewsRepository(NamedParameterJdbcTemplate jdbcTemplate) {
+    public NoticeViewsRepository(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<Integer> findIdByBoardAndUser(int boardId, String user_id) {
+    public Optional<Integer> findIdByNoticeAndUser(int noticeId, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("boardId", boardId)
+                .addValue("noticeId", noticeId)
                 .addValue("user_id", user_id);
 
-        String sql = "SELECT view_id FROM board_views WHERE board_id =:boardId AND user_id = user_id";
+        String sql = "SELECT view_id FROM notice_views WHERE notice_id =:noticeId AND admin_id =:user_id";
 
         try {
             int view_id = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
@@ -31,12 +31,12 @@ public class BoardViewsRepository {
         }
     }
 
-    public Optional<Integer> createBoardViews(int boardId, String user_id) {
+    public Optional<Integer> createNoticeViews(int noticeId, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("boardId", boardId)
+                .addValue("noticeId", noticeId)
                 .addValue("user_id", user_id);
 
-        String sql = "INSERT INTO board_views(board_id, user_id) VALUES(:boardId, :user_id)";
+        String sql = "INSERT INTO notice_views(notice_id, admin_id) VALUES(:noticeId, :user_id)";
 
         try{
             int check = jdbcTemplate.update(sql, namedParameters);
@@ -44,5 +44,6 @@ public class BoardViewsRepository {
         } catch (DataIntegrityViolationException e) {
             return Optional.empty();
         }
+
     }
 }

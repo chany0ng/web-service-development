@@ -4,6 +4,7 @@ import db.project.dto.*;
 import db.project.exceptions.ErrorCode;
 import db.project.exceptions.NoticeException;
 import db.project.repository.NoticeRepository;
+import db.project.repository.NoticeViewsRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +15,11 @@ import java.util.Optional;
 @Service
 public class NoticeService {
     private final NoticeRepository noticeRepository;
+    private final NoticeViewsRepository noticeViewsRepository;
 
-    public NoticeService(NoticeRepository noticeRepository) {
+    public NoticeService(NoticeRepository noticeRepository, NoticeViewsRepository noticeViewsRepository) {
         this.noticeRepository = noticeRepository;
+        this.noticeViewsRepository = noticeViewsRepository;
     }
 
     @Transactional
@@ -28,12 +31,12 @@ public class NoticeService {
             noticePage = (page.get() - 1) * 10;
         }
 
-        Optional<List<NoticeDto.NoticeList>> noticeListDtoOptional = noticeRepository.noticeList(noticePage);
+        Optional<List<NoticeDto.NoticeList>> noticeListDtoOptional = noticeRepository.findNotice(noticePage);
         if(noticeListDtoOptional.isEmpty()) {
             throw new NoticeException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
-        int noticeCount = noticeRepository.getNoticeCount();
+        int noticeCount = noticeRepository.findNoticeCount();
 
         if(noticePage != 0 && noticeCount < noticePage) {
             throw new NoticeException("page not found", ErrorCode.NOT_FOUND_PAGE);
@@ -52,16 +55,16 @@ public class NoticeService {
     public NoticeDto.NoticeInfo noticeInfo(int noticeId) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<Integer> view_id = noticeRepository.getAdminIdAndNoticeId(noticeId, user_id);
+        Optional<Integer> view_id = noticeViewsRepository.findIdByNoticeAndUser(noticeId, user_id);
         if(view_id.isEmpty()) {
-            Optional<Integer> checkPage = noticeRepository.insertNoticeViews(noticeId, user_id);
+            Optional<Integer> checkPage = noticeViewsRepository.createNoticeViews(noticeId, user_id);
             if(checkPage.isEmpty()) {
                 throw new NoticeException("page not post", ErrorCode.NOT_FOUND_POST);
             }
-            noticeRepository.updateNoticeView(noticeId);
+            noticeRepository.updateViewsById(noticeId);
         }
 
-        Optional<NoticeDto.NoticeInfo> noticeInfoDtoOptional = noticeRepository.noticeInfo(noticeId);
+        Optional<NoticeDto.NoticeInfo> noticeInfoDtoOptional = noticeRepository.findNoticeById(noticeId);
         if(noticeInfoDtoOptional.isEmpty()) {
             throw new NoticeException("page not post", ErrorCode.NOT_FOUND_POST);
         }
@@ -77,20 +80,20 @@ public class NoticeService {
 
     public void noticeCreate(NoticeDto.NoticeCreateAndUpdate noticeCreateDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        noticeRepository.noticeCreate(noticeCreateDto, user_id);
+        noticeRepository.createNotice(noticeCreateDto, user_id);
     }
 
     @Transactional
     public void noticeUpdate(NoticeDto.NoticeCreateAndUpdate noticeUpdateDto, int notice_id) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<String> userId = noticeRepository.isAuthor(notice_id);
+        Optional<String> userId = noticeRepository.findUserIdById(notice_id);
         if(userId.isEmpty()) {
             throw new NoticeException("page not post", ErrorCode.NOT_FOUND_POST);
         }
 
         if(user_id.equals(userId.get())) {
-            noticeRepository.noticeUpdate(noticeUpdateDto, notice_id);
+            noticeRepository.updateNoticeById(noticeUpdateDto, notice_id);
         } else {
             throw new NoticeException("not author of the post", ErrorCode.NOT_AUTHOR);
         }
@@ -100,13 +103,13 @@ public class NoticeService {
     public void noticeDelete(NoticeDto.NoticeDelete noticeDeleteDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<String> userId = noticeRepository.isAuthor(noticeDeleteDto.getNotice_id());
+        Optional<String> userId = noticeRepository.findUserIdById(noticeDeleteDto.getNotice_id());
         if(userId.isEmpty()) {
             throw new NoticeException("page not post", ErrorCode.NOT_FOUND_POST);
         }
 
         if(user_id.equals(userId.get())) {
-            noticeRepository.noticeDelete(noticeDeleteDto.getNotice_id());
+            noticeRepository.deleteNoticeById(noticeDeleteDto.getNotice_id());
         } else {
             throw new NoticeException("not author of the post", ErrorCode.NOT_AUTHOR);
         }

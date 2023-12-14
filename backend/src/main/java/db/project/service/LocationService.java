@@ -25,12 +25,12 @@ public class LocationService {
             locationPage = (page.get() - 1) * 10;
         }
 
-        Optional<List<ReturnGetLocationListDto>> locationListOptional = locationRepository.locationList(locationPage);
+        Optional<List<ReturnGetLocationListDto>> locationListOptional = locationRepository.findLocationByStatus(locationPage);
         if(locationListOptional.isEmpty()) {
             throw new LocationException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
-        int locationCount = locationRepository.getLocationCount();
+        int locationCount = locationRepository.findLocationCountByStatus();
         if(locationPage != 0 && locationCount <= locationPage) {
             throw new LocationException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
@@ -45,14 +45,14 @@ public class LocationService {
     }
 
     public void locationCreate(PostLocationCreateDto postLocationCreateDto) {
-        Optional<String> exceptionCheck = locationRepository.locationCreate(postLocationCreateDto);
+        Optional<String> exceptionCheck = locationRepository.createLocation(postLocationCreateDto);
         if(exceptionCheck.isEmpty()) {
             throw new LocationException("LOCATION ID DUPLICATE", ErrorCode.LOCATION_DUPLICATION);
         }
     }
 
     public void locationDelete(PostLocationDeleteDto postLocationDeleteDto) {
-        int deleteCheck = locationRepository.locationDelete(postLocationDeleteDto);
+        int deleteCheck = locationRepository.deleteLocation(postLocationDeleteDto);
         if(deleteCheck == 0) {
             throw new LocationException("NON EXIST LOCATION ID", ErrorCode.NON_EXIST_LOCATION);
         }

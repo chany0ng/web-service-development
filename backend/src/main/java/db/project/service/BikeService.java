@@ -25,12 +25,12 @@ public class BikeService {
             bikePage = (page.get() - 1) * 10;
         }
 
-        Optional<List<ReturnGetBikeListDto>> bikeListOptional = bikeRepository.bikeList(bikePage);
+        Optional<List<ReturnGetBikeListDto>> bikeListOptional = bikeRepository.findBikeByStatus(bikePage);
         if(bikeListOptional.isEmpty()) {
             throw new BikeException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
-        int bikeCount = bikeRepository.getBikeCount();
+        int bikeCount = bikeRepository.findBikeCountByStatus();
         if(bikePage != 0 && bikeCount <= bikePage) {
             throw new BikeException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
@@ -45,7 +45,7 @@ public class BikeService {
     }
 
     public void bikeCreate(PostBikeCreateDto postBikeCreateDto) {
-        Optional<String> exceptionCheck = bikeRepository.bikeCreate(postBikeCreateDto);
+        Optional<String> exceptionCheck = bikeRepository.createBike(postBikeCreateDto);
         if(exceptionCheck.get() == "bike_id 중복") {
             throw new BikeException("BIKE ID DUPLICATE", ErrorCode.BIKE_DUPLICATION);
         } else if(exceptionCheck.get() == "존재하지 않는 location_id") {
@@ -54,7 +54,7 @@ public class BikeService {
     }
 
     public void bikeDelete(PostBikeDeleteDto postBikeDeleteDto) {
-        int deleteCheck = bikeRepository.bikeDelete(postBikeDeleteDto);
+        int deleteCheck = bikeRepository.updateStatusDeletedByIdAndStatus(postBikeDeleteDto);
         if(deleteCheck == 0) {
             throw new BikeException("NON EXIST BIKE ID", ErrorCode.NON_EXIST_BIKE);
         }

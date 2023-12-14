@@ -29,13 +29,13 @@ public class BoardCommentService {
     public void deleteComment(BoardCommentDto.BoardCommentDelete boardCommentDeleteDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<String> userId = boardCommentRepository.isAuthor(boardCommentDeleteDto.getComment_id());
+        Optional<String> userId = boardCommentRepository.findUserIdById(boardCommentDeleteDto.getComment_id());
         if(userId.isEmpty()) {
             throw new BoardCommentException("page not post", ErrorCode.NOT_FOUND_POST);
         }
 
         if(user_id.equals(userId.get())) {
-            boardCommentRepository.deleteComment(boardCommentDeleteDto.getComment_id());
+            boardCommentRepository.deleteCommentById(boardCommentDeleteDto.getComment_id());
         } else {
             throw new BoardCommentException("not author of the post", ErrorCode.NOT_AUTHOR);
         }
@@ -45,13 +45,13 @@ public class BoardCommentService {
     public void updateComment(BoardCommentDto.BoardCommentCreateAndUpdate boardCommentUpdateDto, int comment_id) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<String> userId = boardCommentRepository.isAuthor(comment_id);
+        Optional<String> userId = boardCommentRepository.findUserIdById(comment_id);
         if(userId.isEmpty()) {
             throw new BoardCommentException("page not post", ErrorCode.NOT_FOUND_POST);
         }
 
         if(user_id.equals(userId.get())) {
-            boardCommentRepository.updateComment(boardCommentUpdateDto, comment_id);
+            boardCommentRepository.updateCommentById(boardCommentUpdateDto, comment_id);
         } else {
             throw new BoardCommentException("not author of the post", ErrorCode.NOT_AUTHOR);
         }

@@ -18,6 +18,28 @@ public class BoardCommentRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    public List<BoardCommentDto.BoardComment> findCommentById(int board_id) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("board_id", board_id);
+
+        String sql = "SELECT comment_id, content, created_at AS date, user_id FROM board_comments WHERE board_id =:board_id";
+
+        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(BoardCommentDto.BoardComment.class));
+    }
+
+    public Optional<String> findUserIdById(int comment_id) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("comment_id", comment_id);
+        String sql = "SELECT user_id FROM board_comments WHERE comment_id =:comment_id";
+
+        try {
+            String user_id = jdbcTemplate.queryForObject(sql, namedParameters, String.class);
+            return Optional.of(user_id);
+        } catch(EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
     public void createComment(BoardCommentDto.BoardCommentCreateAndUpdate boardCommentCreateDto, String user_id, int board_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("content", boardCommentCreateDto.getContent())
@@ -29,7 +51,7 @@ public class BoardCommentRepository {
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    public void deleteComment(int comment_id) {
+    public void deleteCommentById(int comment_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("comment_id", comment_id);
         String sql = "DELETE FROM board_comments WHERE comment_id =:comment_id";
@@ -37,7 +59,7 @@ public class BoardCommentRepository {
         int rowsUpdated = jdbcTemplate.update(sql, namedParameters);
     }
 
-    public void updateComment(BoardCommentDto.BoardCommentCreateAndUpdate boardCommentUpdateDto, int comment_id) {
+    public void updateCommentById(BoardCommentDto.BoardCommentCreateAndUpdate boardCommentUpdateDto, int comment_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("content", boardCommentUpdateDto.getContent())
                 .addValue("comment_id", comment_id);
@@ -45,27 +67,5 @@ public class BoardCommentRepository {
         String sql = "UPDATE board_comments SET content =:content WHERE comment_id =:comment_id";
 
         jdbcTemplate.update(sql, namedParameters);
-    }
-
-    public List<BoardCommentDto.BoardComment> getCommentList(int board_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("board_id", board_id);
-
-        String sql = "SELECT comment_id, content, created_at AS date, user_id FROM board_comments WHERE board_id =:board_id";
-
-        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(BoardCommentDto.BoardComment.class));
-    }
-
-    public Optional<String> isAuthor(int comment_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("comment_id", comment_id);
-        String sql = "SELECT user_id FROM board_comments WHERE comment_id =:comment_id";
-
-        try {
-            String user_id = jdbcTemplate.queryForObject(sql, namedParameters, String.class);
-            return Optional.of(user_id);
-        } catch(EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
     }
 }
