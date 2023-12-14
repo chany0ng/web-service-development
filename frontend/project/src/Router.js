@@ -23,6 +23,8 @@ import AdminManageBike from './pages/Admin/Manage/AdminManageBike';
 import AdminManageLocation from './pages/Admin/Manage/AdminManageLocation';
 import AdminNoticeList from './pages/Admin/Notice/AdminNoticeList';
 import AdminNoticeCreate from './pages/Admin/Notice/AdminNoticeCreate';
+import AdminNoticeView from './pages/Admin/Notice/AdminNoticeView';
+import AdminReportList from './pages/Admin/Report/AdminReportList';
 const Router = () => {
   return (
     <Routes>
@@ -77,6 +79,14 @@ const Router = () => {
         element={<AdminNoticeList />}
       />
       <Route path="/admin/notice/create" element={<AdminNoticeCreate />} />
+      <Route
+        path="/admin/notice/view/:postNumber"
+        element={<AdminNoticeView />}
+      />
+      <Route
+        path="/admin/report/list/:postNumber"
+        element={<AdminReportList />}
+      />
       {/* <Route path="/admin/report/list/:pageNumber" element={<AdminInfoList />} /> */}
     </Routes>
   );
