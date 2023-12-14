@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { postFetch, getFetch } from '../../../config';
+import { getFetch } from '../../../config';
 import Layout from '../../../layouts/Layout';
 import PostView from '../../../components/PostView/PostView';
 import Article from '../../../layouts/Article';
 import { mainPageAuthCheck } from '../../../AuthCheck';
-
-const UserNoticeView = () => {
+import { Button } from '@mui/material';
+const AdminNoticeView = () => {
   const navigate = useNavigate();
   useEffect(() => {
     mainPageAuthCheck(navigate);
@@ -14,7 +14,7 @@ const UserNoticeView = () => {
   const location = useLocation();
   const postNumber = location.state?.postNumber;
   const moveToList = () => {
-    navigate('/user/notice/noticeList/1');
+    navigate('/admin/notice/list/1');
   };
   const [postContent, setPostContent] = useState({
     title: '',
@@ -28,6 +28,7 @@ const UserNoticeView = () => {
       const data = await response.json();
       if (response.status === 200) {
         const realDate = new Date(data.date).toLocaleDateString();
+        console.log(data);
         setPostContent((prevData) => ({
           ...prevData,
           ...data,
@@ -47,7 +48,7 @@ const UserNoticeView = () => {
     fetchPost();
   }, []);
   return (
-    <Layout>
+    <Layout admin="true">
       <Article>
         <h1
           style={{ textAlign: 'left', fontSize: '3rem', marginBottom: '3vh' }}
@@ -59,4 +60,4 @@ const UserNoticeView = () => {
     </Layout>
   );
 };
-export default UserNoticeView;
+export default AdminNoticeView;

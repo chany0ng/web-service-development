@@ -64,8 +64,8 @@ const UserNoticeList = () => {
   }, [currentPage]);
 
   const onClickPostHandler = (row) => {
-    navigate(`/user/notice/noticeView/${row.board_id}`, {
-      state: { postNumber: row.board_id }
+    navigate(`/user/notice/noticeView/${row.notice_id}`, {
+      state: { postNumber: row.notice_id }
     });
   };
 
