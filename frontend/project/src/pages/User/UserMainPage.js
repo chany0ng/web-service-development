@@ -37,7 +37,7 @@ const UserMainPage = () => {
   }, []);
   const getWeather = async () => {
     try {
-      const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${LAT}&lon=${LON}&exclude={part}&appid=${API_KEY}&lang="kr"`;
+      const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
       console.log(data);

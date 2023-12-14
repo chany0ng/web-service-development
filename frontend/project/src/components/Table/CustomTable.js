@@ -31,7 +31,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   }
 }));
 
-const CustomTable = ({ headData, bodyData }) => {
+const CustomTable = ({ headData, bodyData, onClick }) => {
   const onClickPostHandler = useContext(MyContext);
   const onClickPostHandler2 = useContext(MyContext2);
 
@@ -40,6 +40,8 @@ const CustomTable = ({ headData, bodyData }) => {
       onClickPostHandler(row);
     } else if (onClickPostHandler2) {
       onClickPostHandler2(row);
+    } else if (onClick) {
+      onClick(row);
     }
   };
   return (
@@ -65,7 +67,7 @@ const CustomTable = ({ headData, bodyData }) => {
                 }}
               >
                 {Object.keys(row)
-                  .filter((key) => key !== 'notice_id') // notice_id를 제외한 키만 필터링
+                  .filter((key) => key !== 'notice_id' && key !== 'board_id') // notice_id를 제외한 키만 필터링
                   .map((key, cellIndex) => (
                     <StyledTableCell key={cellIndex} align="center">
                       {row[key]}
