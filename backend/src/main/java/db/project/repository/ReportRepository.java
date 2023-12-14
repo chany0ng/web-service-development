@@ -64,13 +64,4 @@ public class ReportRepository {
 
         jdbcTemplate.update(sql, namedParameters);
     }
-
-    public ReturnGetAdminMainDto adminMain(String user_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", user_id);
-        String sql = "SELECT :user_id AS user_id, COUNT(report_id) AS report FROM report WHERE status = 'received'";
-
-        ReturnGetAdminMainDto returnGetAdminMainDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetAdminMainDto.class));
-        return returnGetAdminMainDto;
-    }
 }

@@ -26,7 +26,12 @@ public class MainService {
 
     public ReturnGetAdminMainDto adminMain() {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        ReturnGetAdminMainDto returnGetAdminMainDto = reportRepository.adminMain(user_id);
+
+        int reportCount = reportRepository.findReportCountByStatus();
+
+        ReturnGetAdminMainDto returnGetAdminMainDto = new ReturnGetAdminMainDto();
+        returnGetAdminMainDto.setUser_id(user_id);
+        returnGetAdminMainDto.setReport(reportCount);
 
         return returnGetAdminMainDto;
     }
