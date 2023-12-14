@@ -54,7 +54,11 @@ const SignInPage = () => {
         } else if (response.status === 200) {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
-          navigate('/user/main');
+          if (data.role === 'admin' || inputData.id === 'admin') {
+            navigate('/admin/main');
+          } else {
+            navigate('/user/main');
+          }
         } else {
           throw new Error('로그인 에러');
         }

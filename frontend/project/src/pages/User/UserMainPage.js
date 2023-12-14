@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { postData, getData } from '../../config';
 import Layout from '../../layouts/Layout';
 import CustomCard from '../../components/Card/CustomCard';
 import styles from './UserMainPage.module.scss';

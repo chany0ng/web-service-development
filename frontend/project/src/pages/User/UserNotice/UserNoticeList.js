@@ -2,9 +2,9 @@ import Layout from '../../../layouts/Layout';
 import InnerTabBar from './../../../components/TabBar/InnerTabBar';
 import Article from './../../../layouts/Article';
 import PostList from '../../../components/List/PostList';
-import { useState, useEffect, createContext, useCallback } from 'react';
+import { useState, useEffect, createContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { postFetch, getFetch } from '../../../config';
+import { getFetch } from '../../../config';
 import { useNavigate } from 'react-router-dom';
 import CustomPagination from '../../../components/Pagination/CustomPagination';
 import { mainPageAuthCheck } from '../../../AuthCheck';
@@ -45,13 +45,11 @@ const UserNoticeList = () => {
         const response = await getFetch(`api/notice/list/${pageNumber}`);
         if (response.status === 200) {
           const data = await response.json();
-          console.log(data.boardAndNoticeList);
-          //todo 날짜 변환 dayjs(data.boardAndNoticeList.date).format('YYYY-MM-DD');
-          const formattedData = data.boardAndNoticeList.map((post) => {
+          const formattedData = data?.noticeList?.map((post) => {
             return { ...post, date: new Date(post.date).toLocaleDateString() };
           });
           setPosts(formattedData);
-          setTotalPages(data.boardCount);
+          setTotalPages(data.noticeCount);
         } else if (response.status === 401) {
           navigate('/');
         } else {

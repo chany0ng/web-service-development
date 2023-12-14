@@ -20,3 +20,12 @@ export const userInfo = atom({
   },
   effects_UNSTABLE: [persistAtom]
 });
+export const adminInfo = atom({
+  key: 'adminInfo',
+  default: {
+    user_id: null,
+    report: 0
+    // 등등 디폴트 값을 추가할 수 있음
+  },
+  effects_UNSTABLE: [persistAtom]
+});

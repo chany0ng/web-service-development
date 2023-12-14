@@ -70,9 +70,7 @@ const UserReportWrite = () => {
   const fetchPost = async () => {
     try {
       const finalData = { ...reportData, ...checked };
-      console.log(finalData);
       const response = await postFetch('api/report', finalData);
-      console.log(response.status);
       if (response.status === 200) {
         setOpen(true);
       } else if (response.status === 401) {
