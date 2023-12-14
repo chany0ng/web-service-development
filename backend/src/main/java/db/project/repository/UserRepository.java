@@ -13,7 +13,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -96,6 +95,15 @@ public class UserRepository {
             map.put("cash", resultSet.getInt("cash"));
             return map;
         });
+    }
+
+    public UserOverfeeAndTicketDto findOverfeeAndTicketById(String user_id){
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("user_id", user_id);
+
+        String sql = "SELECT overfee, ticket_id FROM user WHERE user_id = :user_id";
+
+        return namedParameterJdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(UserOverfeeAndTicketDto.class));
     }
 
     public int findUserCountByIdAndRole(PostUserInfoListDto postUserInfoListDto) {

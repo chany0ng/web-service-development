@@ -28,7 +28,8 @@ public class LocationRepository {
     public Optional<List<ReturnGetLocationListDto>> findLocationByStatus(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
-        String sql = "SELECT l.location_id, address, COUNT(bike_id) AS bikeCount FROM location l LEFT JOIN bike b ON l.location_id = b.location_id " +
+        String sql = "SELECT l.location_id, address, COUNT(bike_id) AS bikeCount FROM location l " +
+                "LEFT JOIN bike b ON l.location_id = b.location_id AND b.status IN ('available', 'rented', 'closed') " +
                 "WHERE l.status = 'available' GROUP BY l.location_id ORDER BY l.location_id LIMIT :page, 10";
 
         try {

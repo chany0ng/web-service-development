@@ -21,16 +21,15 @@ public class RentalRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public Optional<String> createRental(PostRentalRentDto rentalRentDto, String user_id) {
+    public void createRental(PostRentalRentDto rentalRentDto, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("bike_id", rentalRentDto.getBike_id())
                 .addValue("start_location", rentalRentDto.getStart_location())
                 .addValue("user_id", user_id);
-
         String insertRentalSql = "INSERT INTO rental(bike_id, start_location, user_id) " +
-                "(SELECT :bike_id, :start_location, :user_id FROM user WHERE ticket_id IS NOT NULL AND user_id = :user_id)";
-        int checkInsert = jdbcTemplate.update(insertRentalSql, namedParameters);
-        return (checkInsert > 0) ? Optional.of("rental 성공") : Optional.empty();
+                "values(:bike_id, :start_location, :user_id)";
+
+        jdbcTemplate.update(insertRentalSql, namedParameters);
     }
 
     public int updateRentalByUserAndBike(PostRentalReturnDto postRentalReturnDto, String user_id) {

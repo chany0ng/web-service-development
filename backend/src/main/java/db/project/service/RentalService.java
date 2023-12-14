@@ -3,6 +3,7 @@ package db.project.service;
 import db.project.dto.PostRentalRentDto;
 import db.project.dto.PostRentalReturnDto;
 import db.project.dto.ReturnPostRentalReturnDto;
+import db.project.dto.UserOverfeeAndTicketDto;
 import db.project.exceptions.ErrorCode;
 import db.project.exceptions.RentalException;
 import db.project.repository.BikeRepository;
@@ -29,12 +30,15 @@ public class RentalService {
     @Transactional
     public void rentalRent(PostRentalRentDto rentalRentDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        int overfee = userRepository.findOverfeeById(user_id);
-        if(overfee > 0) {
-            new RentalException("EXIST UNPAID AMOUNT", ErrorCode.EXIST_UNPAID_AMOUNT);
+
+        UserOverfeeAndTicketDto userOverfeeAndTicketDto = userRepository.findOverfeeAndTicketById(user_id);
+        if(userOverfeeAndTicketDto.getOverfee() > 0) {
+            throw new RentalException("EXIST UNPAID AMOUNT", ErrorCode.EXIST_UNPAID_AMOUNT);
+        } else if(userOverfeeAndTicketDto.getTicket_id().isEmpty()) {
+            throw new RentalException("DON'T HAVE TICKET", ErrorCode.NO_TICKET);
         }
 
-        rentalRepository.createRental(rentalRentDto, user_id).orElseThrow(() -> new RentalException("DON'T HAVE TICKET", ErrorCode.NO_TICKET));
+        rentalRepository.createRental(rentalRentDto, user_id);
 
         bikeRepository.updateStatusRentedById(rentalRentDto.getBike_id());
     }
