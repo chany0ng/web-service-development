@@ -81,16 +81,15 @@ const UserManageRentalRanking = () => {
     <Layout>
       <TabBar title={outerTitle} select={outerTab} />
       <InnerTabBar title={innerTitle} select={innerTab} url={url} />
-      <Article>
-        <h2 style={{ marginBottom: '10px' }}>나의 대여 시간 랭킹</h2>
-        <div className={styles.myRank}>
-          <span>순위: {timeRankTotal.user_ranking}등</span>
-          <span>ID: {timeRankTotal.user_id}</span>
-          <span>시간: {timeRankTotal.user_duraiton_time}분</span>
-        </div>
-        <h2>대여 시간 순 차트</h2>
-        {timeRankId}
-        {timeRankId.length > 0 && timeRankData.length > 0 && (
+      <h1 style={{ marginBottom: '10px' }}>나의 대여 시간 랭킹</h1>
+      <div className={styles.myRank}>
+        <span>순위: {timeRankTotal.user_ranking}위</span>
+        <span>ID: {timeRankTotal.user_id}</span>
+        <span>시간: {timeRankTotal.user_duraiton_time}분</span>
+      </div>
+      <h2>대여 시간 순 차트</h2>
+      {timeRankId.length > 0 && timeRankData.length > 0 && (
+        <div>
           <BarChart
             xAxis={[
               {
@@ -99,32 +98,32 @@ const UserManageRentalRanking = () => {
               }
             ]}
             series={[{ data: timeRankData.map(Number) }]}
-            height={300}
+            height={400}
           />
-        )}
-        <br />
-        <h2 style={{ marginBottom: '10px', marginTop: '50px' }}>
-          나의 대여 횟수 랭킹
-        </h2>
-        <div className={styles.myRank}>
-          <span>순위: {countRankTotal.user_ranking}등</span>
-          <span>ID: {countRankTotal.user_id}</span>
-          <span>횟수: {countRankTotal.user_using_count}회</span>
         </div>
-        <h2>이용 횟수 순 차트</h2>
-        {countRankId.length > 0 && countRankData.length > 0 && (
-          <BarChart
-            xAxis={[
-              {
-                scaleType: 'band',
-                data: countRankId
-              }
-            ]}
-            series={[{ data: countRankData.map(Number) }]}
-            height={300}
-          />
-        )}
-      </Article>
+      )}
+      <br />
+      <h1 style={{ marginBottom: '10px', marginTop: '50px' }}>
+        나의 대여 횟수 랭킹
+      </h1>
+      <div className={styles.myRank}>
+        <span>순위: {countRankTotal.user_ranking}위</span>
+        <span>ID: {countRankTotal.user_id}</span>
+        <span>횟수: {countRankTotal.user_using_count}회</span>
+      </div>
+      <h2>이용 횟수 순 차트</h2>
+      {countRankId.length > 0 && countRankData.length > 0 && (
+        <BarChart
+          xAxis={[
+            {
+              scaleType: 'band',
+              data: countRankId
+            }
+          ]}
+          series={[{ data: countRankData.map(Number) }]}
+          height={400}
+        />
+      )}
     </Layout>
   );
 };
