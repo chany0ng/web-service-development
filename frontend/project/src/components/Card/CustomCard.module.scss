@@ -35,11 +35,12 @@
   }
   .cardMoney {
     display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid $primaryLight;
   }
   .cardInfo {
-    display: flex;
     padding-top: 0.5rem;
   }
 }

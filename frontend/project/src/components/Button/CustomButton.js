@@ -1,19 +1,26 @@
 import styles from './css/CustomButton.module.min.css';
 import { Button } from '@mui/material';
-const CustomButton = () => {
+const CustomButton = ({ name, onClick }) => {
   return (
     <Button
-      variant="contained"
+      variant="outlined"
       className={styles.btn}
+      onClick={onClick}
       sx={[
         {
           '&:hover': {
-            color: 'white'
+            color: '##008800'
           }
+        },
+        {
+          width: '30%',
+          margin: '0 auto',
+          fontSize: '1.5rem',
+          fontWeight: 'bold'
         }
       ]}
     >
-      This is button.
+      {name}
     </Button>
   );
 };

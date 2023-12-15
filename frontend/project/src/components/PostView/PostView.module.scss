@@ -1,0 +1,62 @@
+.comment {
+  border: 1px solid #9a9a9a;
+  border-radius: 3px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  button {
+    border: 1px solid black;
+    border-radius: 3px;
+    background-color: white;
+    margin-left: 3px;
+    padding: 3px;
+    font-size: 1rem;
+  }
+}
+.write {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 8vh;
+  border: 1px solid #9a9a9a;
+  border-radius: 3px;
+  textarea {
+    border: none;
+    height: 90%;
+    text-align: left;
+    resize: none;
+    outline: none;
+  }
+  button {
+    width: 10%;
+    height: 100%;
+    cursor: pointer;
+    color: white;
+    background-color: #008800;
+  }
+}
+.article {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  > div {
+    padding: 10px;
+  }
+  .first {
+    text-align: left;
+    border-bottom: 1px solid black;
+    h2,
+    p {
+      padding: 5px;
+    }
+  }
+  .second {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: left;
+    font-size: 1.5rem;
+    white-space: pre-wrap;
+    border-bottom: 1px solid black;
+    margin-bottom: 30px;
+  }
+}

@@ -4,7 +4,12 @@ import InnerTabBar from '../../../components/TabBar/InnerTabBar';
 import Layout from '../../../layouts/Layout';
 import Article from '../../../layouts/Article';
 import { Card, Button, Container } from '@mui/material';
-
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { mainPageAuthCheck } from '../../../AuthCheck';
+import { userInfo } from '../../../recoil';
+import { useRecoilState } from 'recoil';
+import { postFetch } from '../../../config';
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['카드 금액 충전', '추가요금 결제'];
 const outerTab = 'payment';
@@ -15,9 +20,37 @@ const url = {
 };
 
 const UserPayCharge = () => {
-  //todo: useEffct-> 보유금액 가져오기
-  //todo: 금액 충전 버튼 클릭 기능 추가
-  const existCash = 15000;
+  const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
+  const [info, setInfo] = useRecoilState(userInfo);
+  const [cash, setCash] = useState({
+    cash: ''
+  });
+  const inputCashHandler = (e) => {
+    setCash({ cash: e.target.value });
+  };
+  const addCashHandler = async (e) => {
+    try {
+      e.preventDefault();
+      const numCash = parseInt(cash.cash, 10);
+      if (numCash % 1000 !== 0 || cash.cash.trim() === '')
+        throw new Error('정상적인 금액입력이 아닙니다!');
+      const response = await postFetch('api/charge', { cash: numCash });
+      if (response.status === 200) {
+        setInfo((prev) => ({ ...prev, cash: prev.cash + numCash }));
+        setCash({ cash: '' });
+      } else if (response.status === 401) {
+        navigate('/');
+      } else {
+        throw new Error('금액 충전 에러');
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
+  };
   return (
     <Layout>
       <TabBar title={outerTitle} select={outerTab} />
@@ -45,7 +78,7 @@ const UserPayCharge = () => {
                 <div className={styles.money}>
                   <h3 style={{ marginRight: '10px' }}>현재 보유 금액 : </h3>
                   <h1 className={styles.amount}>
-                    {existCash.toLocaleString()}원
+                    {info.cash.toLocaleString()}원
                   </h1>
                 </div>
               </div>
@@ -54,15 +87,15 @@ const UserPayCharge = () => {
                   type="text"
                   name="cash"
                   id="cash"
-                  // value={cash}
-                  // onChange={inputStationHandler}
+                  value={cash.cash}
+                  onChange={inputCashHandler}
                   placeholder="충전 할 금액 입력"
                 />
                 <Button
                   variant="contained"
                   color="primary"
                   sx={{ fontSize: '1rem' }}
-                  // onClick={addStationHandler}
+                  onClick={addCashHandler}
                 >
                   금액 충전
                 </Button>
