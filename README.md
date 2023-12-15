@@ -1,6 +1,9 @@
 # 🚴‍♂️DB 프로젝트 (따릉이 관리 시스템)
 SpringBoot + React Web Application
 
+## 🧑‍🤝‍🧑팀원
+박찬용(팀장), 이동익, 정희성
+
 ## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
