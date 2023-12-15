@@ -30,7 +30,7 @@ public class BoardRepository {
     public Optional<List<BoardDto.BoardList>> findBoard(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
-        String sql = "SELECT board_id, title, created_at as date, views FROM board ORDER BY board_id LIMIT :page, 10";
+        String sql = "SELECT board_id, title, created_at as date, views FROM board ORDER BY board_id DESC LIMIT :page, 10";
 
         try {
             List<BoardDto.BoardList> boardListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(BoardDto.BoardList.class));
