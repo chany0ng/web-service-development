@@ -30,7 +30,7 @@ public class NoticeRepository {
     public Optional<List<NoticeDto.NoticeList>> findNotice(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
-        String sql = "SELECT notice_id, title, created_at as date, views FROM notice ORDER BY notice_id LIMIT :page, 10";
+        String sql = "SELECT notice_id, title, created_at as date, views FROM notice ORDER BY notice_id DESC LIMIT :page, 10";
 
         try {
             List<NoticeDto.NoticeList> noticeListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(NoticeDto.NoticeList.class));
