@@ -1,9 +1,6 @@
 package db.project.controller;
 
-import db.project.dto.BoardAndNoticeListResponseDto;
-import db.project.dto.PostBoardAndNoticeCreateAndUpdateDto;
-import db.project.dto.PostBoardAndNoticeDeleteDto;
-import db.project.dto.ReturnGetBoardAndNoticeInfoDto;
+import db.project.dto.*;
 import db.project.exceptions.ErrorResponse;
 import db.project.service.BoardService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +36,7 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 게시물 리스트
-    public ResponseEntity<BoardAndNoticeListResponseDto> getBoardList(@PathVariable(required = false) Optional<Integer> page) {
+    public ResponseEntity<BoardDto.BoardListResponse> getBoardList(@PathVariable(required = false) Optional<Integer> page) {
 
         return ResponseEntity.ok(boardService.boardList(page));
     }
@@ -56,7 +53,7 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 게시물 상세정보
-    public ResponseEntity<ReturnGetBoardAndNoticeInfoDto> getBoardInfo(@PathVariable int boardId) {
+    public ResponseEntity<BoardDto.BoardInfo> getBoardInfo(@PathVariable int boardId) {
 
         return ResponseEntity.ok(boardService.boardInfo(boardId));
     }
@@ -74,7 +71,7 @@ public class BoardController {  // 게시판 Controller
             })
     })
     // 게시물 생성
-    public ResponseEntity<String> postBoardCreate(@RequestBody PostBoardAndNoticeCreateAndUpdateDto form) {
+    public ResponseEntity<String> postBoardCreate(@RequestBody BoardDto.BoardCreateAndUpdate form) {
         boardService.boardCreate(form);
 
         return ResponseEntity.ok("{}");
@@ -96,7 +93,7 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 게시물 수정
-    public ResponseEntity<String> postBoardUpdate(@PathVariable int boardId, @RequestBody PostBoardAndNoticeCreateAndUpdateDto form) {
+    public ResponseEntity<String> postBoardUpdate(@PathVariable int boardId, @RequestBody BoardDto.BoardCreateAndUpdate form) {
         boardService.boardUpdate(form, boardId);
 
         return ResponseEntity.ok("{}");
@@ -119,7 +116,7 @@ public class BoardController {  // 게시판 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 게시물 삭제
-    public ResponseEntity<String> getBoardDelete(@RequestBody PostBoardAndNoticeDeleteDto form) {
+    public ResponseEntity<String> getBoardDelete(@RequestBody BoardDto.BoardDelete form) {
         boardService.boardDelete(form);
 
         return ResponseEntity.ok("{}");

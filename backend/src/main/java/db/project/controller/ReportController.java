@@ -1,11 +1,9 @@
 package db.project.controller;
 
-import db.project.dto.PostBreakdownReportDto;
-import db.project.dto.BreakdownReportListResponseDto;
-import db.project.dto.PostBreakdownReportRepairDto;
+import db.project.dto.BreakdownReportDto;
 import db.project.exceptions.BreakdownReportException;
 import db.project.exceptions.ErrorResponse;
-import db.project.service.BreakdownReportService;
+import db.project.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -21,11 +19,11 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
-public class BreakdownReportController {  // 고장신고 Controller
-    private final BreakdownReportService breakdownReportService;
+public class ReportController {  // 고장신고 Controller
+    private final ReportService reportService;
 
-    public BreakdownReportController(BreakdownReportService breakdownReportService) {
-        this.breakdownReportService = breakdownReportService;
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
     }
 
     @ResponseBody
@@ -43,9 +41,9 @@ public class BreakdownReportController {  // 고장신고 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 고장신고
-    public ResponseEntity<String> postReport(@RequestBody PostBreakdownReportDto form){
+    public ResponseEntity<String> postReport(@RequestBody BreakdownReportDto.Report form){
         try{
-            String result = breakdownReportService.report(form);
+            String result = reportService.report(form);
             return ResponseEntity.ok("{}");
         } catch (BreakdownReportException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -64,8 +62,8 @@ public class BreakdownReportController {  // 고장신고 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 고장신고 List
-    public ResponseEntity<BreakdownReportListResponseDto> getReportList(@PathVariable(required = false) Optional<Integer> page) {
-        return ResponseEntity.ok(breakdownReportService.reportList(page));
+    public ResponseEntity<BreakdownReportDto.BreakdownReportListResponse> getReportList(@PathVariable(required = false) Optional<Integer> page) {
+        return ResponseEntity.ok(reportService.reportList(page));
     }
 
     @ResponseBody
@@ -80,8 +78,8 @@ public class BreakdownReportController {  // 고장신고 Controller
                             @ExampleObject(value = "{}")})
             })
     })
-    public ResponseEntity<String> postReportRepair(@RequestBody PostBreakdownReportRepairDto form) {
-        breakdownReportService.reportRepair(form);
+    public ResponseEntity<String> postReportRepair(@RequestBody BreakdownReportDto.BreakdownReportRepair form) {
+        reportService.reportRepair(form);
 
         return ResponseEntity.ok("{}");
     }

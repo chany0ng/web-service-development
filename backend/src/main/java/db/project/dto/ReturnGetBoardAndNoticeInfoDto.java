@@ -7,13 +7,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+<<<<<<<< HEAD:backend/src/main/java/db/project/dto/ReturnGetBoardAndNoticeInfoDto.java
 public class ReturnGetBoardAndNoticeInfoDto {
+========
+@AllArgsConstructor
+public class ReturnGetUserInfoListDto {
+>>>>>>>> backend:backend/src/main/java/db/project/dto/ReturnGetUserInfoListDto.java
     private String user_id;
-    private String title;
-    private String content;
-    private String date;
-    private int views;
-    private boolean isAuthor;
+    private String phone_number;
+    private String email;
 }

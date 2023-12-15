@@ -73,6 +73,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(e.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(BoardCommentException.class)
+    public ResponseEntity<ErrorResponse> handleBoardCommentException(BoardCommentException e){
+        ErrorResponse response = new ErrorResponse(e.getErrorCode());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(e.getErrorCode().getStatus()));
+    }
+
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<ErrorResponse> handleException(Exception e){
 //        ErrorResponse response = new ErrorResponse(ErrorCode.INTER_SERVER_ERROR);

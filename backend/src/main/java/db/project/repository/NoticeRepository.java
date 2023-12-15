@@ -1,6 +1,7 @@
 package db.project.repository;
 
 import db.project.dto.*;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -19,83 +20,81 @@ public class NoticeRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public int getNoticeCount() {
+    public int findNoticeCount() {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         String sql = "SELECT count(notice_id) noticeCount FROM Notice";
 
         return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
     }
 
-    public Optional<List<ReturnGetBoardAndNoticeListDto>> noticeList(int page) {
+    public Optional<List<NoticeDto.NoticeList>> findNotice(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
-        String sql = "SELECT title, created_at as date FROM notice LIMIT :page, 10";
+        String sql = "SELECT notice_id, title, created_at as date, views FROM notice ORDER BY notice_id LIMIT :page, 10";
 
         try {
-            List<ReturnGetBoardAndNoticeListDto> returnGetNoticeListDtoList = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardAndNoticeListDto.class));
-            return Optional.of(returnGetNoticeListDtoList);
+            List<NoticeDto.NoticeList> noticeListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(NoticeDto.NoticeList.class));
+            return Optional.of(noticeListDto);
         } catch (BadSqlGrammarException e) {
             return Optional.empty();
         }
     }
 
-    public Optional<ReturnGetBoardAndNoticeInfoDto> noticeInfo(int noticeId) {
+    public Optional<NoticeDto.NoticeInfo> findNoticeById(int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("noticeId", noticeId);
-        String sql = "SELECT admin_id AS user_id, title, content, created_at as date, views FROM notice LIMIT :noticeId, 1";
+        String sql = "SELECT notice_id, admin_id AS user_id, title, content, created_at as date, views FROM notice WHERE notice_id =:noticeId";
         try{
-            ReturnGetBoardAndNoticeInfoDto returnGetNoticeInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBoardAndNoticeInfoDto.class));
+            NoticeDto.NoticeInfo noticeInfoDto = jdbcTemplate.queryForObject(sql, namedParameters, new BeanPropertyRowMapper<>(NoticeDto.NoticeInfo.class));
 
-            return Optional.of(returnGetNoticeInfoDto);
+            return Optional.of(noticeInfoDto);
         } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        } catch (BadSqlGrammarException e) {
             return Optional.empty();
         }
     }
 
-    public void noticeCreate(PostBoardAndNoticeCreateAndUpdateDto NoticeCreateDto, String user_id) {
+    public Optional<String> findUserIdById(int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("title", NoticeCreateDto.getTitle())
-                .addValue("content", NoticeCreateDto.getContent())
+                .addValue("noticeId", noticeId);
+        String sql = "SELECT admin_id AS user_id FROM notice WHERE notice_id =:noticeId";
+
+        try {
+            String user_id = jdbcTemplate.queryForObject(sql, namedParameters, String.class);
+            return Optional.of(user_id);
+        } catch(EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    public void createNotice(NoticeDto.NoticeCreateAndUpdate noticeCreateDto, String user_id) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("title", noticeCreateDto.getTitle())
+                .addValue("content", noticeCreateDto.getContent())
                 .addValue("user_id", user_id);
         String sql = "INSERT INTO notice(admin_id, title, content) values(:user_id, :title, :content)";
         jdbcTemplate.update(sql, namedParameters);
     }
 
-    public Optional<Integer> getNoticeId(int notice_id) {
+    public void updateNoticeById(NoticeDto.NoticeCreateAndUpdate noticeUpdateDto, int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("notice_id", notice_id);
-        String sql = "SELECT notice_id AS noticeId FROM notice limit :notice_id, 1";
-        try{
-            int noticeId = jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
-            return Optional.of(noticeId);
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        } catch (BadSqlGrammarException e) {
-            return Optional.empty();
-        }
-    }
-
-    public String isAuthor(int noticeId) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("noticeId", noticeId);
-        String sql = "SELECT admin_id AS user_id FROM notice WHERE notice_id =:noticeId";
-
-        return jdbcTemplate.queryForObject(sql, namedParameters, String.class);
-    }
-
-    public void noticeUpdate(PostBoardAndNoticeCreateAndUpdateDto postNoticeUpdateDto, int noticeId) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("title", postNoticeUpdateDto.getTitle())
-                .addValue("content", postNoticeUpdateDto.getContent())
+                .addValue("title", noticeUpdateDto.getTitle())
+                .addValue("content", noticeUpdateDto.getContent())
                 .addValue("noticeId", noticeId);
         String sql = "UPDATE notice SET title =:title, content =:content WHERE notice_id =:noticeId";
 
         int rowsUpdated = jdbcTemplate.update(sql, namedParameters);
     }
 
-    public void noticeDelete(int noticeId) {
+    public void updateViewsById(int noticeId) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("noticeId", noticeId);
+
+        String sql = "UPDATE notice SET views = views + 1 WHERE notice_id =:noticeId";
+
+        jdbcTemplate.update(sql, namedParameters);
+    }
+
+    public void deleteNoticeById(int noticeId) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("noticeId", noticeId);
         String sql = "DELETE FROM notice WHERE notice_id =:noticeId";

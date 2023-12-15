@@ -119,12 +119,12 @@ public class UserService {
             userInfoPage = (page.get() - 1) * 10;
         }
 
-        Optional<List<ReturnGetUserInfoListDto>> userListOptional = userRepository.findUserInfoList(userInfoPage);
+        Optional<List<ReturnGetUserInfoListDto>> userListOptional = userRepository.findUserInfoByRole(userInfoPage);
         if(userListOptional.isEmpty()) {
             throw new UserException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
-        int userCount = userRepository.getUserCount();
+        int userCount = userRepository.findUserCountByRole();
         if(userInfoPage != 0 && userCount <= userInfoPage) {
             throw new UserException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
@@ -147,12 +147,12 @@ public class UserService {
             userInfoPage = (page.get() - 1) * 10;
         }
 
-        Optional<List<ReturnGetUserInfoListDto>> userListOptional = userRepository.findUserInfoListById(userInfoPage, postUserInfoListDto);
+        Optional<List<ReturnGetUserInfoListDto>> userListOptional = userRepository.findUserInfoByIdAndRole(userInfoPage, postUserInfoListDto);
         if(userListOptional.isEmpty()) {
             throw new UserException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
-        int userCount = userRepository.getUserCountById(postUserInfoListDto);
+        int userCount = userRepository.findUserCountByIdAndRole(postUserInfoListDto);
         if(userInfoPage != 0 && userCount <= userInfoPage) {
             throw new UserException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }

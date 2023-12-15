@@ -21,18 +21,18 @@ public class BikeRepository {
 
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public int getBikeCount() {
+    public int findBikeCountByStatus() {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         String sql = "SELECT COUNT(bike_id) bikeCount FROM bike WHERE status IN ('available', 'closed')";
 
         return jdbcTemplate.queryForObject(sql, namedParameters, Integer.class);
     }
 
-    public Optional<List<ReturnGetBikeListDto>> bikeList(int page) {
+    public Optional<List<ReturnGetBikeListDto>> findBikeByStatus(int page) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("page", page);
         String sql = "SELECT bike_id, address, b.status FROM bike b JOIN location l ON b.location_id = l.location_id " +
-                "WHERE b.status IN ('available', 'closed') LIMIT :page, 10";
+                "WHERE b.status IN ('available', 'closed') ORDER BY bike_id LIMIT :page, 10";
 
         try {
             List<ReturnGetBikeListDto> returnGetBikeListDto = jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnGetBikeListDto.class));
@@ -43,7 +43,7 @@ public class BikeRepository {
 
     }
 
-    public Optional<String> bikeCreate(PostBikeCreateDto postBikeCreateDto) {
+    public Optional<String> createBike(PostBikeCreateDto postBikeCreateDto) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("bike_id", postBikeCreateDto.getBike_id())
                 .addValue("location_id", postBikeCreateDto.getLocation_id());
@@ -60,12 +60,31 @@ public class BikeRepository {
 
     }
 
-    public int bikeDelete(PostBikeDeleteDto postBikeDeleteDto) {
+    public int updateStatusDeletedByIdAndStatus(PostBikeDeleteDto postBikeDeleteDto) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("bike_id", postBikeDeleteDto.getBike_id());
 
         String sql = "UPDATE bike SET status = 'deleted' WHERE bike_id =:bike_id AND status IN ('available', 'closed')";
 
         return jdbcTemplate.update(sql, namedParameters);
+    }
+
+    public void updateStatusRentedById(String bikeId) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("bike_id", bikeId);
+
+        String updateBikeSql = "UPDATE bike SET status = 'rented' WHERE  bike_id = :bike_id";
+
+        int rowsUpdated = jdbcTemplate.update(updateBikeSql, namedParameters);
+    }
+
+    public Optional<String> updateStatusClosedById(String bikeId) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("bike_id", bikeId);
+
+        String updateBikeSql = "UPDATE bike SET status = 'closed' WHERE bike_id = :bike_id";
+        int rowsUpdated = jdbcTemplate.update(updateBikeSql, namedParameters);
+
+        return (rowsUpdated > 0) ? Optional.of("자전거 상태가 업데이트되었습니다.") : Optional.empty();
     }
 }

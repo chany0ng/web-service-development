@@ -3,7 +3,8 @@ package db.project.service;
 import db.project.dto.*;
 import db.project.exceptions.ErrorCode;
 import db.project.exceptions.MapException;
-import db.project.repository.MapRepository;
+import db.project.repository.FavoritesRepository;
+import db.project.repository.LocationRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,14 +14,16 @@ import java.util.Optional;
 
 @Service
 public class MapService {
-    private final MapRepository mapRepository;
+    private final LocationRepository locationRepository;
+    private final FavoritesRepository favoritesRepository;
 
-    public MapService(MapRepository mapRepository) {
-        this.mapRepository = mapRepository;
+    public MapService(LocationRepository locationRepository, FavoritesRepository favoritesRepository) {
+        this.locationRepository = locationRepository;
+        this.favoritesRepository = favoritesRepository;
     }
 
     public MapLocationListResponseDto locationList(){
-       List<ReturnGetMapLocationDto> mapLocationList = mapRepository.locationList();
+       List<ReturnGetMapLocationDto> mapLocationList = locationRepository.findMapLocationByStatus();
        MapLocationListResponseDto response = new MapLocationListResponseDto();
        for (ReturnGetMapLocationDto mapLocation : mapLocationList) {
            response.getLocations().add(mapLocation);
@@ -32,11 +35,11 @@ public class MapService {
     public Optional<MapLocationInfoResponseDto> locationInfo(PostMapLocationInfoDto postMapLocationInfoDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Optional<ReturnPostMapLocationInfoDto> locationInfoOptional = mapRepository.locationInfo(postMapLocationInfoDto);
+        Optional<ReturnPostMapLocationInfoDto> locationInfoOptional = locationRepository.findMapLocationByLatitudeAndLongitude(postMapLocationInfoDto);
         if(locationInfoOptional.isEmpty()) {
             throw new MapException("FAILURE VIEW INFO", ErrorCode.FAIL_MAP_INFO);
         }
-        Optional<Boolean> isFavorite = mapRepository.getIsFavorite(locationInfoOptional.get().getLocation_id(), user_id);
+        Optional<Boolean> isFavorite = favoritesRepository.findFavoriteById(locationInfoOptional.get().getLocation_id(), user_id);
 
         return locationInfoOptional.map(mapLocationInfo -> {
             MapLocationInfoResponseDto response = new MapLocationInfoResponseDto(mapLocationInfo.getLocation_id(), mapLocationInfo.getAddress(), mapLocationInfo.getLocation_status(), isFavorite.get());

@@ -3,7 +3,9 @@ package db.project.service;
 import db.project.dto.*;
 import db.project.exceptions.BoardException;
 import db.project.exceptions.ErrorCode;
+import db.project.repository.BoardCommentRepository;
 import db.project.repository.BoardRepository;
+import db.project.repository.BoardViewsRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +16,17 @@ import java.util.Optional;
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final BoardCommentRepository boardCommentRepository;
+    private final BoardViewsRepository boardViewsRepository;
 
-    public BoardService(BoardRepository boardRepository) {
+    public BoardService(BoardRepository boardRepository, BoardCommentRepository boardCommentRepository, BoardViewsRepository boardViewsRepository) {
         this.boardRepository = boardRepository;
+        this.boardCommentRepository = boardCommentRepository;
+        this.boardViewsRepository = boardViewsRepository;
     }
 
     @Transactional
-    public BoardAndNoticeListResponseDto boardList(Optional<Integer> page) {
+    public BoardDto.BoardListResponse boardList(Optional<Integer> page) {
         int boardPage;
         if(page.isEmpty()) {
             boardPage = 0;
@@ -28,55 +34,76 @@ public class BoardService {
             boardPage = (page.get() - 1) * 10;
         }
 
-        Optional<List<ReturnGetBoardAndNoticeListDto>> boardListOptional = boardRepository.boardList(boardPage);
-        if(boardListOptional.isEmpty()) {
+        Optional<List<BoardDto.BoardList>> boardListDtoOptional = boardRepository.findBoard(boardPage);
+        if(boardListDtoOptional.isEmpty()) {
             throw new BoardException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
-        int boardCount = boardRepository.getBoardCount();
+        int boardCount = boardRepository.findBoardCount();
 
         if(boardPage != 0 && boardCount <= boardPage) {
             throw new BoardException("page not found", ErrorCode.NOT_FOUND_PAGE);
         }
 
-        List<ReturnGetBoardAndNoticeListDto> boardList = boardListOptional.get();
-        BoardAndNoticeListResponseDto response = new BoardAndNoticeListResponseDto(boardCount);
-        for (ReturnGetBoardAndNoticeListDto board : boardList) {
-            response.getBoardAndNoticeList().add(board);
+        List<BoardDto.BoardList> boardListDto = boardListDtoOptional.get();
+        BoardDto.BoardListResponse response = new BoardDto.BoardListResponse(boardCount);
+        for (BoardDto.BoardList board : boardListDto) {
+            response.getBoardList().add(board);
         }
         return response;
     }
 
-    public ReturnGetBoardAndNoticeInfoDto boardInfo(int boardId) {
+    @Transactional
+    public BoardDto.BoardInfo boardInfo(int boardId) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<ReturnGetBoardAndNoticeInfoDto> returnGetBoardInfoDtoOptional = boardRepository.boardInfo(boardId - 1);
-        if(returnGetBoardInfoDtoOptional.isEmpty()) {
+
+        Optional<Integer> view_id = boardViewsRepository.findIdByBoardAndUser(boardId, user_id);
+        if(view_id.isEmpty()) {
+            Optional<Integer> checkPage = boardViewsRepository.createBoardViews(boardId, user_id);
+            if(checkPage.isEmpty()) {
+                throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
+            }
+            boardRepository.updateViewsById(boardId);
+        }
+
+        Optional<BoardDto.BoardInfo> boardInfoDtoOptional = boardRepository.findBoardById(boardId);
+        if(boardInfoDtoOptional.isEmpty()) {
             throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
         }
-        ReturnGetBoardAndNoticeInfoDto returnGetBoardAndNoticeInfoDto = returnGetBoardInfoDtoOptional.get();
-        if(user_id.equals(returnGetBoardAndNoticeInfoDto.getUser_id())) {
-            returnGetBoardAndNoticeInfoDto.setAuthor(true);
+
+        BoardDto.BoardInfo boardInfoDto = boardInfoDtoOptional.get();
+        if(user_id.equals(boardInfoDto.getUser_id())) {
+            boardInfoDto.setAuthor(true);
         } else {
-            returnGetBoardAndNoticeInfoDto.setAuthor(false);
+            boardInfoDto.setAuthor(false);
         }
-        return returnGetBoardAndNoticeInfoDto;
+
+        List<BoardCommentDto.BoardComment> boardCommentListDto = boardCommentRepository.findCommentById(boardId);
+        if(boardCommentListDto.isEmpty()) {
+            boardInfoDto.setComments(null);
+        } else {
+            boardInfoDto.setComments(boardCommentListDto);
+        }
+
+        return boardInfoDto;
     }
 
-    public void boardCreate(PostBoardAndNoticeCreateAndUpdateDto postBoardCreateDto) {
+    public void boardCreate(BoardDto.BoardCreateAndUpdate boardCreateDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        boardRepository.boardCreate(postBoardCreateDto, user_id);
+        boardRepository.createBoard(boardCreateDto, user_id);
     }
 
     @Transactional
-    public void boardUpdate(PostBoardAndNoticeCreateAndUpdateDto postBoardUpdateDto, int board_id) {
+    public void boardUpdate(BoardDto.BoardCreateAndUpdate boardUpdateDto, int board_id) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Integer> boardId = boardRepository.getBoardId(board_id - 1);
-        if(boardId.isEmpty()) {
+
+        Optional<String> userId = boardRepository.findUserIdById(board_id);
+        if(userId.isEmpty()) {
             throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
         }
-        String userId = boardRepository.isAuthor(boardId.get());
-        if(user_id.equals(userId)) {
-            boardRepository.boardUpdate(postBoardUpdateDto, boardId.get());
+
+        if(user_id.equals(userId.get())) {
+            boardRepository.updateBoardById(boardUpdateDto, board_id);
         } else {
             throw new BoardException("not author of the post", ErrorCode.NOT_AUTHOR);
         }
@@ -84,15 +111,16 @@ public class BoardService {
     }
 
     @Transactional
-    public void boardDelete(PostBoardAndNoticeDeleteDto postBoardDeleteDto) {
+    public void boardDelete(BoardDto.BoardDelete boardDeleteDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Integer> boardId = boardRepository.getBoardId(postBoardDeleteDto.getId() - 1);
-        if(boardId.isEmpty()) {
+
+        Optional<String> userId = boardRepository.findUserIdById(boardDeleteDto.getBoard_id());
+        if(userId.isEmpty()) {
             throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
         }
-        String userId = boardRepository.isAuthor(boardId.get());
-        if(user_id.equals(userId)) {
-            boardRepository.boardDelete(boardId.get());
+
+        if(user_id.equals(userId.get())) {
+            boardRepository.deleteBoardById(boardDeleteDto);
         } else {
             throw new BoardException("not author of the post", ErrorCode.NOT_AUTHOR);
         }

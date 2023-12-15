@@ -36,7 +36,7 @@ public class NoticeController {  // 공지사항 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 공지사항 리스트
-    public ResponseEntity<BoardAndNoticeListResponseDto> getNoticeList(@PathVariable(required = false) Optional<Integer> page) {
+    public ResponseEntity<NoticeDto.NoticeListResponse> getNoticeList(@PathVariable(required = false) Optional<Integer> page) {
 
         return ResponseEntity.ok(noticeService.noticeList(page));
     }
@@ -53,7 +53,7 @@ public class NoticeController {  // 공지사항 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 공지사항 상세정보
-    public ResponseEntity<ReturnGetBoardAndNoticeInfoDto> getNoticeInfo(@PathVariable int noticeId) {
+    public ResponseEntity<NoticeDto.NoticeInfo> getNoticeInfo(@PathVariable int noticeId) {
 
         return ResponseEntity.ok(noticeService.noticeInfo(noticeId));
     }
@@ -71,7 +71,7 @@ public class NoticeController {  // 공지사항 Controller
             })
     })
     // 공지사항 생성
-    public ResponseEntity<String> postNoticeCreate(@RequestBody PostBoardAndNoticeCreateAndUpdateDto form) {
+    public ResponseEntity<String> postNoticeCreate(@RequestBody NoticeDto.NoticeCreateAndUpdate form) {
         noticeService.noticeCreate(form);
 
         return ResponseEntity.ok("{}");
@@ -93,7 +93,7 @@ public class NoticeController {  // 공지사항 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 공지사항 수정
-    public ResponseEntity<String> postNoticeUpdate(@PathVariable int noticeId, @RequestBody PostBoardAndNoticeCreateAndUpdateDto form) {
+    public ResponseEntity<String> postNoticeUpdate(@PathVariable int noticeId, @RequestBody NoticeDto.NoticeCreateAndUpdate form) {
         noticeService.noticeUpdate(form, noticeId);
 
         return ResponseEntity.ok("{}");
@@ -115,7 +115,7 @@ public class NoticeController {  // 공지사항 Controller
             @ApiResponse(responseCode = "500", description = "내부 서버 오류", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
     })
     // 공지사항 삭제
-    public ResponseEntity<String> getNoticeDelete(@RequestBody PostBoardAndNoticeDeleteDto form) {
+    public ResponseEntity<String> getNoticeDelete(@RequestBody NoticeDto.NoticeDelete form) {
         noticeService.noticeDelete(form);
 
         return ResponseEntity.ok("{}");
