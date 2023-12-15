@@ -117,11 +117,11 @@ const UserMap = () => {
       const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
       const response = await fetch(url);
       const data = await response.json();
-      const temp = Math.floor(data.main['feels_like'] - 273.15);
+      console.log(data);
+      const temp = Math.floor(data.main.temp - 273.15);
       const humidity = data.main['humidity'];
-      const rain = data.rain['1h'];
       const main = data.weather[0].main;
-      return { temp, humidity, main, rain };
+      return { temp, humidity, main };
     } catch (error) {
       console.error(error);
     }
@@ -241,7 +241,6 @@ const UserMap = () => {
             `   <h3>온도: ${weatherData.temp}도</h3>`,
             `   <h3>습도: ${weatherData.humidity}%</h3>`,
             `   <h3>날씨: ${weatherData.main}</h3>`,
-            `   <h3>강수량: ${weatherData.rain}mm</h3>`,
             '</div>'
           ].join('');
           const infowindow = new naver.maps.InfoWindow({

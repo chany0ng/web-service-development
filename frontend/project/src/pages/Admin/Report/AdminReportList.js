@@ -69,7 +69,7 @@ const AdminReportList = () => {
                   repairHandler(item.bike_id);
                 }}
               >
-                삭제하기
+                수리하기
               </Button>
             );
             return newObj;
