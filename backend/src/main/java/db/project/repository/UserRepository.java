@@ -163,7 +163,6 @@ public class UserRepository {
         }
 
     }
-
     public int updatePW(String id, String password) {
         String sql = "UPDATE USER SET password= :password WHERE user_id= :id";
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();

@@ -9,7 +9,9 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class ReturnGetAdminMainDto {
     private String user_id;
     private int report;
+
 }

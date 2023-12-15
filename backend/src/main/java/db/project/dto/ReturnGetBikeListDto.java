@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class ReturnGetBikeListDto {
     private String bike_id;
     private String address;
