@@ -8,9 +8,6 @@ import { userInfo } from '../../recoil';
 import { mainPageAuthCheck } from '../../AuthCheck';
 import { getFetch } from '../../config';
 
-const API_KEY = 'e1228960280fdf5ec15ede4ced0e53aa';
-const LAT = 37.619774;
-const LON = 127.060926;
 const UserMainPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
@@ -33,18 +30,8 @@ const UserMainPage = () => {
   };
   useEffect(() => {
     getUserInfo();
-    getWeather();
   }, []);
-  const getWeather = async () => {
-    try {
-      const url = `https://api.openweathermap.org/data/3.0/onecall?lat=${LAT}&lon=${LON}&appid=${API_KEY}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+
   return (
     <Layout>
       <CustomCard info={user} />

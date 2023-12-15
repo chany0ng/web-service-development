@@ -8,6 +8,9 @@ import { Button } from '@mui/material';
 import { useRecoilState } from 'recoil';
 import { userInfo } from './../../../recoil';
 import { useNavigate } from 'react-router-dom';
+
+const API_KEY = 'c0fe3481342c342f7e53a450614e3c25';
+
 const UserMap = () => {
   const [user, setUser] = useRecoilState(userInfo);
   const [data, setData] = useState([]);
@@ -106,6 +109,20 @@ const UserMap = () => {
       }
     } catch (error) {
       alert(error);
+      console.error(error);
+    }
+  };
+  const getWeather = async (lat, lon) => {
+    try {
+      const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      const temp = Math.floor(data.main['feels_like'] - 273.15);
+      const humidity = data.main['humidity'];
+      const rain = data.rain['1h'];
+      const main = data.weather[0].main;
+      return { temp, humidity, main, rain };
+    } catch (error) {
       console.error(error);
     }
   };
@@ -218,28 +235,33 @@ const UserMap = () => {
       naver.maps.Event.addListener(marker, 'click', function (e) {
         setIsClicked((prev) => !prev);
         const [latitude, longitude] = marker.title.split(',');
-        getLocationDetailInfo({ latitude, longitude });
-        const contentString = [
-          '<div style="padding: 5px">',
-          `   <h3>${location.address}</h3>`,
-          '</div>'
-        ].join('');
-        const infowindow = new naver.maps.InfoWindow({
-          content: contentString,
-          maxWidth: 150,
-          backgroundColor: '#ffffff',
-          borderColor: '#2db400',
-          borderWidth: 2,
-          anchorSize: new naver.maps.Size(20, 20),
-          anchorSkew: true,
-          anchorColor: '#ffffff',
-          pixelOffset: new naver.maps.Point(20, -20)
+        getWeather(latitude, longitude).then((weatherData) => {
+          const contentString = [
+            '<div style="padding: 5px">',
+            `   <h3>온도: ${weatherData.temp}도</h3>`,
+            `   <h3>습도: ${weatherData.humidity}%</h3>`,
+            `   <h3>날씨: ${weatherData.main}</h3>`,
+            `   <h3>강수량: ${weatherData.rain}mm</h3>`,
+            '</div>'
+          ].join('');
+          const infowindow = new naver.maps.InfoWindow({
+            content: contentString,
+            maxWidth: 150,
+            backgroundColor: '#ffffff',
+            borderColor: '#2db400',
+            borderWidth: 2,
+            anchorSize: new naver.maps.Size(20, 20),
+            anchorSkew: true,
+            anchorColor: '#ffffff',
+            pixelOffset: new naver.maps.Point(20, -20)
+          });
+          if (infowindow.getMap()) {
+            infowindow.close();
+          } else {
+            infowindow.open(mapRef.current, marker);
+          }
         });
-        if (infowindow.getMap()) {
-          infowindow.close();
-        } else {
-          infowindow.open(mapRef.current, marker);
-        }
+        getLocationDetailInfo({ latitude, longitude });
       });
     });
   }, [data]);
