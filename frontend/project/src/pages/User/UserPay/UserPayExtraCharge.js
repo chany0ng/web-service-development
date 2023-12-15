@@ -102,8 +102,9 @@ const UserPayExtraCharge = () => {
           </p>
           <p>서울자전거 모든 대여소에서 사용이 가능합니다.</p>
           <p>
-            서울자전거 <span style={{ color: 'red' }}>환불규정</span>에
-            따릅니다.
+            서울자전거 <span style={{ color: 'red' }}>환불규정</span>에 의해{' '}
+            <span style={{ color: 'red' }}>15분 당 250원</span>의 추가요금이
+            부가됩니다.
           </p>
           <p>
             환불 규정 보기 이용권을 다른 사람에게 양도할 수 없으며,양도로 인해
