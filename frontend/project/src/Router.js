@@ -26,6 +26,8 @@ import AdminNoticeCreate from './pages/Admin/Notice/AdminNoticeCreate';
 import AdminNoticeView from './pages/Admin/Notice/AdminNoticeView';
 import AdminReportList from './pages/Admin/Report/AdminReportList';
 import BoardList from './pages/User/BoardList';
+import BoardView from './pages/User/BoardView';
+import BoardCreate from './pages/User/BoardCreate';
 const Router = () => {
   return (
     <Routes>
@@ -85,10 +87,12 @@ const Router = () => {
         element={<AdminNoticeView />}
       />
       <Route
-        path="/admin/report/list/:postNumber"
+        path="/admin/report/list/:pageNumber"
         element={<AdminReportList />}
       />
-      <Route path="/board/list/:postNumber" element={<BoardList />} />
+      <Route path="/board/list/:pageNumber" element={<BoardList />} />
+      <Route path="/board/view/:postNumber" element={<BoardView />} />
+      <Route path="/board/create" element={<BoardCreate />} />
     </Routes>
   );
 };

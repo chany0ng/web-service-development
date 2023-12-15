@@ -8,7 +8,8 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { mainPageAuthCheck } from '../../AuthCheck';
 import { getFetch, postFetch } from '../../config';
-const headData = ['제목', '작성 시각', '조회수'];
+import { Button } from '@mui/material';
+const headData = ['제목', '작성 날짜', '조회수'];
 
 const BoardList = () => {
   const [user, setUser] = useRecoilState(userInfo);
@@ -44,8 +45,7 @@ const BoardList = () => {
           const formattedData = data?.boardList?.map((post) => {
             return { ...post, date: new Date(post.date).toLocaleDateString() };
           });
-          console.log(formattedData);
-          setPosts(formattedData);
+          setPosts(formattedData.reverse());
           setTotalPages(data.boardCount);
         } else if (response.status === 401) {
           navigate('/');
@@ -68,6 +68,23 @@ const BoardList = () => {
   return (
     <Layout admin={isAdmin}>
       <Article>
+        <h1
+          style={{ textAlign: 'left', fontSize: '3rem', marginBottom: '5vh' }}
+        >
+          자유 게시판
+        </h1>
+        <div>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{ fontSize: '1rem', float: 'right', margin: '10px' }}
+            onClick={() => {
+              navigate('/board/create');
+            }}
+          >
+            글 작성
+          </Button>
+        </div>
         <CustomTable
           headData={headData}
           bodyData={posts}

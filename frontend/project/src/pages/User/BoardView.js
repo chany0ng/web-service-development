@@ -59,7 +59,7 @@ const BoardView = () => {
         <PostView
           data={postContent}
           moveToList={moveToList}
-          author={postContent.author}
+          isBoard={postContent.board_id}
         />
       </Article>
     </Layout>
