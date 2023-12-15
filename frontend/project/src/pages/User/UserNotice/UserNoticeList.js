@@ -14,7 +14,7 @@ const url = {
   notice: '/user/notice/noticeList/1',
   report: '/user/report/reportBoardEdit'
 };
-const headData = ['제목', '작성 시각', '조회수'];
+const headData = ['제목', '작성 날짜', '조회수'];
 export const MyContext = createContext();
 
 const UserNoticeList = () => {

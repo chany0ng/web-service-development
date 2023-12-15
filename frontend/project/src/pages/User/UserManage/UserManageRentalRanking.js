@@ -89,6 +89,7 @@ const UserManageRentalRanking = () => {
           <span>시간: {timeRankTotal.user_duraiton_time}분</span>
         </div>
         <h2>대여 시간 순 차트</h2>
+        {timeRankId}
         {timeRankId.length > 0 && timeRankData.length > 0 && (
           <BarChart
             xAxis={[

@@ -74,7 +74,7 @@ const AdminReportList = () => {
             );
             return newObj;
           });
-          setPosts(trueReportList);
+          setPosts(trueReportList.reverse());
           setTotalPages(data.reportCount);
         } else if (response.status === 401) {
           navigate('/');
