@@ -119,7 +119,7 @@ const UserTicketGift = () => {
                 <br />
                 <span>결제 후 보유 금액:</span>
                 <span>
-                  {afterMoney <= 0 ? '-' : `${afterMoney.toLocaleString()}원`}
+                  {afterMoney < 0 ? '-' : `${afterMoney.toLocaleString()}원`}
                 </span>
               </div>
               <h3
