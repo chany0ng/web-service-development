@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/{your_db_name}?serverTimeZone=Asia/Seoul&CharacterEncoding=UTF-8
+    username: root
+    password: {your_password}
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 5000
+      connection-init-sql: SELECT 1
+      validation-timeout: 2000
+      minimum-idle: 10
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: {your_client-id}
+            client-secret: {your_client-secret}
+            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
+            authorization-grant-type: authorization_code
+            scope: email
+
+
+jwt:
+  issuer: {your_issuer}
+  secret_key: {your_secret_key}
+
