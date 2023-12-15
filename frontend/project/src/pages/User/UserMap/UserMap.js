@@ -62,9 +62,9 @@ const UserMap = () => {
             overfee: data.overfee
           }));
           alert(
-            `따릉이 반납 완료. 추가 요금 ${data.overfee}를 결제해야 합니다!`
+            `따릉이 반납 완료. 추가 요금 ${data.overfee}원을 결제해야 합니다!`
           );
-          navigate('user/payment/extra-chrage');
+          navigate('/user/payment/extra-chrage');
         } else {
           setUser((prev) => ({
             ...prev,

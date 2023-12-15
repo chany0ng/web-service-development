@@ -57,7 +57,7 @@ const PostView = ({ data, moveToList, isBoard }) => {
         : {
             board_id: data.board_id
           };
-      const api = !isBoard ? '/api/admin/notice/delete' : 'api/board/delete';
+      const api = !isBoard ? 'api/admin/notice/delete' : 'api/board/delete';
       const response = await postFetch(api, boardOrNotice);
       if (response.status === 200) {
         navigate(-1);
