@@ -1,9 +1,8 @@
 package db.project.service;
 
-import db.project.dto.FavoritesResponseDto;
-import db.project.dto.PostFavoritesChangeDto;
-import db.project.dto.PostFavoritesSearchDto;
-import db.project.dto.ReturnFavoritesDto;
+import db.project.dto.*;
+import db.project.exceptions.ErrorCode;
+import db.project.exceptions.FavoritesException;
 import db.project.repository.FavoritesRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,35 +17,35 @@ public class FavoritesService {
         this.favoritesRepository = favoritesRepository;
     }
 
-    public FavoritesResponseDto locationList(PostFavoritesSearchDto postFavoritesSearchDto) {
+    public FavoritesDto.FavoritesResponse locationList(FavoritesDto.FavoritesSearch favoritesSearchDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        List<ReturnFavoritesDto> favoritesSearchList = favoritesRepository.locationList(postFavoritesSearchDto, user_id);
+        List<FavoritesDto.Favorites> favoritesSearchList = favoritesRepository.findFavoritesAndLocation(favoritesSearchDto, user_id);
 
-        FavoritesResponseDto response = new FavoritesResponseDto();
-        for(ReturnFavoritesDto favoritesSearch : favoritesSearchList) {
+        FavoritesDto.FavoritesResponse response = new FavoritesDto.FavoritesResponse();
+        for(FavoritesDto.Favorites favoritesSearch : favoritesSearchList) {
             response.getLocations().add(favoritesSearch);
         }
         return response;
     }
 
-    public String locationChange(PostFavoritesChangeDto postFavoritesChangeDto) {
+    public void locationChange(FavoritesDto.FavoritesChange favoritesChangeDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        if(postFavoritesChangeDto.isFavorite()) {
-            return favoritesRepository.locationAdd(postFavoritesChangeDto.getLocation(), user_id)
-                    .orElseThrow(() -> new IllegalArgumentException("이미 즐겨찾기에 추가된 대여소 입니다."));
+        if(favoritesChangeDto.isFavorite()) {
+            favoritesRepository.createFavorites(favoritesChangeDto.getLocation(), user_id)
+                    .orElseThrow(() -> new FavoritesException("ALREADY ADD FAVORITE", ErrorCode.FAVORITE_DUPLICATION));
         } else {
-            return favoritesRepository.locationDelete(postFavoritesChangeDto.getLocation(), user_id);
+            favoritesRepository.deleteFavoritesById(favoritesChangeDto.getLocation(), user_id);
         }
     }
 
-    public FavoritesResponseDto locationList() {
+    public FavoritesDto.FavoritesResponse locationList() {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        List<ReturnFavoritesDto> favoritesList = favoritesRepository.locationList(user_id);
+        List<FavoritesDto.Favorites> favoritesList = favoritesRepository.findFavoritesByUserId(user_id);
 
-        FavoritesResponseDto response = new FavoritesResponseDto();
-        for(ReturnFavoritesDto favorite : favoritesList) {
+        FavoritesDto.FavoritesResponse response = new FavoritesDto.FavoritesResponse();
+        for(FavoritesDto.Favorites favorite : favoritesList) {
             response.getLocations().add(favorite);
         }
         return response;

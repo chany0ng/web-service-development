@@ -1,0 +1,21 @@
+@import '../../../styles/reset.scss';
+
+.box {
+  width: 90%;
+  height: 30vh;
+  background-color: #ffffff;
+  border-top-right-radius: 30px;
+  border-top-left-radius: 30px;
+  position: absolute;
+  bottom: 0px;
+  left: 5%;
+  overflow-y: scroll;
+  .row {
+    padding: 5px;
+    background-color: #eee;
+    border-radius: 5px;
+    // border-bottom: 1px solid $primaryLight;
+    margin: 5px;
+    font-size: larger;
+  }
+}

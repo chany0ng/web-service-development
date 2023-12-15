@@ -1,0 +1,73 @@
+@import '../../../styles/reset.scss';
+
+.notice {
+  padding-left: 10px;
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+  p {
+    text-align: left;
+    font-size: larger;
+  }
+}
+
+.card {
+  margin: 40px 0 15px 0;
+  box-shadow: $boxShadow;
+  &:hover {
+    box-shadow: $boxShadowHover;
+  }
+  h2 {
+    padding: 10px;
+    border-bottom: 1px solid $primaryLight;
+  }
+}
+
+.favorite {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+  .money {
+    padding: 10px;
+    width: 25vw;
+    border-bottom: 1px solid black;
+    span {
+      font-size: larger;
+    }
+    span:nth-child(2) {
+      text-align: right;
+      display: inline-block;
+      margin-left: 10px;
+      white-space: pre-wrap;
+    }
+    span:nth-child(5) {
+      text-align: right;
+      display: inline-block;
+      margin-left: 10px;
+      white-space: pre-wrap;
+    }
+  }
+  > div {
+    margin: 5px;
+    font-size: 1.4rem;
+    .number {
+      color: $primaryLight;
+      font-size: 4rem;
+      font-weight: 900;
+      margin: 10px;
+    }
+  }
+  .inputBox {
+    padding: 15px;
+    padding-top: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.moneyLack {
+  color: red;
+  margin: 10px;
+}

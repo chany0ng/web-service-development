@@ -1,8 +1,8 @@
 package db.project.repository;
 
-import db.project.dto.PostFavoritesSearchDto;
-import db.project.dto.ReturnFavoritesDto;
+import db.project.dto.FavoritesDto;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -20,20 +20,43 @@ public class FavoritesRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ReturnFavoritesDto> locationList(PostFavoritesSearchDto postFavoritesSearchDto, String user_id) {
+    public List<FavoritesDto.Favorites> findFavoritesAndLocation(FavoritesDto.FavoritesSearch favoritesSearchDto, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("user_id", user_id)
-                .addValue("location", "%" + postFavoritesSearchDto.getLocation() + "%");
-        String sql = "SELECT address, IF(f.location_id IS NULL, 0, 1) AS favorite FROM location l LEFT JOIN favorites f ON " +
-                "l.location_id = f.location_id AND f.user_id =:user_id WHERE l.address LIKE :location ORDER BY favorite desc, address";
-        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnFavoritesDto.class));
+                .addValue("location", "%" + favoritesSearchDto.getLocation() + "%");
+        String sql = "SELECT l.location_id, address, IF(f.location_id IS NULL, 0, 1) AS favorite FROM location l LEFT JOIN favorites f ON " +
+                "l.location_id = f.location_id AND f.user_id =:user_id WHERE l.address LIKE :location ORDER BY favorite desc, l.location_id";
+        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(FavoritesDto.Favorites.class));
     }
 
-    public Optional<String> locationAdd(String address, String user_id) {
+    public List<FavoritesDto.Favorites> findFavoritesByUserId(String user_id) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("user_id", user_id);
+        String sql = "SELECT f.location_id, address, IF(f.location_id IS NULL, 0, 1) AS favorite FROM favorites f JOIN location l ON " +
+                "l.location_id = f.location_id WHERE f.user_id =:user_id ORDER BY favorite desc, l.location_id";
+        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(FavoritesDto.Favorites.class));
+    }
+
+    public Optional<Boolean> findFavoriteById(String location_id, String user_id) {
+        String sql = "SELECT IF(location_id = :location_id and user_id =:user_id, 1, 0) AS favorite FROM favorites where location_id = :location_id and user_id =:user_id";
+
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
+                .addValue("location_id", location_id)
+                .addValue("user_id", user_id);
+
+        try{
+            Boolean isFavorite = jdbcTemplate.queryForObject(sql, namedParameters, Boolean.class);
+            return Optional.of(isFavorite);
+        } catch(EmptyResultDataAccessException e) {
+            return Optional.of(false);
+        }
+    }
+
+    public Optional<String> createFavorites(String address, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("user_id", user_id)
-                .addValue("location", address);
-        String sql = "INSERT INTO favorites(user_id, location_id) (SELECT :user_id, location_id FROM location WHERE address =:location)";
+                .addValue("address", address);
+        String sql = "INSERT INTO favorites(user_id, location_id) (SELECT :user_id, location_id FROM location WHERE address =:address)";
         try{
             jdbcTemplate.update(sql, namedParameters);
             return Optional.of("즐겨찾기 추가 성공");
@@ -42,7 +65,7 @@ public class FavoritesRepository {
         }
     }
 
-    public String locationDelete(String address, String user_id) {
+    public String deleteFavoritesById(String address, String user_id) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("user_id", user_id)
                 .addValue("location", address);
@@ -50,13 +73,5 @@ public class FavoritesRepository {
                 "location_id = (SELECT location_id FROM location WHERE address =:location)";
         jdbcTemplate.update(sql, namedParameters);
         return "즐겨찾기 삭제 성공";
-    }
-
-    public List<ReturnFavoritesDto> locationList(String user_id) {
-        final MapSqlParameterSource namedParameters = new MapSqlParameterSource()
-                .addValue("user_id", user_id);
-        String sql = "SELECT address, IF(f.location_id IS NULL, 0, 1) AS favorite FROM location l JOIN favorites f ON " +
-                "l.location_id = f.location_id WHERE f.user_id =:user_id ORDER BY favorite desc, address";
-        return jdbcTemplate.query(sql, namedParameters, new BeanPropertyRowMapper<>(ReturnFavoritesDto.class));
     }
 }

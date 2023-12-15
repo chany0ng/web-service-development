@@ -3,10 +3,13 @@ import InnerTabBar from '../../../components/TabBar/InnerTabBar';
 import Layout from '../../../layouts/Layout';
 import Article from '../../../layouts/Article';
 import styles from './UserPayExtraCharge.module.scss';
-import { Button } from '@mui/material';
+import { Button, typographyClasses } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-
+import { mainPageAuthCheck } from '../../../AuthCheck';
+import { userInfo } from '../../../recoil';
+import { useRecoilState } from 'recoil';
+import { getFetch } from '../../../config';
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['카드 금액 충전', '추가요금 결제'];
 const outerTab = 'payment';
@@ -17,24 +20,36 @@ const url = {
 };
 
 const UserPayExtraCharge = () => {
-  //todo 추가요금 있는 사람은 무조건 여기로 오게
-  const existMoney = 3500;
-  const overFee = 0;
+  const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
+  useEffect(() => {
+    const getOverFee = async () => {
+      try {
+        const response = await getFetch('api/surcharge/info');
+        if (response.status === 200) {
+          const data = await response.json();
+          setOverFee(data.overfee);
+        } else {
+          throw new Error('추가요금 조회 에러');
+        }
+      } catch (error) {
+        alert(error);
+        console.error(error);
+      }
+    };
+    getOverFee();
+  }, []);
+  const [info, setInfo] = useRecoilState(userInfo);
+  const [overFee, setOverFee] = useState(0);
   const lackNotice = (
     <h2 className={styles.moneyLack}>보유 금액이 부족합니다!</h2>
-  );
-  const noLackNotice = (
-    <h2>
-      결제 후 남은 금액:
-      <span style={{ fontSize: '1.8rem' }}>
-        {(existMoney - overFee).toLocaleString()}원
-      </span>
-    </h2>
   );
   const [isLackOfMoney, setIsLackOfMoney] = useState(false);
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
   useEffect(() => {
-    if (overFee > existMoney) {
+    if (overFee > info.cash) {
       setIsLackOfMoney(true);
       setIsButtonEnabled(true);
     } else if (overFee === 0) {
@@ -44,17 +59,37 @@ const UserPayExtraCharge = () => {
       setIsLackOfMoney(false);
       setIsButtonEnabled(false);
     }
-  }, [existMoney, overFee]);
+  }, [info.cash, overFee]);
 
-  const navigate = useNavigate();
   const movePageHandler = () => {
-    navigate('/user/pay/charge');
+    navigate('/user/payment/charge');
   };
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    //todo 보유금액에서 미납금액만큼 차감 후, post요청
-  };
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
 
+      const response = await getFetch('api/surcharge/pay');
+      if (response.status === 200) {
+        setInfo((prev) => ({ ...prev, cash: prev.cash - overFee }));
+        setOverFee(0);
+      } else if (response.status === 401) {
+        navigate('/');
+      } else {
+        throw new Error('추가요금 결제 에러');
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
+  };
+  const noLackNotice = (
+    <h2>
+      결제 후 남은 금액:
+      <span style={{ fontSize: '1.8rem' }}>
+        {(info.cash - overFee).toLocaleString()}원
+      </span>
+    </h2>
+  );
   return (
     <Layout>
       <TabBar title={outerTitle} select={outerTab} />
@@ -79,7 +114,7 @@ const UserPayExtraCharge = () => {
           <div className={styles.flexItem}>
             <span className={styles.first}>보유 금액 : </span>
             <span className={styles.second}>
-              {existMoney.toLocaleString()}원
+              {info.cash.toLocaleString()}원
             </span>
           </div>
           <div className={styles.flexItem}>

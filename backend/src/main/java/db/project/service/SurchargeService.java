@@ -1,40 +1,45 @@
 package db.project.service;
 
 import db.project.dto.ReturnGetSurchargeOverfeeInfoDto;
-import db.project.repository.SurchargeRepository;
+import db.project.exceptions.ErrorCode;
+import db.project.exceptions.SurchargeException;
+import db.project.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class SurchargeService {
-    private final SurchargeRepository surchargeRepository;
+    private final UserRepository userRepository;
 
-    public SurchargeService(SurchargeRepository surchargeRepository) {
-        this.surchargeRepository = surchargeRepository;
+    public SurchargeService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
-    public Optional<ReturnGetSurchargeOverfeeInfoDto> overfeeInfo(){
+    public ReturnGetSurchargeOverfeeInfoDto overfeeInfo(){
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        return surchargeRepository.overfeeInfo(user_id);
+        int overfee = userRepository.findOverfeeById(user_id);
+        ReturnGetSurchargeOverfeeInfoDto returnGetSurchargeOverfeeInfoDto = new ReturnGetSurchargeOverfeeInfoDto(overfee);
+
+        return returnGetSurchargeOverfeeInfoDto;
     }
 
     @Transactional
-    public boolean overfeePay(){
+    public void overfeePay(){
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        Map<String, Object> overfeeAndCash = surchargeRepository.getOverfeeAndCash(user_id);
+        Map<String, Object> overfeeAndCash = userRepository.findOverfeeAndCashById(user_id);
 
         int overfee = (int) overfeeAndCash.get("overfee");
         int cash = (int) overfeeAndCash.get("cash");
 
         if (cash < overfee) {
-            return false;
+            throw new SurchargeException("NOT ENOUGH MONEY", ErrorCode.NOT_ENOUGH_MONEY);
         }
-        return surchargeRepository.overfeePay(overfee, user_id);
+
+        userRepository.updateCashAndOverfeeById(overfee, user_id);
     }
 }

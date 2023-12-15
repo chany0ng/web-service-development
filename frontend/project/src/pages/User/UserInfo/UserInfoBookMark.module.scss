@@ -24,3 +24,19 @@
     border-radius: 5px;
   }
 }
+
+.search {
+  height: 30vh;
+  border-top: 1px solid $primaryLight;
+  overflow-y: scroll;
+  font-size: larger;
+  box-shadow: $boxShadowHover;
+  .each {
+    border-bottom: 0.5px solid grey;
+    padding: 5px;
+    cursor: pointer;
+    &:hover {
+      background-color: #f0f0f0;
+    }
+  }
+}

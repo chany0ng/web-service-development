@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class RentalHistoryResponseDto {
 
-    List<ReturnPostRentalHistoryDto> RentalInfo;
+    private List<ReturnPostRentalHistoryDto> RentalInfo;
 
     public RentalHistoryResponseDto() {
         this.RentalInfo = new ArrayList<>();

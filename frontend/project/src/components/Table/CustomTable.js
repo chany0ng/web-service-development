@@ -8,6 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { useContext } from 'react';
 import { MyContext } from './../../pages/User/UserNotice/UserNoticeList';
+import { MyContext2 } from '../../pages/Admin/Notice/AdminNoticeList';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -30,9 +31,19 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   }
 }));
 
-const CustomTable = ({ headData, bodyData }) => {
-  // 현재 예시 데이터 사용중
-  const onClickPageHandler = useContext(MyContext);
+const CustomTable = ({ headData, bodyData, onClick }) => {
+  const onClickPostHandler = useContext(MyContext);
+  const onClickPostHandler2 = useContext(MyContext2);
+
+  const clickHandler = (row) => {
+    if (onClickPostHandler) {
+      onClickPostHandler(row);
+    } else if (onClickPostHandler2) {
+      onClickPostHandler2(row);
+    } else if (onClick) {
+      onClick(row);
+    }
+  };
   return (
     <TableContainer component={Paper} sx={{ marginTop: '30px' }}>
       <Table sx={{ minWidth: '50vw' }} aria-label="customized table">
@@ -50,15 +61,18 @@ const CustomTable = ({ headData, bodyData }) => {
             {bodyData.map((row, index) => (
               <StyledTableRow
                 key={index}
-                onClick={
-                  onClickPageHandler ? () => onClickPageHandler(row) : null
-                }
+                sx={{ cursor: 'pointer' }}
+                onClick={() => {
+                  clickHandler(row);
+                }}
               >
-                {Object.values(row).map((cellValue, cellIndex) => (
-                  <StyledTableCell key={cellIndex} align="center">
-                    {cellValue}
-                  </StyledTableCell>
-                ))}
+                {Object.keys(row)
+                  .filter((key) => key !== 'notice_id' && key !== 'board_id') // notice_id를 제외한 키만 필터링
+                  .map((key, cellIndex) => (
+                    <StyledTableCell key={cellIndex} align="center">
+                      {row[key]}
+                    </StyledTableCell>
+                  ))}
               </StyledTableRow>
             ))}
           </TableBody>

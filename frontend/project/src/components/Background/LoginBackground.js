@@ -3,7 +3,7 @@ const LoginBackground = ({ children }) => {
   return (
     <div
       className="background-image"
-      style={{ backgroundImage: 'url(/images/landingImage.jpg)' }}
+      style={{ backgroundImage: 'url(/images/landingImage2.jpg)' }}
     >
       {children}
     </div>

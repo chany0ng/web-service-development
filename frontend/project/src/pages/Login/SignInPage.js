@@ -47,14 +47,20 @@ const SignInPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postFetch('api/auth/login', inputData);
-        if (status === 401) {
+        const response = await postFetch('api/auth/login', inputData);
+        const data = await response.json();
+        if (response.status === 401) {
           idPwCheck(data);
-        }
-        if (status === 200) {
+        } else if (response.status === 200) {
           localStorage.setItem('accessToken', data.accessToken);
           localStorage.setItem('refreshToken', data.refreshToken);
-          navigate('/user/main');
+          if (data.role === 'admin' || inputData.id === 'admin') {
+            navigate('/admin/main');
+          } else {
+            navigate('/user/main');
+          }
+        } else {
+          throw new Error('로그인 에러');
         }
       }
     } catch (error) {
@@ -65,7 +71,7 @@ const SignInPage = () => {
 
   return (
     <LoginBackground>
-      <Container component="main" maxWidth="sm">
+      <Container component="main" sx={{ width: '50vw' }}>
         <Box
           sx={{
             margin: 5,
@@ -141,7 +147,16 @@ const SignInPage = () => {
               Login
             </Button>
             <a href="http://localhost:8080/oauth2/authorization/google">
-              Google Login
+              <img
+                src="/images/googleLogin.svg"
+                alt="logo"
+                style={{
+                  cursor: 'pointer',
+                  margin: '10px',
+                  border: '1px solid gray',
+                  borderRadius: '3px'
+                }}
+              />
             </a>
             <Grid container justifyContent="center">
               <Grid item xs={4}>

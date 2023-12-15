@@ -11,16 +11,18 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+    public static final String REDIRECT_PATH = "http://localhost:3000/login/oauth2/code/google";
+
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
-
     private long accessTokenValidTime = 60 * 60 * 1000L; //1시간
     private long refreshTokenValidTime = 7 * 24 * 60 * 60 * 1000L; //일주일
 
@@ -39,10 +41,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         refreshTokenRepository.save(id, refreshToken)
                 .orElseThrow(() -> new IllegalArgumentException("중복된 아이디"));
 
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().write("{ \"accessToken\": \"" + accessToken + "\", \"refreshToken\": \""+ refreshToken + "\" } ");
+        String targetUrl = getTargetUrl(accessToken, refreshToken);
 
-        getRedirectStrategy().sendRedirect(request, response, "http://localhost:3000/user/main");
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+    }
+
+    private String getTargetUrl(String accessToken, String refreshToken) {
+        return UriComponentsBuilder.fromUriString(REDIRECT_PATH)
+                .queryParam("accessToken", accessToken)
+                .queryParam("refreshToken", refreshToken)
+                .build()
+                .toUriString();
     }
 }

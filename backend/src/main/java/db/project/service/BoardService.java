@@ -1,11 +1,11 @@
 package db.project.service;
 
-import db.project.dto.BoardListResponseDto;
-import db.project.dto.PostBoardCreateAndUpdateDto;
-import db.project.dto.ReturnGetBoardInfoDto;
-import db.project.dto.ReturnGetBoardListDto;
+import db.project.dto.*;
 import db.project.exceptions.BoardException;
+import db.project.exceptions.ErrorCode;
+import db.project.repository.BoardCommentRepository;
 import db.project.repository.BoardRepository;
+import db.project.repository.BoardViewsRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,75 +16,113 @@ import java.util.Optional;
 @Service
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final BoardCommentRepository boardCommentRepository;
+    private final BoardViewsRepository boardViewsRepository;
 
-    public BoardService(BoardRepository boardRepository) {
+    public BoardService(BoardRepository boardRepository, BoardCommentRepository boardCommentRepository, BoardViewsRepository boardViewsRepository) {
         this.boardRepository = boardRepository;
+        this.boardCommentRepository = boardCommentRepository;
+        this.boardViewsRepository = boardViewsRepository;
     }
 
-    public BoardListResponseDto boardList(int page) {
-        page = (page - 1) * 10;
-        Optional<List<ReturnGetBoardListDto>> boardListOptional = boardRepository.boardList(page);
-        if(boardListOptional.isEmpty()) {
-            throw new BoardException("잘못된 페이지 접근입니다.");
+    @Transactional
+    public BoardDto.BoardListResponse boardList(Optional<Integer> page) {
+        int boardPage;
+        if(page.isEmpty()) {
+            boardPage = 0;
+        } else {
+            boardPage = (page.get() - 1) * 10;
         }
-        List<ReturnGetBoardListDto> boardList = boardListOptional.get();
-        BoardListResponseDto response = new BoardListResponseDto();
-        for (ReturnGetBoardListDto board : boardList) {
+
+        Optional<List<BoardDto.BoardList>> boardListDtoOptional = boardRepository.findBoard(boardPage);
+        if(boardListDtoOptional.isEmpty()) {
+            throw new BoardException("page not found", ErrorCode.NOT_FOUND_PAGE);
+        }
+
+        int boardCount = boardRepository.findBoardCount();
+
+        if(boardPage != 0 && boardCount <= boardPage) {
+            throw new BoardException("page not found", ErrorCode.NOT_FOUND_PAGE);
+        }
+
+        List<BoardDto.BoardList> boardListDto = boardListDtoOptional.get();
+        BoardDto.BoardListResponse response = new BoardDto.BoardListResponse(boardCount);
+        for (BoardDto.BoardList board : boardListDto) {
             response.getBoardList().add(board);
         }
         return response;
     }
 
-    public ReturnGetBoardInfoDto boardInfo(int boardId) {
+    @Transactional
+    public BoardDto.BoardInfo boardInfo(int boardId) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<ReturnGetBoardInfoDto> returnGetBoardInfoDtoOptional = boardRepository.boardInfo(boardId - 1);
-        if(returnGetBoardInfoDtoOptional.isEmpty()) {
-            throw new BoardException("존재하지 않는 게시물 입니다.");
+
+        Optional<Integer> view_id = boardViewsRepository.findIdByBoardAndUser(boardId, user_id);
+        if(view_id.isEmpty()) {
+            Optional<Integer> checkPage = boardViewsRepository.createBoardViews(boardId, user_id);
+            if(checkPage.isEmpty()) {
+                throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
+            }
+            boardRepository.updateViewsById(boardId);
         }
-        ReturnGetBoardInfoDto returnGetBoardInfoDto = returnGetBoardInfoDtoOptional.get();
-        if(user_id.equals(returnGetBoardInfoDto.getUser_id())) {
-            returnGetBoardInfoDto.setAuthor(true);
+
+        Optional<BoardDto.BoardInfo> boardInfoDtoOptional = boardRepository.findBoardById(boardId);
+        if(boardInfoDtoOptional.isEmpty()) {
+            throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
+        }
+
+        BoardDto.BoardInfo boardInfoDto = boardInfoDtoOptional.get();
+        if(user_id.equals(boardInfoDto.getUser_id())) {
+            boardInfoDto.setAuthor(true);
         } else {
-            returnGetBoardInfoDto.setAuthor(false);
+            boardInfoDto.setAuthor(false);
         }
-        return returnGetBoardInfoDto;
+
+        List<BoardCommentDto.BoardComment> boardCommentListDto = boardCommentRepository.findCommentById(boardId);
+        if(boardCommentListDto.isEmpty()) {
+            boardInfoDto.setComments(null);
+        } else {
+            boardInfoDto.setComments(boardCommentListDto);
+        }
+
+        return boardInfoDto;
     }
 
-    public void boardCreate(PostBoardCreateAndUpdateDto postBoardCreateAndUpdateDto) {
+    public void boardCreate(BoardDto.BoardCreateAndUpdate boardCreateDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        boardRepository.boardCreate(postBoardCreateAndUpdateDto, user_id);
+        boardRepository.createBoard(boardCreateDto, user_id);
     }
 
     @Transactional
-    public String boardUpdate(PostBoardCreateAndUpdateDto postBoardCreateAndUpdateDto, int board_id) {
+    public void boardUpdate(BoardDto.BoardCreateAndUpdate boardUpdateDto, int board_id) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Integer> boardId = boardRepository.getBoardId(board_id - 1);
-        if(boardId.isEmpty()) {
-            throw new BoardException("존재하지 않는 게시물 입니다.");
+
+        Optional<String> userId = boardRepository.findUserIdById(board_id);
+        if(userId.isEmpty()) {
+            throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
         }
-        String userId = boardRepository.isAuthor(boardId.get());
-        if(user_id.equals(userId)) {
-            return boardRepository.boardUpdate(postBoardCreateAndUpdateDto, boardId.get())
-                    .orElseThrow(() -> new BoardException("게시물 업데이트 실패"));
+
+        if(user_id.equals(userId.get())) {
+            boardRepository.updateBoardById(boardUpdateDto, board_id);
         } else {
-            throw new BoardException("게시물의 작성자가 아닙니다.");
+            throw new BoardException("not author of the post", ErrorCode.NOT_AUTHOR);
         }
 
     }
 
     @Transactional
-    public String boardDelete(int board_id) {
+    public void boardDelete(BoardDto.BoardDelete boardDeleteDto) {
         String user_id = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<Integer> boardId = boardRepository.getBoardId(board_id - 1);
-        if(boardId.isEmpty()) {
-            throw new BoardException("존재하지 않는 게시물 입니다.");
+
+        Optional<String> userId = boardRepository.findUserIdById(boardDeleteDto.getBoard_id());
+        if(userId.isEmpty()) {
+            throw new BoardException("page not post", ErrorCode.NOT_FOUND_POST);
         }
-        String userId = boardRepository.isAuthor(boardId.get());
-        if(user_id.equals(userId)) {
-            return boardRepository.boardDelete(boardId.get())
-                    .orElseThrow(() -> new BoardException("게시물 삭제 실패"));
+
+        if(user_id.equals(userId.get())) {
+            boardRepository.deleteBoardById(boardDeleteDto);
         } else {
-            throw new BoardException("게시물의 작성자가 아닙니다.");
+            throw new BoardException("not author of the post", ErrorCode.NOT_AUTHOR);
         }
     }
 }

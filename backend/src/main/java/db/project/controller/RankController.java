@@ -1,17 +1,14 @@
 package db.project.controller;
 
+import db.project.dto.RankDto;
 import db.project.service.RankService;
-import db.project.dto.RankCountResponseDto;
-import db.project.dto.RankTimeResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api")
 public class RankController {  //rank Controller
@@ -31,10 +28,10 @@ public class RankController {  //rank Controller
             @ApiResponse(responseCode = "200", description = "이용시간 랭킹 조회 성공")
     })
     // 이용시간에 따른 랭킹 조회
-    public ResponseEntity<RankTimeResponseDto> getRankTime() {
-        RankTimeResponseDto returnGetRankTimeDto = rankService.timeRank();
+    public ResponseEntity<RankDto.RankTimeResponse> getRankTime() {
+        RankDto.RankTimeResponse rankTimeResponseDto = rankService.timeRank();
 
-        return ResponseEntity.ok(returnGetRankTimeDto);
+        return ResponseEntity.ok(rankTimeResponseDto);
     }
 
     @GetMapping("rank/count")
@@ -47,8 +44,8 @@ public class RankController {  //rank Controller
             @ApiResponse(responseCode = "200", description = "이용횟수 랭킹 조회 성공")
     })
     // 이용회수에 따른 랭킹 조회
-    public ResponseEntity<RankCountResponseDto> getRankCount() {
-        RankCountResponseDto rankCountResponseDto = rankService.countRank();
+    public ResponseEntity<RankDto.RankCountResponse> getRankCount() {
+        RankDto.RankCountResponse rankCountResponseDto = rankService.countRank();
 
         return ResponseEntity.ok(rankCountResponseDto);
     }

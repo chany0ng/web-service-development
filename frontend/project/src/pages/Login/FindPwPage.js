@@ -14,11 +14,16 @@ import { postFetch } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { loginPageAuthCheck } from '../../AuthCheck';
 
-const passwordQuestion = [
+const pwQuestionList = [
   {
-    question: 'school',
+    question: 'elementary',
     description: '졸업한 초등학교 이름',
     value: 1
+  },
+  {
+    question: 'middle',
+    description: '졸업한 중학교 이름',
+    value: 2
   }
 ];
 
@@ -33,8 +38,30 @@ const FindPwPage = () => {
     pw_answer: ''
   });
   const [isValid, setIsValid] = useState(true);
+  const [validQuestion, setValidQuestion] = useState(false);
+  const [newPw, setNewPw] = useState('');
+  const newPwHandler = (e) => {
+    setNewPw(e.target.value);
+  };
+  const onResetHandler = async (e) => {
+    try {
+      e.preventDefault();
+      const response = await postFetch('api/auth/findPW/update', {
+        id: inputData.id,
+        new_password: newPw
+      });
+      if (response.status === 200) {
+        alert('비밀번호가 재설정 되었습니다!');
+        navigate('/signin');
+      } else {
+        throw new Error('비밀번호 재설정 오류발생');
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error);
+    }
+  };
   const inputDataHandler = (e) => {
-    e.preventDefault();
     const key = e.target.id || 'pw_question';
     const value = e.target.value;
     setInputData((prevData) => ({ ...prevData, [key]: value }));
@@ -47,10 +74,13 @@ const FindPwPage = () => {
         setIsValid(false);
       } else {
         setIsValid(true);
-        const { status, data } = await postFetch('api/findpw', inputData);
-        if (status === 200) {
-          alert(`비밀번호는 ${data}입니다.`);
-          navigate('/signin');
+        const response = await postFetch('api/auth/findPW', inputData);
+        if (response.status === 200) {
+          // 변수 하나로 맞았는지 체크. 모달창에서 새로운 비밀번호 전송.
+          setValidQuestion(true);
+        } else {
+          const data = await response.json();
+          throw new Error(data.message);
         }
       }
     } catch (error) {
@@ -60,7 +90,7 @@ const FindPwPage = () => {
   };
   return (
     <LoginBackground>
-      <Container component="main" maxWidth="sm">
+      <Container component="main" sx={{ width: '50vw' }}>
         <Box
           sx={{
             margin: 5,
@@ -108,7 +138,7 @@ const FindPwPage = () => {
                   variant="standard"
                   helperText="비밀번호 찾기 질문을 선택해주세요"
                 >
-                  {passwordQuestion.map((option) => (
+                  {pwQuestionList.map((option) => (
                     <MenuItem key={option.question} value={option.value}>
                       {option.description}
                     </MenuItem>
@@ -129,6 +159,22 @@ const FindPwPage = () => {
                   helperText="비밀번호 찾기 답변을 작성해주세요"
                 />
               </Grid>
+              {validQuestion && (
+                <Grid item xs={12}>
+                  <TextField
+                    value={newPw}
+                    onChange={newPwHandler}
+                    required
+                    fullWidth
+                    variant="standard"
+                    name="new_password"
+                    label="New Password"
+                    type="password"
+                    id="new_password"
+                    helperText="새로운 비밀번호를 입력해주세요"
+                  />
+                </Grid>
+              )}
               {!isValid && (
                 <Grid
                   item
@@ -145,15 +191,28 @@ const FindPwPage = () => {
                 </Grid>
               )}
             </Grid>
-            <Button
-              onClick={onSubmitHandler}
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Search
-            </Button>
+            {validQuestion ? (
+              <Button
+                onClick={onResetHandler}
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                비밀번호 재설정
+              </Button>
+            ) : (
+              <Button
+                onClick={onSubmitHandler}
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Search
+              </Button>
+            )}
+
             <Grid container justifyContent="center">
               <Grid item xs={4}>
                 <Link

@@ -7,10 +7,12 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 import CustomTable from '../../../components/Table/CustomTable';
-
+import { useNavigate } from 'react-router-dom';
+import { mainPageAuthCheck } from '../../../AuthCheck';
+import { postFetch } from '../../../config';
 const outerTitle = ['회원정보 관리', '결제 관리', '이용정보 관리'];
 const innerTitle = ['대여/반납 이력', '대여소 랭킹'];
 const outerTab = 'manage';
@@ -24,25 +26,45 @@ const head = [
   '대여 시각',
   '대여소',
   '반납 시각',
-  '반납 대여소',
-  '자전거 대여 시간'
+  '반납 대여소'
 ];
-const body = [];
 const UserManageRentalHistory = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    mainPageAuthCheck(navigate);
+  }, []);
   const [startDate, setStartDate] = useState(dayjs());
   const [endDate, setEndDate] = useState(dayjs());
+  const [body, setBody] = useState([]);
   const handleStartDateChange = (date) => {
     setStartDate(date);
-    //todo 날짜 데이터 저장형식 정해야함(toDate()고려)
   };
 
   const handleEndDateChange = (date) => {
     setEndDate(date);
-    //todo 날짜 데이터 저장형식 정해야함(toDate()고려)
   };
-  const onSubmitHandler = (e) => {
-    e.preventDefault();
-    alert('날짜 제출');
+  const onSubmitHandler = async (e) => {
+    try {
+      e.preventDefault();
+      const formattedStartDate = dayjs(startDate).format('YYYY-MM-DD');
+      const formattedEndDate = dayjs(endDate).format('YYYY-MM-DD');
+      const response = await postFetch('api/rentalHistory', {
+        start_date: formattedStartDate,
+        end_date: formattedEndDate
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log(data.rentalInfo);
+        setBody([...data.rentalInfo]);
+      } else if (response.status === 401) {
+        navigate('/');
+      } else {
+        throw new Error('대여기록 조회 에러');
+      }
+    } catch (error) {
+      alert(error);
+      console.error(error);
+    }
   };
   return (
     <Layout>

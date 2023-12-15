@@ -10,14 +10,12 @@ const GoogleLogin = () => {
     // const params = new URLSearchParams(window.location.search);
     const accessToken = params.get('accessToken');
     const refreshToken = params.get('refreshToken');
-    localStorage.setItem('acceessToken', accessToken);
+    localStorage.setItem('accessToken', accessToken);
     localStorage.setItem('refreshToken', refreshToken);
-    console.log(accessToken);
-    console.log(refreshToken);
     navigate('/user/main');
   });
   return (
-    <section>
+    <section className={styles['dots-container']}>
       <div className={styles.dot}></div>
       <div className={styles.dot}></div>
       <div className={styles.dot}></div>
