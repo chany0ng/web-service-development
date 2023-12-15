@@ -49,7 +49,7 @@ const AdminNoticeList = () => {
           const formattedData = data?.noticeList?.map((post) => {
             return { ...post, date: new Date(post.date).toLocaleDateString() };
           });
-          setPosts(formattedData.reverse());
+          setPosts(formattedData);
           setTotalPages(data.noticeCount);
         } else if (response.status === 401) {
           navigate('/');

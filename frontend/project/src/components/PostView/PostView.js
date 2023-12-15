@@ -126,18 +126,22 @@ const PostView = ({ data, moveToList, isBoard }) => {
             </div>
           </div>
         ))}
-        <p style={{ textAlign: 'left', fontSize: 'larger', margin: '5px' }}>
-          댓글 쓰기
-        </p>
-        <div className={styles.write}>
-          <div style={{ width: '90%' }}>
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            />
+        {data.comments && (
+          <p style={{ textAlign: 'left', fontSize: 'larger', margin: '5px' }}>
+            댓글 쓰기
+          </p>
+        )}
+        {data.comments && (
+          <div className={styles.write}>
+            <div style={{ width: '90%' }}>
+              <textarea
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
+              />
+            </div>
+            <button onClick={addCommentHandler}>작성</button>
           </div>
-          <button onClick={addCommentHandler}>작성</button>
-        </div>
+        )}
       </section>
       <CustomButton name="목록" onClick={moveToList} />
     </article>

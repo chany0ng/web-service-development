@@ -45,7 +45,7 @@ const BoardList = () => {
           const formattedData = data?.boardList?.map((post) => {
             return { ...post, date: new Date(post.date).toLocaleDateString() };
           });
-          setPosts(formattedData.reverse());
+          setPosts(formattedData);
           setTotalPages(data.boardCount);
         } else if (response.status === 401) {
           navigate('/');
