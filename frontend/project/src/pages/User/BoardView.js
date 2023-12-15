@@ -5,12 +5,15 @@ import Layout from '../../layouts/Layout';
 import PostView from '../../components/PostView/PostView';
 import Article from '../../layouts/Article';
 import { mainPageAuthCheck } from '../../AuthCheck';
-
+import { adminInfo } from '../../recoil';
+import { useRecoilState } from 'recoil';
 const BoardView = () => {
   const navigate = useNavigate();
   useEffect(() => {
     mainPageAuthCheck(navigate);
   }, []);
+  const [admin, setAdmin] = useRecoilState(adminInfo);
+  const isAdmin = admin.user_id === 'admin' ? true : false;
   const location = useLocation();
   const postNumber = location.state?.postNumber;
   const moveToList = () => {
@@ -49,7 +52,7 @@ const BoardView = () => {
     fetchPost();
   }, []);
   return (
-    <Layout>
+    <Layout admin={isAdmin}>
       <Article>
         <h1
           style={{ textAlign: 'left', fontSize: '3rem', marginBottom: '3vh' }}

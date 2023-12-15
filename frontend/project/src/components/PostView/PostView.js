@@ -9,6 +9,7 @@ import { useRecoilState } from 'recoil';
 const PostView = ({ data, moveToList, isBoard }) => {
   const navigate = useNavigate();
   const [user, setUser] = useRecoilState(userInfo);
+  console.log(user);
   const [content, setContent] = useState('');
   const addCommentHandler = async () => {
     try {

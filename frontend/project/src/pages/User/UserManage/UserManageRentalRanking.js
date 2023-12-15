@@ -1,8 +1,6 @@
 import InnerTabBar from '../../../components/TabBar/InnerTabBar';
-import Article from '../../../layouts/Article';
 import TabBar from './../../../components/TabBar/TabBar';
 import Layout from '../../../layouts/Layout';
-import CustomTable from '../../../components/Table/CustomTable';
 import { BarChart } from '@mui/x-charts/BarChart';
 import styles from './UserManageRentalRanking.module.scss';
 import { useEffect, useState } from 'react';

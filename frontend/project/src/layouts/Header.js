@@ -18,8 +18,6 @@ const Header = ({ sections, title }) => {
         sessionStorage.removeItem('adminInfo');
         sessionStorage.clear();
         navigate('/');
-        // } else if (response.status === 401) {
-        //   navigate('/');
       } else {
         throw new Error('토큰이 정상적으로 삭제되지 않았습니다!');
       }

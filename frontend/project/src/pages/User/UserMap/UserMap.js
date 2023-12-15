@@ -1,5 +1,4 @@
 import Layout from '../../../layouts/Layout';
-import {} from 'react-naver-maps';
 import { useEffect, useState, useRef } from 'react';
 import { getFetch, postFetch } from '../../../config';
 import styles from './UserMap.module.scss';
