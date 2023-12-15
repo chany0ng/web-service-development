@@ -63,7 +63,11 @@ const CustomCard = ({ info }) => {
             </div>
             <div className={styles.cardMoney}>
               <div>현재 대여중인 따릉이</div>
-              {info.rented ? <h3>bike id: {info.bike_id}</h3> : <h3>없음</h3>}
+              {info.isRented ? (
+                <h3>자전거 번호: {info.bike_id}</h3>
+              ) : (
+                <h3>없음</h3>
+              )}
               <Button
                 onClick={() => {
                   navigate('/user/tickets/purchase');
