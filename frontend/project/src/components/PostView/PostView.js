@@ -126,12 +126,12 @@ const PostView = ({ data, moveToList, isBoard }) => {
             </div>
           </div>
         ))}
-        {data.comments && (
+        {isBoard && (
           <p style={{ textAlign: 'left', fontSize: 'larger', margin: '5px' }}>
             댓글 쓰기
           </p>
         )}
-        {data.comments && (
+        {isBoard && (
           <div className={styles.write}>
             <div style={{ width: '90%' }}>
               <textarea

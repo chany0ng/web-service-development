@@ -71,18 +71,18 @@ const AdminManageLocation = () => {
   const handlePageChange = (e, newPage) => {
     setCurrentPage(newPage);
   };
-  const bikeDeleteHandler = async (bike_id) => {
+  const locationDeleteHandler = async (location_id) => {
     try {
-      const response = await postFetch('api/admin/bike/delete', {
-        bike_id: bike_id
+      const response = await postFetch('api/admin/location/delete', {
+        location_id: location_id
       });
       if (response.status === 200) {
-        alert('따릉이가 삭제되었습니다');
+        alert('대여소가 삭제되었습니다');
         window.location.reload();
       } else if (response.status === 401) {
         navigate('/');
       } else {
-        throw new Error('따릉이 삭제 오류');
+        throw new Error('대여소 삭제 오류');
       }
     } catch (error) {
       console.error(error);
@@ -111,7 +111,7 @@ const AdminManageLocation = () => {
                   color="primary"
                   sx={{ fontSize: '1rem' }}
                   onClick={() => {
-                    bikeDeleteHandler(location.location_id);
+                    locationDeleteHandler(location.location_id);
                   }}
                 >
                   삭제하기
