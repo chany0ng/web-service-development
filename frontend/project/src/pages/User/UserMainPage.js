@@ -20,6 +20,8 @@ const UserMainPage = () => {
       if (response.status === 200) {
         const data = await response.json();
         setUser((prevData) => ({ ...prevData, ...data }));
+      }else if(response.status === 401){
+        navigate('/');
       } else {
         throw new Error('Get User Data error');
       }
